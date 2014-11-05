@@ -1,0 +1,262 @@
+<h1>Chapter 11: Simple Error Handling</h1>
+
+<p>Well, we've spent the majority of the book so far learning how to program, and we've broken a bunch of things along the way.  Since we've gotten into so much trouble by trying to expose the error systems in Python, maybe it's time to learn how to handle the errors that we keep bringing up.</p>
+
+<p>In this chapter, we'll learn about error handling--the proper way to catch exceptions when they arise, and how to write code that can recover from what would otherwise have been a fatal error.</p>
+
+<h2>Exceptions</h2>
+
+<p>By this point, you've probably run into a few exceptions along the way. At least, I hope you have! We're setting out to break as many things as we can in the name of learning, after all!</p>
+
+<p>Exceptions can happen when you try to convert a string into a number when the string is actually a person's name, or when you misspell a function or variable name forcing Python to complain that it can't find the thing that you're trying to call. Exceptions are Python's way of identifying where and how a part of your program broke. Once you're able to identify what they mean, you can use these to help fix your code.</p>
+
+<h2>What exactly is an exception?</h2>
+
+<p>It's probably safe to assume that you've hit a red warning message at some point in your programming. It might have been clear what happened, but it also might have been a total mystery. Some of the error messages can be confusing. Only with experience are you able to make the most sense of them. Other exception messages sound perfectly reasonable, and you might even find yourself understanding how to deal with them in a responsible way.</p>
+
+<p>Let's look at an example that you might have run into already. We'd like to get a number as input from a user so that we can do some math with it. Maybe we're squaring it, maybe we're adding two. Regardless, we'd like to get a number from the user, and to use the number value, the string value must be converted. What happens when the user enters a word, or for that matter, any non-numeric value, and the conversion is omitted?</p>
+
+<code>
+&gt;&gt;&gt; <b>user_number = int(input(&quot;Enter a number: &quot;))</b><br>
+Enter a number: <b>Alexander</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#2&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number: &quot;))<br>
+ValueError: invalid literal for int() with base 10: 'Alexander'
+</code>
+
+<p>Python complains in bright red text about a <i>ValueError</i> exception, and states that the string &quot;Alexander&quot; is an invalid literal for <i>int()</i> with base 10. So what on Earth does that mean? It's pretty clear that <i>int</i> was given a value that can't be converted into a number. Why did Python actually throw a bright red error and terminate the program in this way? Is this really the graceful way to handle the problem?</p>
+
+<p>Let's try another example to get Python to halt program execution with another exception. Consider the case where we get an acceptable number, but a number that breaks the mathematical operation we'd like to use.</p>
+
+<code>
+&gt;&gt;&gt; <b>user_number = int(input(&quot;Enter a number: &quot;))</b><br>
+Enter a number: <b>0</b><br>
+&gt;&gt;&gt; <b>print(&quot;10 divided by {0} is {1}.&quot;.format(user_number, 10/user_number))</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#4&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;10 divided by {0} is {1}.&quot;.format(user_number, 10/user_number))<br>
+ZeroDivisionError: int division or modulo by zero
+</code>
+
+<p>This sample code broke because we tried to divide 10 by 0, which is undefined. Python threw the appropriately-named <i>ZeroDivisionError</i> to indicate that this was the specific problem.</p>
+
+<p>An exception is Python's way to break the code in a reasonable and safe way that can actually be identified by your program. For example, if it is known that a division operation could potentially attempt to divide by zero causing a <i>ZeroDivisionError</i>, we could tell the code to watch for this error message, and to handle it gracefully if it happens. In the <i>ValueError</i> example, a loop could be repeated as long as <i>ValueError</i> exceptions came back from <i>int</i>, since a <i>ValueError</i> exception means that the user is trying to enter in values that aren't accepted by the <i>int</i> function.</p>
+
+<h2>Try blocks: giving it a shot</h2>
+
+<p>Fortunately, there is functionality to attempt to run a program with the knowledge that some part of the code might actually throw an exception. It's like saying that you know you're asking the user to enter in a value, but you also know that they're capable of giving you bad data. You'd like to try to run this block of code, and if an exception comes back, you'd like to handle it in an appropriate way.</p>
+
+<p>In the <i>ValueError</i> example, let's make a very simple piece of code that attempts to convert the input to an integer, and to catch a <i>ValueError</i> if the user gives inappropriate data.</p>
+
+<code>
+<b>try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is {0}.&quot;.format(user_number))</b><br>
+<b>except ValueError as e:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(e)</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a number: <b>10</b><br>
+Your number is 10.<br>
+All done!<br>
+<br>
+Enter a number: <b>Alexander</b><br>
+You didn't enter a number! Shame on you.<br>
+invalid literal for int() with base 10: 'Alexander'<br>
+All done!
+</code>
+
+<p>This is certainly much better than a program crash! If the program gets an acceptable value, everything goes as planned and the <i>except</i> block never gets executed. However, Python understood that there was a block of code that might throw a <i>ValueError</i> exception, and if it happened, it should stop immediately and execute the code that prints out a stern rebuke. Notice that it really does exit immediately. A try block is your way of asking Python to cautiously execute the code, and to get out of there as soon as possible once an Exception occurs. That's why you don't see the &quot;Your number is&quot; string when the bad value is given. Python gets out as soon as the <i>int</i> statement occurs.</p>
+
+<p>If you want to access detailed information about the specifics of the crash, you can add &quot;as e&quot;, or &quot;as (variable_name)&quot; to the <i>except</i> statement. That gives you the ability to have a statement like <i>print(e)</i> that gives more information about the details of the exception being raised. In future examples, we generally won't need to deal with those details, and the &quot;as (variable_name)&quot; component will be safely omitted.</p>
+
+<p>Once the <i>try</i> block and corresponding <i>except</i> block are finished, the program continues on as it normally would. There really is no crash here when an exception is raised and caught. Python catches the exception, does something with it (if you'd like to do something at all), and then moves forward as if everything was fine. Presumably you would use the <i>except</i> block to make sure that your program state was in a good place moving forward.</p>
+
+<p>What about the division case? If for some reason the division needs to occur, we don't want to move forward without a valid number.  Let's write a loop.</p>
+
+<p>A <i>try</i> block can occur inside of a loop, and we can use <i>try</i> blocks to carefully identify only the pieces of code that are potential candidates for exceptions to occur. Let's rewrite the <i>ZeroDivisionError</i> code to loop until a valid number occurs, and to do the division once everything is finished and we are sure that a good number has been placed in <i>user_number</i>.  First, here is the naive case that tries once to get a valid number.</p>
+
+<code>
+<b>try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input("Enter a number other than zero: "))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;division = 10 / user_number</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print("10 divided by {0} is {1}.".format(user_number, 10 / user_number))</b><br>
+<b>except ZeroDivisionError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print("A number other than zero, please!")</b><br>
+</code>
+
+<p>From this, let's move the try block inside of a loop.</p>
+
+<code>
+<b>done = False</b><br>
+<b>while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number other than zero: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;division = 10 / user_number</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;except ZeroDivisionError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;A number other than zero, please!&quot;)</b><br>
+<b>print(&quot;10 divided by {0} is {1}.&quot;.format(user_number, 10 / user_number))</b><br>
+<br>
+Enter a number other than zero: <b>0</b><br>
+A number other than zero, please!<br>
+Enter a number other than zero: <b>0</b><br>
+A number other than zero, please!<br>
+Enter a number other than zero: <b>25</b><br>
+10 divided by 25 is 0.4.
+</code>
+
+<p>With the <i>try</i>-block nicely nested inside the <i>while</i> loop, we get away from the messy example of wrapping the entire block in a try section. It really is only the division operation that can cause this problem, so that single line is wrapped in a try block along with the only modification to <i>done</i> that can terminate the <i>while</i> loop. If the division raised a <i>ZeroDivisionError</i>, the statement that sets <i>done</i> to <i>True</i> never gets hit because Python swiftly shifts the program execution into the except block.</p>
+
+<p>A keen observer will have noticed that we have the exact same ValueError problem in this new code. There's nothing to stop a malicious user from entering a word in the <i>input</i> block, and the <i>try</i> statement in the code above won't catch bogus strings that can't be converted into integers.</p>
+
+<p><i>Try</i> blocks can have multiple except conditions, just like <i>if</i>-statements can have multiple <i>elif</i> blocks followed by an <i>else</i> block. If the <i>input</i> statement is moved inside the <i>try</i> block, and another <i>except</i> statement is introduced to catch <i>ValueError</i> exceptions, the code might look like this:</p>
+
+<code>
+<b>done = False</b><br>
+<b>while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number other than zero: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;division = 10 / user_number</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;except ZeroDivisionError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;A number other than zero, please!&quot;)</b><br>
+<b>print(&quot;10 divided by {0} is {1}.&quot;.format(user_number, 10 / user_number))</b><br>
+<br>
+Enter a number other than zero: <b>Alexander</b><br>
+You didn't enter a number! Shame on you.<br>
+Enter a number other than zero: <b>0</b><br>
+A number other than zero, please!<br>
+Enter a number other than zero: <b>25</b><br>
+10 divided by 25 is 0.4.
+</code>
+
+<p>This code nicely merges both of the examples seen so far. The code won't crash on a non-numeric string, and it also won't die when a zero value is given. It sits inside of a loop that repeats until a valid condition is obtained, and finally moves on to the goal state where we get to print out the result of the division.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>You are not a slave to exceptions!  You don't need to sit idly by waiting to catch them at their fancy. You have the ability to raise exceptions yourself when your code breaks in a unique way.</p>
+
+<p>To start, we can write a simple loop that duplicates the modulo (mod) operator--a way to determine the remainder of devision of one number by another.  For example, if we evaluate the expression <i>6 mod 4</i>, the result is 2, because 4 goes into 6 one time and leaves a remainder of 2.  In Python, we can use the % operator to find the remainder.</p>
+
+<code>
+&gt;&gt;&gt; <b>6 % 4</b><br>
+2
+</code>
+
+<p>Now, in the interest of learning something new, and in potentially breaking something in a creative way, let's build a loop that will duplicate this functionality.  First, the naive solution looks like this:</p>
+
+<code>
+<b>x = int(input(&quot;Enter the first number: &quot;))</b><br>
+<b>y = int(input(&quot;Enter the second number: &quot;))</b><br>
+<br>
+<b>print(&quot;{0} mod {1} is {2}&quot;.format(x, y, x % y))</b><br>
+<br>
+Enter the first number: <b>6</b><br>
+Enter the second number: <b>4</b><br>
+6 mod 4 is 2
+</code>
+
+<p>We can replace the explicit <i>x % y</i> operation in the print statement with a reference to a variable we create to store the result.  Let's try this:</p>
+
+<code>
+<b>x = int(input(&quot;Enter the first number: &quot;))</b><br>
+<b>y = int(input(&quot;Enter the second number: &quot;))</b><br>
+<br>
+<b>m = x</b><br>
+<b>while True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;m = m - y</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if m &lt; y:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b><br>
+<br>
+<b>print(&quot;{0} mod {1} is {2}&quot;.format(x, y, m))</b><br>
+<br>
+Enter the first number: <b>6</b><br>
+Enter the second number: <b>4</b><br>
+6 mod 4 is 2
+</code>
+
+<p>In this example, we replace the modulo operator with a loop.  Before the loop begins, we create a new variable called <i>m</i>.  In <i>m</i>, we store the value of <i>x</i>, and iteratively subtract <i>y</i> from <i>m</i> until we're left with a value that is less than our divisor.  In the case of <i>6 mod 4</i>, subtracting 4 from 6 once gives us 2, which can't bear another subtraction of the divisor before heading into the negative values.  We halt the loop when this condition is met, and in m, the correct value is stored.</p>
+
+<p>So what's wrong with this code?  Well, a number of things.  We wouldn't be breaking stuff otherwise.</p>
+
+<p>First, consider what it means to divide by zero.  How many times does zero go into another number?  The result of dividing a number of zero is undefined--there's no result that satisfies the expression.  We can see this clearly in Python through an exception.</p>
+
+<code>
+>>> <b>6 / 0</b><br>
+Traceback (most recent call last):<br>
+&nbsp;&nbsp;File &quot;&gt;stdin&lt;&quot;, line 1, in &lt;module&gt;<br>
+ZeroDivisionError: integer division or modulo by zero<br>
+</code>
+
+<p>The program halts, as expected, with the appropriately named <i>ZeroDivisionError</i> exception.  Do you see that bit at the end of the expression detail though where it suggests that this is a result of either an integer division by zero or a modulo by zero?  What happens if we use the modulo operator with zero?</p>
+
+<code>
+>>> <b>6 % 0</b><br>
+Traceback (most recent call last):<br>
+&nbsp;&nbsp;File &quot;&gt;stdin&lt;&quot;, line 1, in &lt;module&gt;<br>
+ZeroDivisionError: integer division or modulo by zero<br>
+</code>
+
+<p>Ouch!  Same thing.  There can't be a remainder after division because we can't even divide by zero in the first place.  So what does that mean for our new program?</p>
+
+<code>
+Enter the first number: <b>6</b><br>
+Enter the second number: <b>0</b><br>
+^CTraceback (most recent call last):<br>
+&nbsp;&nbsp;File &quot;sample.py&quot;, line 5, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;while True:<br>
+KeyboardInterrupt
+</code>
+
+<p>The program doesn't end!  It repeats in an infinite loop since the terminating condition of <i>m &lt; y</i> can never be true.  Subtract zero from <i>m</i> as many times as you want, but <i>m</i> can never be less than <i>y</i>.  We're not defeated though.  This is just another way to break the code and hint at the solution.</p>
+
+<p>In the Python implementation of modulo, the correct response is to give the <i>ZeroDivisionError</i> exception when zero is provided as the divisor.  We can do the same thing in our code.</p>
+
+<p>Throwing an exception is done using the <i>raise</i> keyword.  By raising an exception, you halt the code at the current point and exit out to a point at which the exception can be caught, or the program can be terminated.</p>
+
+<code>
+&gt;&gt;&gt; raise Exception(&quot;Oh no!&quot;)
+Traceback (most recent call last):
+&nbsp;&nbsp;File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+Exception: Oh no!
+</code>
+
+<p>An exception is a type of class, which we'll talk about in more detail later.  For our purposes, though, we can use exceptions that we know to exist already in our code, especially if we're writing similar blocks of code to fragments that exist in Python.  Let's try adding a raised exception to our sample modulo.</p>
+
+<code>
+<b>x = int(input(&quot;Enter the first number: &quot;))</b><br>
+<b>y = int(input(&quot;Enter the second number: &quot;))</b><br>
+<br>
+<b>if y == 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;raise ZeroDivisionError(&quot;modulo by zero&quot;)</b><br>
+<br>
+<b>m = x</b><br>
+<b>while True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;m = m - y</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if m &lt; y:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b><br>
+<br>
+<b>print(&quot;{0} mod {1} is {2}&quot;.format(x, y, m))</b><br>
+<br>
+Enter the first number: <b>6</b><br>
+Enter the second number: <b>0</b><br>
+Traceback (most recent call last):<br>
+&nbsp;&nbsp;File &quot;sample.py&quot;, line 5, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;raise ZeroDivisionError(&quot;modulo by zero&quot;)<br>
+ZeroDivisionError: modulo by zero
+</code>
+
+<p>Beautiful.  We even get our customized message that omits the integer error possibility.  You can write whatever you'd like in there.</p>
+
+<p>And hey, by the way, if you'd like to break some stuff, try adding in negative numbers.  This code isn't perfect yet!</p>
+
+<h2>Summary</h2>
+
+<p>Code can break in lots of ways.  In fact, in many cases, code breaks by design.  To make sure that our code runs as expected, even in the situation where we're given data that is clearly malformed or inappropriate for our purposes, throwing exceptions is the Pythonic way to handle those errors and to continue or die gracefully.</p>
+
+<p>In the next section, we will introduce the concept of a function, a way to compartmentalize blocks of code that can be reused without resorting to simply copying and pasting.</p>

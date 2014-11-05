@@ -1,0 +1,477 @@
+<h1>Chapter 5: Strings</h1>
+
+<p>We started off by treating the Python interpreter as a calculator, and we took a good look at how numbers are defined and manipulated in the language. Now we'll move on to some more complicated values by investigating how Python deals with strings. A string is a collection of characters, such as a word, a sentence, or a proper name. It might be a date, or it might even be a number. The crucial difference is that the data is treated as a piece of text. In this chapter, you'll see how strings are defined and used in Python, and you'll discover the new ways you can use these data values.</p>
+
+<h2>Text, the Python way</h2>
+
+<p>A string is Python's data type for storing a piece of text.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Hello World&quot;</b><br>
+'Hello World'
+</code>
+
+<p>Strings can be enclosed in single quotes, double quotes, or even triple quotes, depending on the way you like to input your variables. They all have slightly different formatting, and it is probably best to treat each case by example. If you've stored some characters in between quotes, you've got a variable that Python understands to be a string type.</p>
+
+<code>
+&gt;&gt;&gt; <b>'Alexander'</b><br>
+'Alexander'<br>
+&gt;&gt;&gt; <b>'Python isn\'t too tricky after you\'ve had some practice.'</b><br>
+&quot;Python isn't too tricky after you've had some practice.&quot;<br>
+&gt;&gt;&gt; <b>'&quot;Python is great,&quot; he said.'</b><br>
+'&quot;Python is great,&quot; he said.'
+</code>
+
+<p>Single quotes are a straightforward way to input strings. In the example above, the third statement shows the use of double quotes.</p>
+
+<p>Something new has happened in the second example, where we actually attempt to use a single quote in the string. To tell Python to actually use an apostrophe in the string value instead of indicating that the string is complete, we have to place a backslash before the single quote. This might seem odd at first, so let's see what would happen if we just tried to add the single quote in the string without any sort of special notification to the Python interpreter.</p>
+
+<code>
+&gt;&gt;&gt; <b>'Python isn't too tricky after you've had some practice.'</b><br>
+SyntaxError: invalid syntax
+</code>
+
+<p>Once Python gets to the word &quot;isn't&quot; and hits the single quote character, the interpreter tries to match the new quote to the first single quote at the start of the string. In other words, it believes you've written the string 'Python isn', and accidentally left some other characters at the end. Without the backslash, Python has no idea that we expect the string to continue, and just closes off the variable right there. If you see a syntax error like this, a common solution is to go back to the nearby strings and to verify that your quotes are all correct. If you'd like to use a single quote in your string that is itself single quoted, remember to place a backslash before the quotes you'd like to retain in your string!</p>
+
+<p>Double quotes are very similar to single quoted strings, so the examples will look very familiar.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Alexander&quot;</b><br>
+'Alexander'<br>
+&gt;&gt;&gt; <b>&quot;Python isn't too tricky after you've had some practice.&quot;</b><br>
+&quot;Python isn't too tricky after you've had some practice.&quot;<br>
+&gt;&gt;&gt; <b>&quot;\&quot;Python is great,\&quot; he said.&quot;</b><br>
+'&quot;Python is great,&quot; he said.'
+</code>
+
+<p>The resulting values that show up on the screen are exactly the same as in the first set of single quoted string examples. The only changes that were made were swapping out single and double quotes, using backslashes in the appropriate places, and omitting the unnecessary backslashes. This is part of the reason that this book recommends starting with double-quoted strings; you won't find much reason as a new programmer to swap between the two, and if you do end up using a mix of single-quoted and double-quoted strings, you might mix things up somewhere along the line and run into syntax error issues. (I speak from experience!)</p>
+
+<p>Triple-quotes are a rare beast, and there really won't be too many instances where you'll need them. A triple-quoted string treats anything inside of it, including new lines where a statement would normally end, as part of the actual string. They're good for extremely long strings with lots of specific formatting.</p>
+
+<code>
+&gt;&gt;&gt; <b>print('''This is a long string.</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;Python is letting me make a very long string.</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There are some spaces before this sentence.</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;What a long string!''')</b><br>
+This is a long string.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Python is letting me make a very long string.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There are some spaces before this sentence.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;What a long string!
+</code>
+
+<h2>Strings are immutable</h2>
+
+<p>Strings are a special kind of data type! Strings are an immutable type, meaning that they can't be changed once they're created. Rather than applying changes to our strings, like changing the second letter to an &quot;e&quot;, or capitalizing the first letter, we create new strings based on the old one.  It's different than saying that once you declare a variable and set it to a string, you can't set that variable to a different one. It's more like saying that if my name is Alexander, and I change my name to Sam, it isn't the case that everyone else in the world named Alexander will also now be known as Sam. I reference a new value when I change my name, I don't change the value itself. Sure, this example might sound silly, but let's try to motivate it with a number example.</p>
+
+<p>Python numbers are also immutable. There is no way to change the number 1 to the number 2. A number is a number, and that's that. We can change a variable that stores the value 1 to reference the value 2, but that doesn't change the actual conceptual value 1 to the other value 2. The same idea applies to strings. If I changed my name to Sam, it wouldn't mean that every Alexander around the world would do the same.</p>
+
+<p>Why even bother to mention this? Again, it might sound silly to even make a point of discussing it. The problem is that we're dealing in terms of variables on a computer, and we can easily imagine cases where we'd want to modify a string. For example, say we wanted to get a string from the user corresponding to their name. If they didn't capitalize it, we'd do it for them.</p>
+
+<code>
+&gt;&gt;&gt; <b>name = 'alexander'</b><br>
+&gt;&gt;&gt; <b>name.capitalize()</b><br>
+'Alexander'
+</code>
+
+<p>This looks different than our previous examples, where we'd expect to see a function call like <i>capitalize(name)</i>. Since a string is an immutable variable, we're not expecting to capitalize the string in-place, just like we're not expecting to round the actual number 2.4, forever wiping out 2.4 and replacing it with the actual number 2. We want to make sure that <i>name</i> gets the result of the <i>capitalize</i> function. We want to get a new string that is capitalized, and we'd like <i>name</i> to refer to that new string.</p>
+
+<code>
+&gt;&gt;&gt; <b>name = 'alexander'</b><br>
+&gt;&gt;&gt; <b>name</b><br>
+'alexander'<br>
+&gt;&gt;&gt; <b>name.capitalize()</b><br>
+'Alexander'<br>
+&gt;&gt;&gt; <b>name</b><br>
+'alexander'<br>
+&gt;&gt;&gt; <b>name = name.capitalize()</b><br>
+&gt;&gt;&gt; <b>name</b><br>
+'Alexander'
+</code>
+
+<p>If you create a string with your name stored in it, unless you change that variable later to point to another string, that variable is always going to be your name. Nobody can change it unless you modify the reference yourself.</p>
+
+<p>Let's use a few more examples to show what this actually means.</p>
+
+<p>One of the built-in string features is the ability to look at individual letters in a string. We can use the square-brackets on the keyboard to reference individual positions in a string. By placing square brackets after a string with a number inside, we ask for the letter at the index referred to by that number. For example, if we have a variable, we can look at each of the letters, one after the other.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;Alexander&quot;</b><br>
+&gt;&gt;&gt; <b>x[0]</b><br>
+'A'<br>
+&gt;&gt;&gt; <b>x[1]</b><br>
+'l'<br>
+&gt;&gt;&gt; <b>x[2]</b><br>
+'e'<br>
+&gt;&gt;&gt; <b>x[3]</b><br>
+'x'<br>
+&gt;&gt;&gt; <b>x[4]</b><br>
+'a'
+</code>
+
+<p>So when we say <i>x[0]</i>, we ask for the letter at position 0 in the string, which in this case is the letter &quot;A&quot;. It's pretty nice to be able to reference each letter in a string like this, but we have to answer one thing right off the bat. First question, why on Earth is the first position zero? Why does <i>x[0]</i> point to the first letter in the string?</p>
+
+<p>It's correct to think about string positions as being indexed by the distance from the start of the string. The first position in the string, which in this case is the capital letter &quot;A&quot;, is 0 letters away from the beginning of the string. Sounds a bit funny, right? For that reason, we say that <i>x[0]</i> is the first letter in the string <i>x</i>. The second letter &quot;l&quot; is one letter away from the start of the string, and so <i>x[1]</i> is &quot;l&quot;. However, since our string is nine letters long, what does this mean for <i>x[9]</i>?</p>
+
+<code>
+&gt;&gt;&gt; <b>x[9]</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#20&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x[9]<br>
+IndexError: string index out of range
+</code>
+
+<p>Oops. What happened? Python is telling us that we've asked for a letter index outside the number of characters in the actual string. If we reference a position outside the range of the string, we hit one of these <i>IndexError</i> warnings. These letters don't exist, so Python throws an <i>IndexError</i> at us to let us know we've gone too far. To exaggerate the point, take a look at this.</p>
+
+<code>
+&gt;&gt;&gt; <b>x[99999]</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#21&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x[99999]<br>
+IndexError: string index out of range
+</code>
+
+<p>The character 9 letters after the starting letter is just as non-existent as the 99,999th, so each request results in an <i>IndexError</i>.</p>
+
+<p>How can we use these indices to actually show that strings are immutable? Well, remember the <i>capitalize</i> example from earlier in this section? We couldn't simply capitalize a string in-place because it would mean changing any other string with that same value. However, we can set our variable to point to a new value that corresponds to the answer we'd expect. If strings are not immutable, we should be able to change individual characters inside of strings. So what happens if we actually try to modify a single letter inside of a string? Let's try to capitalize a name.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 'alexander'</b><br>
+&gt;&gt;&gt; <b>x[0] = 'A'</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#39&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x[0] = 'A'<br>
+TypeError: 'str' object does not support item assignment
+</code>
+
+<p>Oops, again! In this case, we hit something called a <i>TypeError</i>. In particular, the error is complaining about item assignment not being supported. To paraphrase, we're not allowed to modify single letters in our string. You can't assign 'A' to the first position in the string, because the string is immutable! So how can we actually get the same effect as modifying a single character in a string?</p>
+
+<p>A naive example is to break the string down into characters, and to change the single character that we're interested in modifying. Here's one very simple way to only change the first character to a capital letter.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 'alexander'</b><br>
+&gt;&gt;&gt; <b>x[0].capitalize()</b><br>
+'A'<br>
+&gt;&gt;&gt; <b>x[0].capitalize() + x[1] + x[2] + x[3]</b><br>
+'Alex'
+</code>
+
+<p>If we take each letter in the string, one-by-one, and concatenate (glue) them together using the plus symbol, the string can be broken down and reformed piece-by-piece. This is a new way to look at the addition symbol. It isn't the only way to do this, but it's here as a learning example. You won't need to do something this extreme each and every time you get a string from your users. It is important to know that strings are immutable objects, and that we can't just ask Python to capitalize the first letter and be done with it.</p>
+
+<p>Reusing the plus symbol for string concatenation (again, you can read that as string joining or string gluing) is a convenient analogy for building new strings from the values in old ones. We can show some of the similarities between numbers and strings by example.</p>
+
+<code>
+&gt;&gt;&gt; <b>1 + 2</b><br>
+3<br>
+&gt;&gt;&gt; <b>&quot;Py&quot; + &quot;thon&quot;</b><br>
+'Python'
+</code>
+
+<p>In each case, we obtain the result by adding the first value and the second value together to return a new value. In neither case do we actually modify either of the values. Instead, we take the values and combine them together to get something new. To show how strings and numbers are different, let's use a slightly different example.</p>
+
+<code>
+&gt;&gt;&gt; <b>1 + 2</b><br>
+3<br>
+&gt;&gt;&gt; <b>int(1 + 2)</b><br>
+3<br>
+&gt;&gt;&gt; <b>&quot;1&quot; + &quot;2&quot;</b><br>
+'12'<br>
+&gt;&gt;&gt; <b>int(&quot;1&quot; + &quot;2&quot;)</b><br>
+12
+</code>
+
+<p>The strings &quot;1&quot; and &quot;2&quot; may look just the same as numbers 1 and 2 to us at first glance, but remember that they are significantly different. When we add (concatenate) the strings &quot;1&quot; and &quot;2&quot; together, we get the string &quot;12&quot;. Even when we use the <i>int</i> built-in function, the concatenation of the strings &quot;1&quot; and &quot;2&quot; after converting to an <i>int</i> is still 12.</p>
+
+<h2>Slicing</h2>
+
+<p>Now we've seen an example of breaking down a string into its individual components and gluing it back together using the plus symbol. There are efficient ways of getting small portions of the string called substrings that might be more interesting. For that, we use a technique called slicing.</p>
+
+<p>Given a starting index and an ending index, it is possible to specify the positions in the string to be returned. An index is a position in the string, like the first letter or the second last character. Slices are specified using the colon symbol, and obtaining a slice appears very similar to the string indexing seen above. Consider this example:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;String Slicing&quot;</b><br>
+&gt;&gt;&gt; <b>x[0:6]</b><br>
+'String'<br>
+&gt;&gt;&gt; <b>x[7:14]</b><br>
+'Slicing'<br>
+&gt;&gt;&gt; <b>x[0:3]</b><br>
+'Str'
+</code>
+
+<p>We define a simple string in the <i>x</i> variable. First, we obtain a slice of <i>x</i> from the 0th index position and cut off right before the 6th index. A slice starts at the first position on the left side of the slice operator (the colon), and ends right before the position at the right of the slice operator. It's as if you put a stop sign in the position at the last index. The character at the 6th index in <i>x</i> is &quot; &quot;, and if we imagine taking some scissors to the left side of the 6th index, we're left with the single word &quot;String&quot; as our new sliced value. Visually, it looks like this:</p>
+
+<code>0 1 2 3 4 5 6 7 8 9 10 11 12 13<br>
+S t r i n g &nbsp;&nbsp;&nbsp; S l &nbsp;i &nbsp;c &nbsp;i &nbsp;n &nbsp;g</code>
+
+<p>Since we're cutting on the left side of our indices, getting the slice from 0 to 6 gives us the word &quot;String&quot;, and getting the slice from 7 to 14 gives us the word &quot;Slicing&quot;.</p>
+
+<p>You might be asking yourself where the 14th index is, as it doesn't show up on our diagram above. Remember that we need to cut on the left side of the index. Really, any position after 13 is acceptable, because we cut off the string at the last letter. If you cut off my first name after 10 letters, it doesn't mean that my name is now &quot;Alexander&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;. My name is still &quot;Alexander&quot;, regardless of how many letters after the final &quot;t&quot; you decide to cut. It is actually possible to take advantage of this fact by omitting either the left side or the right side when they are equal to the start or end of the string respectively. For example,</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;String Slicing&quot;</b><br>
+&gt;&gt;&gt; <b>x[:6]</b><br>
+'String'<br>
+&gt;&gt;&gt; <b>x[7:]</b><br>
+'Slicing'
+</code>
+
+<p>In the first example, we omitted out the left-hand side of the slice operation, where we'd previously had the 0 index. The left-side will default to the beginning of the string, so we can actually leave it out if we only want the first 6 letters. In a more convenient fashion, we can do the same thing with the end of the string. We could use <i>x[7:100]</i> if we wanted, by the logic that we used above to suggest that the end of the sliced string will be the end of the source string if we go too far. Rather than use large and silly numbers, we can just omit the right-hand side if we want to slice up to the end of the string itself. What if we omit both the left-hand side and the right-hand side?</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;String Slicing&quot;</b><br>
+&gt;&gt;&gt; <b>x[:]</b><br>
+'String Slicing'
+</code>
+
+<p>You might not be surprised to see the original string. If we read that out to ourselves, we've asked Python to take a slice of the string stored in <i>x</i> from the first position all the way to the last. Of course, in this case, we get the original string returned to us.</p>
+
+<h2>String functions</h2>
+
+<p>We've established that strings are immutable, and that we can slice out substrings and paste characters and other strings back together to make new ones. We looked at referencing individual letters using the square brackets, and we applied functions like <i>capitalize</i> to a string to get a new returned value in some other format. Let's take the function idea further, and see how we can operate in more interesting ways on the strings we've got.</p>
+
+<p>Python offers a large number of functions similar to <i>capitalize</i> that allow you take a string as input and derive another new string (or several strings) based on the input. To begin, let's look at the upper and lower functions.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;Alexander's String&quot;</b><br>
+&gt;&gt;&gt; <b>x.upper()</b><br>
+&quot;ALEXANDER'S STRING&quot;<br>
+&gt;&gt;&gt; <b>x.lower()</b><br>
+&quot;alexander's string&quot;
+</code>
+
+<p>Whereas we'd capitalized on the first letter in the entire string previously, the <i>upper</i> and <i>lower</i> functions provide the ability to completely convert a string to uppercase or lowercase. Keep in mind, we're not modifying the actual value stored in <i>x</i>, we're returning a new string that can be used later in our program. Just like <i>capitalize</i>, we'd need to use variable assignment if we wanted to store the result of one of these operations.</p>
+
+<p>It is possible to determine whether or not substrings are found inside of another string using the <i>find</i> function.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;Alexander's String&quot;</b><br>
+&gt;&gt;&gt; <b>x.find(&quot;String&quot;)</b><br>
+12<br>
+&gt;&gt;&gt; <b>x.find(&quot;Alexander&quot;)</b><br>
+0<br>
+&gt;&gt;&gt; <b>x.find(&quot;Sam&quot;)</b><br>
+-1<br>
+&gt;&gt;&gt; <b>x.find(&quot;exa&quot;)</b><br>
+2
+</code>
+
+<p>The find function returns the index of the first character in the provided substring, and if it's not in the string at all, the function returns -1. The reason we get -1 back is that -1 is always an invalid index. What is the negative first letter in your name? The use of -1 is common as an error code, particularly in string functions. When we look for the substring &quot;Alexander&quot;, it returns a 0, corresponding to the 0th index. That's where the substring starts, and since we've got an index greater than -1, we know the original string contains our substring. The function even works when the substring isn't at the starting position in the string, as seen in the examples of &quot;String&quot; and &quot;exa&quot;.</p>
+
+<p>Strings are case-sensitive though, and if we try to look for &quot;Alexander&quot;, we'll need to ensure that the string actually has &quot;Alexander&quot; with a capital A. Take a look at this:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;Alexander's String&quot;</b><br>
+&gt;&gt;&gt; <b>x.find(&quot;alexander&quot;)</b><br>
+-1
+</code>
+
+<p>What happened there? As we mentioned, <i>find</i> is case-sensitive, so trying to find &quot;alexander&quot; results in a failure since our source string uses a capital letter. In strings, it is necessary to respect the capitalization of each letter. If we think back to our use of boolean values, and the equality operator, this can be verified:</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;A&quot; == &quot;a&quot;</b><br>
+False
+</code>
+
+<p>That tells us that Python doesn't treat a capital letter as being equal to a lower-case letter. If we want to check to see if a name is in the source string, we can do something a little more complicated. Look at this code, and before you read on, see if you can see exactly what it's doing and why it works.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;Alexander's String&quot;</b><br>
+&gt;&gt;&gt; <b>x.lower().find(&quot;alexander&quot;)</b><br>
+0
+</code>
+
+<p>Now what have we done? We got a 0 back from our <i>find</i> function, and that tells us that we succeeded; we found the lower-case string &quot;alexander&quot; at index 0 in the string. But what string are we looking at? If you look carefully, we've taken the result of <i>x.lower()</i>, which is itself a string, and used that as input to the <i>find</i> function. To expand things out in more detail, take a look at the example here:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;Alexander's String&quot;</b><br>
+&gt;&gt;&gt; <b>x</b><br>
+&quot;Alexander's String&quot;<br>
+&gt;&gt;&gt; <b>x.lower()</b><br>
+&quot;alexander's string&quot;<br>
+&gt;&gt;&gt; <b>y = x.lower()</b><br>
+&gt;&gt;&gt; <b>y.find(&quot;alexander&quot;)</b><br>
+0<br>
+&gt;&gt;&gt; <b>&quot;alexander's string&quot;.find(&quot;alexander&quot;)</b><br>
+0<br>
+&gt;&gt;&gt; <b>x.lower().find(&quot;alexander&quot;)</b><br>
+0
+</code>
+
+<p>First, define the <i>x</i> variable, and store a mixed-case string in it. If we then use the <i>lower</i> function that we talked about earlier in this section, we get a lower-case representation of the string. As long as the substring that we're searching for is all in lower-case, we'll be able to find the word &quot;alexander&quot; that we're looking for. So exactly what is happening when we call the <i>find</i> function on the direct result of the <i>lower</i> function? We know that <i>x.lower()</i> is going to return a string, so it is possible to actually use that new string as the input for <i>find</i>. You can see this in action when we define the <i>y</i> variable and save the result of <i>x.lower()</i> in it. With <i>y</i> as input to <i>find</i>, we get the correct index. By explicitly calling <i>find</i> on a string, you might be able to see in greater clarity how a function like <i>find</i> is actually called on a string, and how <i>find</i> is applied to the source string with a parameter.</p>
+
+<p>It's possible to chain these operations together like this, as we know that these particular string functions also return strings themselves. To use a silly example for emphasis, here's a line of code that I hope you never have to write.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = &quot;ALEXander&quot;</b><br>
+&gt;&gt;&gt; <b>x.upper().lower().capitalize()</b><br>
+'Alexander'
+</code>
+
+<p>Each of the <i>upper</i>, <i>lower</i>, and <i>capitalize</i> functions all return a string themselves, so the output from each of those can be used directly as input to the next. We've chained them all together using the period symbol, and reformed the mixed-case input into a nicely capitalized string.</p>
+
+<h2>String formatting</h2>
+
+<p>To really get the most bang for our buck with strings, we'd like to be able to use them effectively in the construction of other strings. We've played around with this when using string concatenation, and printed out one string after another. There is a better, more Python friendly way of tackling this problem. It's called string formatting, and it uses a built-in function in Python called <i>format</i>.</p>
+
+<p>The <i>format</i> function allows us to define variables inside of strings that can be swapped out for other values at a later time. If we know that we'd like to greet the user, but we don't yet have their name, we can define a greeting string to format properly once the user finally tells us their name. These format strings look a bit unusual, so let's look at an example to explain exactly what it's doing.</p>
+
+<code>
+&gt;&gt;&gt; <b>name = &quot;Alexander&quot;</b><br>
+&gt;&gt;&gt; <b>age = 30</b><br>
+&gt;&gt;&gt; <b>greeting = &quot;Hello {0}. You are {1} years old.&quot;</b><br>
+&gt;&gt;&gt; <b>greeting.format(name, age)</b><br>
+'Hello Alexander. You are 30 years old.'
+</code>
+
+<p>So what the heck are those curly braces in <i>greeting</i>? And what do the numbers mean? These curly braces are references to variables that we'll pass in at a later time. You can think back to the positional character referencing that we used to find individual letters in strings. This is a similar idea. The {0} and {1} substrings are like variables inside of <i>greeting</i>. When we actually format <i>greeting</i> later, we can give it those two variables to help us build the string we'd like to use. Specifically,</p>
+
+<code>
+&gt;&gt;&gt; <b>greeting = &quot;Hello {0}. You are {1} years old.&quot;</b><br>
+&gt;&gt;&gt; <b>greeting.format(name, age)</b><br>
+'Hello Alexander. You are 30 years old.'
+</code>
+
+<p>Each time that the <i>format</i> function runs into a substring of the form {#}, it looks at the parameters that have been passed to it and tries to fit in the appropriate value. It isn't limited to the order of the parameters or only using each variable once either; we can build strings with lots of replacements using <i>format</i>.</p>
+
+<code>
+&gt;&gt;&gt; <b>name = &quot;Alexander&quot;</b><br>
+&gt;&gt;&gt; <b>age = 30</b><br>
+&gt;&gt;&gt; <b>formatString = &quot;{0}{0}{0} {1}{1}{1} {0}{1}{0}&quot;</b><br>
+&gt;&gt;&gt; <b>formatString.format(name, age)</b><br>
+'AlexanderAlexanderAlexander 303030 Alexander30Alexander'
+</code>
+
+<p>We also don't need to worry about the separator, like we did with the <i>print</i> function, because we actually specify exactly how the string is going to look beforehand. In this example, <i>formatString</i> is a string template, and our string template is going to get formatted later to look exactly how we want it to look. There are no extra details like spaces in our original strings and no unnecessary separation character.</p>
+
+<p>There is an optional variable identifier that can be provided for each of the <i>format</i> variable parameters. For example, if we know that we'll be passing in the user's name and age, we might do something like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>userString = &quot;Hello {name}. You are {age} years old.&quot;</b><br>
+&gt;&gt;&gt; <b>userName = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: Alexander<br>
+&gt;&gt;&gt; <b>userAge = int(input(&quot;Enter your age: &quot;))</b><br>
+Enter your age: 30<br>
+&gt;&gt;&gt; <b>userString.format(name=userName, age=userAge)</b><br>
+'Hello Alexander. You are 30 years old.'
+</code>
+
+<p>See what we did there? Instead of using the numerical index positions for the parameters in <i>format</i>, like {0} and {1}, we took a similar approach to the <i>sep</i> parameter in the <i>print</i> function, and explicitly defined replacement names in the template string. We said that there would be two variables that <i>format</i> was going to give us in <i>userString</i>. We expected to look for a <i>name</i> variable and an <i>age</i> variable in the actual value for <i>userString</i>, and in <i>format</i>, we asked the replacement function to use our <i>userName</i> variable wherever it asked for <i>name</i>, and our <i>userAge</i> variable wherever it asked for <i>age</i>. Once we did that, we got rid of the ugly {0} and {1} portion of <i>userString</i>, and made it a little more readable in the process.</p>
+
+<p>The <i>format</i> function has a lot of additional power behind it, making it much more than just a simple tool for searching and replacing. Each of the replacement tokens in the original string can be tagged with information on exactly how to format the data being inserted in that string location. Let's say that we write a mobile application to bring to restaurants with us to help calculate the 15% gratuity we like to give to servers. With larger bills, or bills that aren't multiples of ten dollars, it might be tricky to ensure that our server gets an appropriate tip. We can write a simple program to calculate the answer.</p>
+
+<code>
+&gt;&gt;&gt; <b>total = float(input(&quot;How much did the bill come to? $&quot;))</b><br>
+How much did the bill come to? $34.75<br>
+&gt;&gt;&gt; <b>tip = total * 0.15</b><br>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0}.&quot;.format(tip))</b><br>
+A 15% tip is $5.2125.
+</code>
+
+<p>That value is certainly correct, as 15% of the <i>float</i> value 34.75 is 5.2125. However, it doesn't make much sense when we're dealing with money. We don't have fractional pennies floating around, and we can't tip five dollars and twenty-one and a quarter cents. Fortunately, we can use <i>format</i> to restrict the output to two decimal places. This technique is called format specification. Format specification gives us a way to provide a variable for substitution into our original string, along with the ability to actually format the output given a set of rules about how it should look on the screen. Let's look at a few examples.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0}.&quot;.format(tip))</b><br>
+A 15% tip is $5.2125.<br>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0:.1f}.&quot;.format(tip))</b><br>
+A 15% tip is $5.2.<br>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0:.2f}.&quot;.format(tip))</b><br>
+A 15% tip is $5.21.
+</code>
+
+<p>Python's format specification rules allow us to add a bit of additional information to the {0} substitution symbol, in cases where we want to round to two decimal places or make other subtle display tweaks. The colon tells Python that we've provided a variable that we'd like to display, but also that we're going to ask for a little extra help when printing it. If Python runs into a period after the colon, it looks at the number that immediately follows it, and optionally, a letter indicating the variable type that we should treat the data as. When the letter is <i>f</i>, it means we've got a <i>float</i> number type. In that case, the number corresponds to the number of decimal places we'd like to print. Given that information, we can read <i>{0:.2f}</i> as &quot;Print the variable at index 0 (the <i>tip</i> variable, in this case), and format it as a float number rounded off to two decimal places.&quot; You can see how changing the number also changes the number of decimal places.</p>
+
+<p>Format specifications aren't just limited to decimal places. For example, if you'd like to format your information on the screen like a spreadsheet, where all the data in a column has a fixed width, you start off the format specification with information about how many characters across you'd like your data to take. You can also specify whether the text is left-aligned, right-aligned, or centered within the character spacing you specify. Think of the format specifications as a list of individual specifications rather than a single mysterious block of strange characters.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0:&lt;10.2f}.&quot;.format(tip))</b><br>
+A 15% tip is $5.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<br>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0:&gt;10.2f}.&quot;.format(tip))</b><br>
+A 15% tip is $&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.21.<br>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0:^10.2f}.&quot;.format(tip))</b><br>
+A 15% tip is $&nbsp;&nbsp;&nbsp;5.21&nbsp;&nbsp;&nbsp;.<br>
+&gt;&gt;&gt; <b>print(&quot;A 15% tip is ${0:@^10.2f}.&quot;.format(tip))</b><br>
+A 15% tip is $@@@5.21@@@.
+</code>
+
+<p>In the first example, it might help you to think about three distinct pieces of data. First, the index of the variable that we're talking about. We've used that one, and in this case, it's just the single number 0 at the very left-most side of the format specification. The last piece of data in the format specification is the one we just looked at, beginning at the period, and ending with the character <i>f</i>. That block tells us that we're going to give <i>format</i> a <i>float</i>, and that we should round it to two decimal places.</p>
+
+<p>In the middle of those two is a width and position specification, and in the first example, it is given as &quot;&lt;10&quot;. When specifying the width and orientation of the variable in <i>format</i>, you provide the minimum number of characters that the variable is going to take up in the new string. In the example above, the value 10 tells <i>format</i> that our <i>tip</i> variable is required to take up at least 10 display characters. That explains why our variable has a bunch of extra spaces on either side, depending on how we orient the data. The width is used in conjunction with a positional symbol. If we use the less-than symbol, which happens to look like an arrow pointing to the left, we tell <i>format</i> that the data should be oriented on the left side of the 10 character minimum width. The greater-than symbol, which happens to look like an arrow pointing to the right, does the same thing for the right side. The caret (or hat, or maybe circumflex, but specifically the character ^) looks sort of like an arrow pointing up, and means that we should center the data in the 10 character width. If we give a symbol before the positional specification instead of spaces, <i>format</i> will fill in the extra space with the new character.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>This section featured a lot of broken code already to show you some of the valid and invalid ways to use string values. Let's break a few more things while we're here.</p>
+
+<p>The <i>format</i> function is an incredibly useful way to build custom strings. An earlier example showed how you could build a string from the name and age of the user. By providing variable names inside of the string we want to format, we can specify those names later in the format function to customize things appropriately. Here is the specific code, one more time:</p>
+
+<code>
+&gt;&gt;&gt; <b>myString = &quot;Hello {name}. You are {age} years old.&quot;</b><br>
+&gt;&gt;&gt; <b>userName = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>Alexander</b><br>
+&gt;&gt;&gt; <b>userAge = int(input(&quot;Enter your age: &quot;))</b><br>
+Enter your age: <b>30</b><br>
+&gt;&gt;&gt; <b>myString.format(name=userName, age=userAge)</b><br>
+'Hello Alexander. You are 30 years old.'
+</code>
+
+<p>What happens if we forget to specify one of the variables? Can we format a string that specifies replacements without actually providing the replacements?</p>
+
+<code>
+&gt;&gt;&gt; <b>myString = &quot;Hello {name}. You are {age} years old.&quot;</b><br>
+&gt;&gt;&gt; <b>myString.format(name=&quot;Alexander&quot;)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#2&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;myString.format(name=&quot;Alexander&quot;)<br>
+KeyError: 'age'
+</code>
+
+<p>Negative. In the source string, we explicitly declared that if this string was going to be formatted at some point, it was going to have to be done with both the <i>name</i> and the <i>age</i> variables provided. Without all of the replacement variables, Python throws up its hands with a <i>KeyError</i> exception.</p>
+
+<p>We haven't talked about keys yet; those are dealt with in more detail when we talk about the dictionary data type. You can treat them as being similar to variables for the moment. We speak about key-value pairs, where the key is an identifier similar to a variable name, and the value is the actual object referred to by the key. In <i>myString</i> above, there are two keys that are declared. If one (or more) of the keys are not associated with a value when <i>format</i> is called, Python throws a <i>KeyError</i> exception. You'll see the same thing in the implicit format strings, like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>myString = &quot;Hello {0}. You are {1} years old.&quot;</b><br>
+&gt;&gt;&gt; <b>myString.format(&quot;Alexander&quot;)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#4&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;myString.format(&quot;Alexander&quot;)<br>
+IndexError: tuple index out of range
+</code>
+
+<p>In this example, the specific error is different, but it's the same kind of flaw. When Python complains about an <i>IndexError</i>, it's telling you that the value at index 1 (the second parameter passed to <i>format</i>, since we start counting at 0) doesn't exist, or is &quot;out of range&quot;. If you start to see <i>KeyError</i> or <i>IndexError</i> exceptions with your format strings, make sure you're providing all the necessary values for your string!</p>
+
+<h2>Summary</h2>
+
+<p>Python string objects allow you to manipulate text in your programs. They come with a powerful set of built-in functions for manipulating and formatting data. Strings can be easily converted to other data types, but only if the data inside the string makes sense for the type you are converting to.</p>
+
+<p>Try playing around with a few strings. Set up some templates, see if you can get some input from the keyboard, and experiment with rendering data to the screen.</p>
+
+<h2>Exercises</h2>
+
+<p>1. Write a program to ask the user for some information about themself, such as their name, hometown, favourite colour, and so on. Use <i>print</i> statements and the <i>format</i> function to tell them what they said.</p>
+
+<p>2. Ask the user for three or more strings, and print them out as if they were in a spreadsheet column with a fixed width. For example, your program might output the following:</p>
+
+<p><code>
+Enter your first name: <b>Alexander</b><br>
+Enter your last name: <b>Coder</b><br>
+Enter your cat's name: <b>Ulysses</b>
+</code></p>
+
+<p><code>
+&nbsp;&nbsp;&nbsp;&nbsp;NAMES<br>
+----------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Alexander<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Coder<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Ulysses
+</code></p>
+
+<p>3. Write a program to calculate the total tax where you live. Allow the user to type in a dollar amount (just a <i>float</i> or even an <i>int</i>, and don't worry about the currency symbol), and calculate the tax based on your local tax rate. For example, if my total tax on a product is 13%, I would calculate 13% of the total cost of the item and print it to the screen.</p>
+
+<p>4. Build a Mad Libs program that asks the user for a few words and then builds a sentence.  For example, your program might display the following output:</p>
+
+<p><code>
+Enter an adjective: <b>funny</b><br>
+Enter a noun: <b>cat</b><br>
+Enter a verb: <b>dance</b><br>
+<br>
+The funny cat likes to dance.
+</code></p>

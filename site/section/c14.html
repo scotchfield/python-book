@@ -1,0 +1,730 @@
+<h1>Chapter 14: Classes</h1>
+
+<p>A class is a way of structuring a related collection of data about some object in a single place. You can think of it as a template for creating new instances of a type, where the class itself defines certain attributes that each of those instances must have. For example, we can think of the <i>Person</i> class as a template for describing people, where each <i>Person</i> must have a name, a birthdate, and some other relevant data about them. It's as though we've defined a new type. In the same way that all dictionaries have keys and all lists have a length, imagine that all <i>Person</i> objects have a name.</p>
+
+<p>Classes consist of two main forms of information. The value of the data inside the class is stored in attributes, and the accessors for that information is through the class functions (also called methods). The attributes are variables that are often defined for each instance of the class, like a person's name. The person instance that represented me would have a name attribute set to &quot;Alexander Coder&quot;. The class functions provide a convenient abstraction for accessing data stored in the attributes.</p>
+
+<p>In the previous chapter, we talked about the <i>datetime</i> object inside of the <i>datetime</i> namespace. The <i>datetime</i> object is an instance of a class that manages a date. Dates are actually reasonably complicated data structures, consisting of a year, a month, a day, hours, minutes, seconds, possibly a time zone, and other possible values. Storing all of this data in a string or in a dictionary could get a little unwieldy, so the authors of the <i>datetime</i> module decided to create a new object to store and manage <i>datetime</i> objects. When you call the <i>now</i> function on the <i>datetime</i> object, you get a new <i>datetime</i> instance that holds all of the data about the instant in time when <i>now</i> was called.</p>
+
+<h2>Simple classes</h2>
+
+<p>The keyword for setting up a new class definition in Python is <i>class</i>. You use the <i>class</i> keyword along with a name for the class template. Any class functions or attributes are indented as if you'd written a function declaration, and these functions exist in the context of the class template. For example, to define a contact class template for our address book, we can write the following code:</p>
+
+<code>
+<b>class Contact:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setName(self, name):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = name</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getName(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.name</b>
+</code>
+
+<p>The <i>class</i> statement says that we're defining a new class template, which is essentially a new data type called <i>Contact</i>. There are two class functions that we've defined that are responsible for getting and setting one of the class attributes. The <i>self.name</i> variable is a class attribute, suggesting that each instance of the <i>Contact</i> data type will have a <i>name</i> attribute. Each contact will probably have a different name (although they are not required to), and we can either find out what that name is or set the name using the functions defined for the class.</p>
+
+<p>You'll note that each of the functions is declared with a variable called <i>self</i> in the first position of the function parameter list. In a class, each function needs to be aware of the object that it belongs to so that it can make changes or retrieve data for the correct instance. An example of this is that if you and I are both contacts, we both have a <i>getName</i> function. If I ask you your name, you probably have a different answer than I do. I wouldn't want you to be giving my name as the answer, and you probably don't want that yourself. When someone asks you what your name is, you're aware of yourself, just as these functions must be aware of the parent object who they're being called for. By providing the <i>self</i> variable, the function can be aware of the current instance of the object, and can retrieve the <i>name</i> variable or set <i>name</i> appropriately.</p>
+
+<p>To create new instances of <i>Contact</i>, set up a variable where you'd like to store the new reference, and call the class constructor. The constructor is used to set up a brand new instance of the class. By default, it just gives you an empty Contact object. You access it by calling a function matching the name of the class itself.</p>
+
+<code>
+<b>c = Contact()</b><br>
+<b>c.setName(&quot;Alexander&quot;)</b><br>
+<b>print(c.getName())</b><br>
+<br>
+Alexander
+</code>
+
+<p>The <i>Contact()</i> constructor is automatically created when you define a new class, and right off the bat will give you a completely empty data object. You can call the <i>setName</i> function on the c object, just like you'd call find on a string or append on a list. These are functions that exist for the class, and are available for you to use on each instance of the new class. When you print the name of the <i>c</i> instance, it gives you the expected result, since we've just set the <i>c</i> instance's name variable to &quot;Alexander&quot;.</p>
+
+<p>Each instance of the class exists in its own space. If you create multiple contacts, you can set the name of one by calling the class function. Even though this function has been defined in a single spot, the reference to <i>self</i> in the function parameter list ensures that one contact has no implicit knowledge of another, and will only make changes to itself, as you'd expect.</p>
+
+<code>
+<b>c1 = Contact()</b><br>
+<b>c2 = Contact()</b><br>
+<b>c1.setName(&quot;Alexander&quot;)</b><br>
+<b>c2.setName(&quot;Jennifer&quot;)</b><br>
+<b>print(&quot;c1's name: {0}&quot;.format(c1.getName()))</b><br>
+<b>print(&quot;c2's name: {0}&quot;.format(c2.getName()))</b><br>
+<br>
+c1's name: Alexander<br>
+c2's name: Jennifer
+</code>
+
+<p>Everything looks the same for the <i>c1</i> and <i>c2</i> instances of <i>Contact</i>, except for the name value. Changing the name in <i>c2</i> didn't modify the name in <i>c1</i>, and each contact retains its own set of information.</p>
+
+<p>A similar analogy using dictionaries is the following piece of code:</p>
+
+<code>
+<b>c1 = {}</b><br>
+<b>c2 = {}</b><br>
+<b>c1[&quot;name&quot;] = &quot;Alexander&quot;</b><br>
+<b>c2[&quot;name&quot;] = &quot;Jennifer&quot;</b><br>
+<b>print(&quot;c1's name: {0}&quot;.format(c1[&quot;name&quot;]))</b><br>
+<b>print(&quot;c2's name: {0}&quot;.format(c2[&quot;name&quot;]))</b><br>
+<br>
+c1's name: Alexander<br>
+c2's name: Jennifer
+</code>
+
+<p>The empty dictionary acts as a constructor for the dictionary class. Assigning a key and referencing that key by index are the equivalent getter and setter class functions. The data types work in a similar way, storing values and allowing other program code to retrieve and set data as necessary.</p>
+
+<p>What if the name hasn't been set yet? When a <i>Contact</i> instance is created, the <i>self.name</i> parameter hasn't been defined. Contacts don't have names until we call <i>setName</i>. Let's look at how both dictionaries and classes handle this problem.</p>
+
+<code>
+<b>c1 = {}</b><br>
+<b>print(&quot;c1's name: {0}&quot;.format(c1[&quot;name&quot;]))</b><br>
+<br>
+Traceback (most recent call last):<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 23, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;c1's name: {0}&quot;.format(c1[&quot;name&quot;]))<br>
+KeyError: 'name'<br>
+<br>
+<b>c2 = Contact()</b><br>
+<b>print(&quot;c2's name: {0}&quot;.format(c2.getName()))</b><br>
+<br>
+Traceback (most recent call last):<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 26, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;c2's name: {0}&quot;.format(c2.getName()))<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 6, in getName<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.name<br>
+AttributeError: 'Contact' object has no attribute 'name'
+</code>
+
+<p>In each of the cases, an error occurs due to the absence of a <i>name</i> attribute (also known as a key in the dictionary). One way to handle this situation is to force a default value for a contact's name. We can use the empty string to prevent a large set of &quot;John Doe&quot; or &quot;Jane Doe&quot; contacts from hanging around in our address book. If the contact doesn't have a name, they'll still have a <i>name</i> attribute, but it will be empty. In a dictionary, we might use the following code to take care of this situation:</p>
+
+<code>
+<b>c1 = {&quot;name&quot;: &quot;&quot;}</b><br>
+<b>print(&quot;c1's name: {0}&quot;.format(c1[&quot;name&quot;]))</b><br>
+<br>
+c1's name: 
+</code>
+
+<p>For a dictionary, this might be better for your code than throwing an exception. We have some additional help with classes. The <i>getName</i> function actually allows us to check whether or not the name is empty, and to run additional code if it is. To allow this to happen, we'll need to set the <i>self.name</i> attribute to the empty string, just like the dictionary did in its constructor. But where is the constructor defined in a class?</p>
+
+<p>Previously, we'd said that the constructor was implicitly defined when you wrote your class definition. If you don't provide an actual constructor, Python inherits a very simple one that just returns an empty instance of your new data type. If you want some additional functionality like the explicit definition of class attributes, you can define the <i>__init__</i> method.</p>
+
+<code>
+<b>class Contact:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = &quot;&quot;</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setName(self, name):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = name</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getName(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.name</b><br>
+<br>
+<b>c1 = Contact()</b><br>
+<b>print(&quot;c1's name: {0}&quot;.format(c1.getName()))</b><br>
+<br>
+c1's name: 
+</code>
+
+<p>The <i>__init__</i> function is the constructor method, and is actually executed when you call <i>Contact()</i> in the creation of <i>c1</i>. In the <i>__init__</i> method, we also have the reference to <i>self</i>. This can be used to give <i>self.name</i> an initial value. Once that's done, any calls to <i>getName</i> will be fine, just like in the dictionary case where the name key received the empty string value.</p>
+
+<p>With the <i>self.name</i> value defined, we can extend the <i>setName</i> function to check whether or not <i>name</i> has actually been set. If it hasn't, throw up a warning message to the user to let them know something strange is going on. Remember that exceptions are a valuable way to identify a severe problem, but if you just want your program to handle less dangerous cases, like forgetting someone's name in your contact list, you can take an approach like this to gracefully handling an absence of values.</p>
+
+<code>
+<b>def getName(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if self.name == &quot;&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;WARNING: This contact doesn't have a name yet!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.name</b><br>
+<br>
+WARNING: This contact doesn't have a name yet!<br>
+c1's name: 
+</code>
+
+<p>It is generally a good idea to explicitly define the constructor, if only to ensure that your default attributes are initialized properly. Let's use this idea to build a random number generator for a certain range, based on the earlier code we developed in previous chapters.</p>
+
+<code>
+<b>import random</b><br>
+<br>
+<b>class RandomGenerator:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.min_number = 0</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.max_number = 100</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getMinNumber(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.min_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getMaxNumber(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.max_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setMinNumber(self, min_number):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.min_number = min_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setMaxNumber(self, max_number):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.max_number = max_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getRandom(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return random.randint(self.min_number, self.max_number)</b><br>
+<br>
+<b>random_generator = RandomGenerator()</b><br>
+<b>print(&quot;Default range for random generator:&quot;)</b><br>
+<b>for i in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(random_generator.getRandom())</b><br>
+<br>
+<b>print(&quot;Constrained range for random generator:&quot;)</b><br>
+<b>random_generator.setMinNumber(25)</b><br>
+<b>random_generator.setMaxNumber(30)</b><br>
+<b>for i in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(random_generator.getRandom())</b><br>
+<br>
+Default range for random generator:<br>
+13<br>
+95<br>
+95<br>
+17<br>
+3<br>
+Constrained range for random generator:<br>
+26<br>
+26<br>
+28<br>
+28<br>
+27
+</code>
+
+<p>You might ask why it would be necessary to set up a random number generator in this way, when we could just reference the <i>random</i> module and make direct calls to <i>randint</i>. The paradigm of a class is a template for instances with similar purposes but different parameters. Instead of calling this a random generator, we could have just called it <i>DiceClass</i>, and set up each instance of the class as a dice roll. For example,</p>
+
+<code>
+<b>import random</b><br>
+<br>
+<b>class DiceClass:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, min_number=0, max_number=100):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.min_number = min_number</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.max_number = max_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getMinNumber(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.min_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getMaxNumber(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.max_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setMinNumber(self, min_number):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.min_number = min_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setMaxNumber(self, max_number):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.max_number = max_number</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getRoll(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return random.randint(self.min_number, self.max_number)</b><br>
+<br>
+<b>d6 = DiceClass(1, 6)</b><br>
+<b>d20 = DiceClass(1, 20)</b><br>
+<br>
+<b>print(&quot;Rolling five 6-sided dice:&quot;)</b><br>
+<b>for i in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(d6.getRoll())</b><br>
+<br>
+<b>print(&quot;Rolling five 20-sided dice:&quot;)</b><br>
+<b>for i in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(d20.getRoll())</b><br>
+<br>
+Rolling five 6-sided dice:<br>
+5<br>
+2<br>
+4<br>
+2<br>
+1<br>
+Rolling five 20-sided dice:<br>
+4<br>
+19<br>
+2<br>
+17<br>
+7
+</code>
+
+<p>Now the idea of a class representing the concept of rolling dice is clear. Each instance of the class represents a particular type of roll.</p>
+
+<h2>Building the address book with classes</h2>
+
+<p>First, let's extend the <i>Contact</i> class to encompass the type of data we're going to try to store for each contact. It would be nice to have a get and a set method for each of the attributes and a constructor for the class to set up the defaults. In addition to this, we can actually build a method into the class to tell it how to handle getting called by a <i>print</i> statement. We can actually configure the class to print out values in a way that we specify. Let's look at some code.</p>
+
+<code>
+<b>class Contact:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, first_name=&quot;&quot;, last_name=&quot;&quot;, phone=None, cell_phone=None, town=&quot;&quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.first_name = first_name</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.last_name = last_name</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.phone = phone</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.cell_phone = cell_phone</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.town = town</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getFirstName(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.first_name</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setFirstName(self, first_name):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.first_name = first_name</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getLastName(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.last_name</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setLastName(self, last_name):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.last_name = last_name</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getPhone(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.phone</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setPhone(self, phone):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.phone = phone</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getCellPhone(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.cell_phone</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setCellPhone(self, cell_phone):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.cell_phone = cell_phone</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def getTown(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.town</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def setTown(self, town):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.town = town</b><br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __str__(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0} {1}&quot;.format(self.first_name, self.last_name)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if self.phone is not None:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0}\nPhone: {1}&quot;.format(st, self.phone)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if self.cell_phone is not None:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0}\nCell: {1}&quot;.format(st, self.cell_phone)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if self.town != &quot;&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0}\nTown: {1}&quot;.format(st, self.town)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return st</b><br>
+<br>
+<b>c1 = Contact(first_name=&quot;Alexander&quot;, last_name=&quot;Coder&quot;)</b><br>
+<b>c1.setPhone(&quot;5551763&quot;)</b><br>
+<b>c1.setTown(&quot;Kingston&quot;)</b><br>
+<b>print(&quot;c1: {0}&quot;.format(c1))</b><br>
+<b>c2 = Contact(first_name=&quot;Michael&quot;, cell_phone=5559955)</b><br>
+<b>print(&quot;c2: {0}&quot;.format(c2))</b><br>
+<br>
+c1: Alexander Coder<br>
+Phone: 5551763<br>
+Town: Kingston<br>
+c2: Michael <br>
+Cell: 5559955
+</code>
+
+<p>Instead of using dictionaries with keys that may or may not exist, we can be relatively certain that all the attributes we're looking for are at least defined for each instance of the Contact class. The constructor accepts all of the keys we were concerned about, and if they aren't provided when the class is instantiated, they're set to a safe default parameter. If they are given, the class instance sets its own attribute to the appropriate value. For each of the attributes, a get and a set method are provided. If we wanted to add some error checking, or some additional formatting, we could modify the get and set methods to handle that.</p>
+
+<p>A new method is <i>__str__</i>, which accepts only <i>self</i> as a parameter and returns a string. The <i>__str__</i> method is called whenever you try to get a string representation of the class, like you'd do when printing, or when using the <i>str</i> function to do a type conversion. You can test this at the interpreter prompt, like so.</p>
+
+<code>
+&gt;&gt;&gt; <b>str(c1)</b><br>
+'Alexander Coder\nPhone: 5551763\nTown: Kingston'<br>
+&gt;&gt;&gt; <b>c1.__str__()</b><br>
+'Alexander Coder\nPhone: 5551763\nTown: Kingston'
+</code>
+
+<p>We need to make sure that <i>__str__</i> returns a string instead of printing values to the screen. In the <i>Contact</i> example, we start by building a string variable called <i>st</i> using the first and last names stored in the contact. Each of the other attributes are added to the string if and only if they are not set to the default values. This saves us from having to build the string in any other application that uses <i>Contact</i>. We tell the class how to present itself, and save other programmers (including ourself!) from having to rewrite this at a later time.</p>
+
+<p>It is also possible to write <i>__str__</i> and other internal functions by using the get methods instead of calling the attributes directly. For example, we could have built <i>__str__</i> like this:</p>
+
+<code>
+<b>def __str__(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0} {1}&quot;.format(self.getFirstName(), self.getLastName())</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if self.getPhone() is not None:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0}\nPhone: {1}&quot;.format(st, self.getPhone())</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if self.getCellPhone() is not None:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0}\nCell: {1}&quot;.format(st, self.getCellPhone())</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if self.getTown() != &quot;&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st = &quot;{0}\nTown: {1}&quot;.format(st, self.getTown())</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return st</b>
+</code>
+
+<p>One reason that we might want to take this approach instead is that if the attributes are held in an intermediate format, such as storing phone numbers as integers, we might want the get function to automatically format the result for us. Let's naively assume that the phone number is always going to be a seven digit number for the moment. A rewrite of <i>getPhone</i> could insert a hyphen for a typical North American phone number in the xxx-xxxx format.</p>
+
+<code>
+<b>def getPhone(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if self.phone is None:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return None</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;st = str(self.phone)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return '{0}-{1}'.format(st[0:3], st[3:])</b><br>
+<br>
+c1: Alexander Coder<br>
+Phone: 555-1763<br>
+Town: Kingston
+</code>
+
+<p>Now that the <i>__str__</i> function has been updated, it automatically gains the added formatting from the <i>getPhone</i> class function. If we'd just referenced <i>self.phone</i> on its own, it would have printed as a number. </p>
+
+<p>How does the rewrite from contacts as dictionaries to classes affect <i>contacts_obj</i>? For starters, we can keep <i>contacts_obj</i> as a dictionary. We use the key lookup of a dictionary as a convenient way to retrieve individual contacts, so for the moment, there's no need to change that. Each value in the dictionary is going to be an instance of the <i>Contact</i> class instead of a dictionary, so we'll call the constructor for each of the contacts we want to keep track of.</p>
+
+<code>
+<b>contacts_obj = {</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;alexander&quot;: {&quot;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;phone&quot;: 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Kingston&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;mike&quot;: {&quot;first_name&quot;: &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;cell_phone&quot;: 5559955},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;laney&quot;: {&quot;first_name&quot;: &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Benes&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;doc&quot;: {&quot;first_name&quot;: &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Newport Beach&quot;},</b><br>
+<b>}</b><br>
+<br>
+<b>contacts_obj = {</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;alexander&quot;: Contact(first_name = &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last_name = &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; phone = 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; town = &quot;Kingston&quot;),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;mike&quot;: Contact(first_name = &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cell_phone = 5559955),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;laney&quot;: Contact(first_name = &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last_name = &quot;Benes&quot;),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;doc&quot;: Contact(first_name = &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; town = &quot;Newport Beach&quot;),</b><br>
+<b>}</b>
+</code>
+
+<p>This should look very similar. In fact, each of the contacts actually has all of the attributes in the contact implicitly now, even though they are set to empty strings or <i>None</i> values. The <i>print</i> statement has been defined for the <i>Contact</i> class, allowing you to print any of the contacts in <i>contacts_obj</i> easily, as opposed to dealing with a dictionary print.</p>
+
+<code>
+<b>for key in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Key: {0}, printing contacts_obj[{0}]&quot;.format(key))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(contacts_obj[key])</b><br>
+<br>
+Key: doc, printing contacts_obj[doc]<br>
+Tobias <br>
+Town: Newport Beach<br>
+Key: mike, printing contacts_obj[mike]<br>
+Michael <br>
+Cell: 555-9955<br>
+Key: alexander, printing contacts_obj[alexander]<br>
+Alexander Coder<br>
+Phone: 555-1763<br>
+Town: Kingston<br>
+Key: laney, printing contacts_obj[laney]<br>
+Elaine Benes
+</code>
+
+<p>Now that we have the new data structure, let's rebuild the old sample application to work with the <i>Contact</i> class instead of dictionaries. It's a simple change, but it will allow you to observe the shifting of responsibility from the program to the class, allowing you to let the class handle how it should be displayed just like how lists and dictionaries already do it. Instead of printing each element of a list one-by-one, you just print the list. With the <i>Contact</i> class, you now have this same power.</p>
+
+<code>
+<b>nickname = input(&quot;Enter the contact you would like to see: &quot;)</b><br>
+<b>if nickname in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Contact: {0}&quot;.format(nickname))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;contact = contacts_obj[nickname]</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for key in contact:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;&nbsp;&nbsp;&nbsp;&nbsp;{0}: {1}&quot;.format(key, contact[key]))</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Sorry, I don't know {0}!&quot;.format(nickname))</b><br>
+<br>
+<b>nickname = input(&quot;Enter the contact you would like to see: &quot;)</b><br>
+<b>if nickname in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Contact: {0}&quot;.format(nickname))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(contacts_obj[nickname])</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Sorry, I don't know {0}!&quot;.format(nickname))</b><br>
+<br>
+Enter the contact you would like to see: <b>alexander</b><br>
+Contact: alexander<br>
+Alexander Coder<br>
+Phone: 555-1763<br>
+Town: Kingston
+</code>
+
+<h2>Class equality</h2>
+
+<p>It's easy to take a pair of integers and to compare them against one another. We even wrote a new <i>max</i> function to simulate the behaviour of the built-in <i>max</i> function. Even strings are comparable using the alpha-numeric ordering of characters. The letter &quot;a&quot; is less than the letter &quot;b&quot; because it occurs earlier in the alphabet.</p>
+
+<p>This idea doesn't naturally carry over to data structures like lists or dictionaries. How can you authoritatively state that one list is less than another? Do you use the length of the list, or the value of the first element? What if that first element is a list? Are all lists of the same length equal to one another? The same rules apply to dictionaries; how can you state with confidence that one dictionary is less than another? Well, in Python, lists and dictionaries are unorderable types. All you can do is define an equality test for them, stating that a dictionary with the same keys and values as another dictionary is equal to the second one. It is unclear how you would use less than or greater then.</p>
+
+<p>With classes, if you believe you can provide an ordering for the instances of the class, you can define some built-in comparison functions that are used when you use operators like less than or greater than. This provides you with a way to sort your instances, to order them in a meaningful way, and to otherwise treat your class instances as if they were a native type in Python like strings or numbers.</p>
+
+<code>
+class.__lt__(self, other)&nbsp;&nbsp;&nbsp;&nbsp;Less-than&nbsp;&nbsp;&nbsp;&nbsp;&lt;<br>
+class.__le__(self, other)&nbsp;&nbsp;&nbsp;&nbsp;Less-than-or-equal&nbsp;&nbsp;&nbsp;&nbsp;&lt;=<br>
+class.__eq__(self, other)&nbsp;&nbsp;&nbsp;&nbsp;Equal&nbsp;&nbsp;&nbsp;&nbsp;==<br>
+class.__ne__(self, other)&nbsp;&nbsp;&nbsp;&nbsp;Not-equal&nbsp;&nbsp;&nbsp;&nbsp;!=<br>
+class.__gt__(self, other)&nbsp;&nbsp;&nbsp;&nbsp;Greater-than&nbsp;&nbsp;&nbsp;&nbsp;&gt;<br>
+class.__ge__(self, other)&nbsp;&nbsp;&nbsp;&nbsp;Greater-than-or-equal&nbsp;&nbsp;&nbsp;&nbsp;&gt;=
+</code>
+
+<p>When you evaluate an expression like <i>c1 &gt; c2</i>, where <i>c1 and c2</i> are instances of the <i>Contact</i> class, what you are doing is calling <i>c1.__gt__(c2)</i>. Python provides the operator as shorthand for this action so that you don't have to write everything in terms of class operations. To gain access to this shorthand, you have to fill in these methods manually when writing your class. Without these methods, you get an error like the following:</p>
+
+<code>
+&gt;&gt;&gt; <b>c1 = Contact()</b><br>
+&gt;&gt;&gt; <b>c2 = Contact()</b><br>
+&gt;&gt;&gt; <b>c1 &gt; c2</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#25&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c1 &gt; c2<br>
+TypeError: unorderable types: Contact() &gt; Contact()
+</code>
+
+<p>Let's start with the greater-than method though. For the <i>Contact</i> class, let's assume that we can just use the contact's name as a sortable attribute. It would be just as easy to use the phone number, or some other attribute, but the name seems like the best way to identify a single contact. Head over to the <i>Contact</i> code and add the following two functions.</p>
+
+<code>
+<b>def getFullName(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return &quot;{0} {1}&quot;.format(self.first_name, self.last_name)</b><br>
+<br>
+<b>def __gt__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() &gt; other.getFullName()</b>
+</code>
+
+<p>The <i>getFullName</i> function acts as a helper for us by concatenating the first and last names together. We could do that in each of the comparison functions, but a helper function in this way makes it easier to read the code, and allows us to write less code overall. The <i>__gt__</i> function is invoked whenever the greater-than operator is used. We can test with the objects inside <i>contacts_obj</i> from earlier.</p>
+
+<code>
+&gt;&gt;&gt; <b>contacts_obj[&quot;alexander&quot;] &gt; contacts_obj[&quot;mike&quot;]</b><br>
+True<br>
+&gt;&gt;&gt; <b>contacts_obj[&quot;laney&quot;] &gt; contacts_obj[&quot;mike&quot;]</b><br>
+False
+</code>
+
+<p>Now we have a way to directly compare instances of the class against one another as if they were a native Python data type. This can be extended to the other comparison methods with code similar to the following:</p>
+
+<code>
+<b>def __lt__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() &lt; other.getFullName()</b><br>
+<b>def __le__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() &lt;= other.getFullName()</b><br>
+<b>def __eq__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() == other.getFullName()</b><br>
+<b>def __ne__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() != other.getFullName()</b><br>
+<b>def __gt__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() &gt; other.getFullName()</b><br>
+<b>def __ge__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return self.getFullName() &gt;= other.getFullName()</b>
+</code>
+
+<p>In this way, the class has defined itself as a sortable data structure. We can now take advantage of this by using the built-in sorting methods. For example, consider the dictionary of contacts stored in <i>contacts_obj</i>. If this was a list, and we disregarded the nickname (or better yet, stored it as an attribute in the class itself), we could obtain sorted lists of contacts by defining the comparison functions and just relying on the ability of <i>sorted</i> to handle the data natively.</p>
+
+<code>
+<b>contacts_obj = [</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;Contact(first_name = &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;last_name = &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;phone = 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;town = &quot;Kingston&quot;),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;Contact(first_name = &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cell_phone = 5559955),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;Contact(first_name = &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;last_name = &quot;Benes&quot;),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;Contact(first_name = &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;town = &quot;Newport Beach&quot;),</b><br>
+<b>]</b><br>
+<br>
+<b>for contact in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(contact)</b><br>
+<br>
+Alexander Coder<br>
+Phone: 555-1763<br>
+Town: Kingston<br>
+Michael <br>
+Cell: 555-9955<br>
+Elaine Benes<br>
+Tobias <br>
+Town: Newport Beach<br>
+<br>
+<b>contacts_obj.sort()</b><br>
+<b>for contact in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(contact)</b><br>
+<br>
+Elaine Benes<br>
+Michael <br>
+Cell: 555-9955<br>
+Alexander Coder<br>
+Phone: 555-1763<br>
+Town: Kingston<br>
+Tobias <br>
+Town: Newport Beach
+</code>
+
+<h2>Class inheritance</h2>
+
+<p>Classes exist as part of a programming model called Object Oriented Programming. In this model, everything is considered to be an object. Integers are just objects that happen to also be numbers, strings are objects that are collections of letters, and <i>Contact</i> instances are a few strings and a number tied together in a single object. This gives a hierarchy of structure, and allows for Python to say that variable assignment is the act of assigning an object to a variable.</p>
+
+<p>This hierarchy means that all the data in a Python program is represented by objects, or by the relation between objects. Each of these objects has an identity, a type, and a value. In the case of an instance of the Contact class, let's examine what each of these three features of the actual object refers to. The instance itself is the identity of the object; calling the constructor returns a reference to a new object, and that reference points to the new object that's been created. The type of the object is <i>Contact</i>, and relates to the class definition that we created. The value of the object consists of the internal state of the attributes, and will include a first name, last name, phone number, cell phone number, and a town.</p>
+
+<p>Let's start with a blank object.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = object()</b><br>
+&gt;&gt;&gt; <b>x</b><br>
+&lt;object object at 0x029E94B8&gt;<br>
+&gt;&gt;&gt; <b>print(x)</b><br>
+&lt;object object at 0x029E94B8&gt;<br>
+&gt;&gt;&gt; <b>type(x)</b><br>
+&lt;class 'object'&gt;
+</code>
+
+<p>So what use is this to us? We get a meaningless memory address (that's what 0x029E94B8 means), and we get told that the <i>x</i> variable has type <i>object</i>. There aren't any attributes to add data to. However, this is perfect, because it can be used as a building block. If all data is an object, variables don't need to have explicit types. For example, we don't need to say that <i>x</i> is an <i>int</i> at the time when <i>x</i> is defined. We just say that it's a variable, and since a variable holds an object and <i>int</i> values are stored as objects, <i>x</i> can hold an <i>int</i>.</p>
+
+<p>When we say that <i>int</i> classes inherit from <i>object</i> classes, we mean that the <i>int</i> class takes all of the properties of the <i>object</i> class, and in addition to that information, adds its own specialized data such as the integer value it stores. There is a special function that can be used to examine the parent of a class. If we look at the <i>int</i> class and the <i>object</i> class using the <i>issubclass</i> function, we can observe whether or not <i>int</i> classes derive from <i>object</i> classes.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = int()</b><br>
+&gt;&gt;&gt; <b>x</b><br>
+0<br>
+&gt;&gt;&gt; <b>type(x)</b><br>
+&lt;class 'int'&gt;<br>
+&gt;&gt;&gt; <b>issubclass(type(x), object)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(int, object)</b><br>
+True
+</code>
+
+<p>The last lines explain that <i>int</i> has a base-class (parent) called <i>object</i>. We know that <i>object</i> is at the top of the Python class hierarchy, and can verify this by also using the <i>__bases__</i> keyword.</p>
+
+<code>
+&gt;&gt;&gt; <b>int.__bases__</b><br>
+(&lt;class 'object'&gt;,)<br>
+&gt;&gt;&gt; <b>object.__bases__</b><br>
+()
+</code>
+
+<p>An empty tuple indicates that the <i>object</i> class inherits from nobody, and must therefore be at the top of the food chain. It is the upper-most class in the type hierarchy. All classes in Python inherit from it in some way.</p>
+
+<p>If a class inherited from something other than <i>object</i>, what would happen? The new class would still be a child of the <i>object</i> class, although a distant one. Primarily, it would be a child of the class it inherited from directly. Let's build a new class to extend <i>int</i> but add no new functionality aside from a new dialog in <i>__str__</i>.</p>
+
+<code>
+<b>class NewInt(int):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __str__(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return &quot;NewInt: {0}&quot;.format(super().__str__())</b><br>
+<br>
+<b>x = NewInt(5)</b><br>
+<b>print(x)</b><br>
+<br>
+NewInt: 5
+</code>
+
+<p>To understand this, we need to know a few pieces of information. First, the only thing we're going to change in our new class is the <i>__str__</i> method. Every other aspect of a <i>NewInt</i> variable should act just like an <i>int</i>. We want to maintain addition, division, equality, and all that other great stuff that we already get for free. We just want to have a new class that prints out <i>NewInt</i> before writing it to the screen. Next, we need to understand that the <i>int</i> class already has a perfectly good <i>__str__</i> method, except for the fact that it doesn't print our custom message. We can access the parent's methods using the <i>super()</i> method. It returns an instance of the parent class, which in this case is <i>int</i>, and allows us to call <i>int</i>'s <i>__str__</i> method with our instance's data. We haven't made any changes to the way that <i>int</i> operates. Finally, when the class is defined using <i>class NewInt(int)</i>, having <i>int</i> inside the parentheses suggests that we would like to inherit existing properties from <i>int</i>. By default, do everything that <i>int</i> does, unless we say otherwise.</p>
+
+<p>How does this change the type inheritance? Are <i>NewInt</i> instances still objects? Are they descendants of the <i>int</i> class, and not <i>object</i>? Or both? Let's use <i>issubclass</i> to answer these questions.</p>
+
+<code>
+&gt;&gt;&gt; <b>issubclass(int, object)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(NewInt, int)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(NewInt, object)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(int, NewInt)</b><br>
+False
+</code>
+
+<p>These results tell us that <i>int</i> derives from <i>object</i>, that <i>NewInt</i> derives from <i>int</i>, that <i>NewInt</i> also derives from <i>object</i> (through its relation to <i>int</i>), and that <i>int</i> does not derive from <i>NewInt</i>. These inheritances are not backwards compatible, so nothing about <i>int</i> has to change for <i>NewInt</i> to inherit qualities from it. With that in mind, <i>NewInt</i> instances can act just like <i>int</i> instances, except for the way they convert to a string. Every call to a <i>NewInt</i> function is passed right through to the <i>int</i> class transparently thanks to the object oriented structure of the language.</p>
+
+<p>When we looked at exceptions in the error handling portion of the code, we saw a number of error messages. They had names like <i>ValueError</i>, <i>TypeError</i>, or <i>ZeroDivisionError</i>, and they all had a very similar format. In Python, exceptions are also objects. More importantly, there is an <i>Exception</i> class in Python. While every individual exception is an object, every exception derives from the <i>Exception</i> class.</p>
+
+<p>Consider the <i>__str__</i> function that we wrote for the <i>Contact</i> class. Python knows that every object has a <i>__str__</i> function, regardless of its type. If we don't explicitly write a <i>__str__</i> function, Python uses the object's default <i>__str__</i>. By virtue of creating a class that implicitly inherits information from the basic object, we get a <i>__str__</i> function for free because the parent class has one. It's like saying that all objects can be printed to the screen, and even if you don't tell me specifically how you'd like to look when you're printed, I can still make an attempt.</p>
+
+<p>Exceptions provide a great example of this. When Python hits an error in the code like a division by zero, it wants to raise an exception so that you can catch it. Without specific information about the type of error that occurs, we might not know if it was a division by zero, or if we were trying to divide by a string instead of a number. With the diverse set of exceptions that can be returned, the programmer gets more information about the error case. This is an important point: even though we might see a <i>TypeError</i> or a <i>ZeroDivisionError</i>, these errors are specialized instances of the Exception class.</p>
+
+<code>
+&gt;&gt;&gt; <b>issubclass(Exception, object)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(ValueError, Exception)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(ValueError, object)</b><br>
+True
+</code>
+
+<p>Python knows that when an error occurs, it has to send an instance of the <i>Exception</i> class upwards through the code to be caught. For this reason, <i>ValueError</i> and <i>TypeError</i> are classes that inherit the properties of the <i>Exception</i> class.</p>
+
+<p>This knowledge can be used to build unique exceptions that fit the type of programming error we'd like to represent. Let's go back and revisit the <i>getNumber</i> function from the modules chapter.</p>
+
+<code>
+<b>import math</b><br>
+<br>
+<b>class NumberTooLowError(Exception):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;pass</b><br>
+<br>
+<b>def getNumber(minimum_value=False, input_text=&quot;Enter a number: &quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;done = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(input_text))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if minimum_value == False or user_number &gt;= minimum_value:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise NumberTooLowError(&quot;Your number was too low! The minimum value is {0}.&quot;.format(minimum_value))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return user_number</b><br>
+<br>
+<b>getNumber(minimum_value=5)</b><br>
+<br>
+Enter a number: <b>3</b><br>
+Traceback (most recent call last):<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 20, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getNumber(minimum_value=5)<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 17, in getNumber<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise NumberTooLowError(&quot;Your number was too low! The minimum value is {0}.&quot;.format(minimum_value))<br>
+NumberTooLowError: Your number was too low! The minimum value is 5.
+</code>
+
+<p>Instead of hitting a <i>TypeError</i> or <i>ValueError</i>, we've now hit a custom error type with a custom error message. If we didn't want to loop inside the <i>getNumber</i> method but would rather throw an exception relevant to the situation, we can define a class like <i>NumberTooLowError</i> that inherits from <i>Exception</i> and changes nothing. Once the particular error case arises, we raise a <i>NumberTooLowError</i> with an appropriate message, and the warning gets sent through the code. As we'd expect, this new exception inherits from both the <i>object</i> and the <i>Exception</i> classes.</p>
+
+<code>
+&gt;&gt;&gt; <b>issubclass(NumberTooLowError, object)</b><br>
+True<br>
+&gt;&gt;&gt; <b>issubclass(NumberTooLowError, Exception)</b><br>
+True
+</code>
+
+<p>If we'd omitted the inheritance specifier in the class definition, Python would have complained.</p>
+
+<code>
+<b>class NumberTooLowError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;pass</b><br>
+<br>
+Enter a number: <b>3</b><br>
+Traceback (most recent call last):<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 20, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getNumber(minimum_value=5)<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 17, in getNumber<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise NumberTooLowError(&quot;Your number was too low! The minimum value is {0}.&quot;.format(minimum_value))<br>
+TypeError: object.__new__() takes no parameters
+</code>
+
+<h2>Breaking Stuff</h2>
+
+<p>There's an easy mistake to make when using the <i>__str__</i> function in a class.  Take a look at this code and see if you can catch it:</p>
+
+<code>
+<b>class StrExample:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, x):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.x = x</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __str__(self):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(self.x)</b><br>
+<br>
+<b>s = StrExample(5)</b><br>
+<b>print("__str__: {0}".format(s.__str__()))</b><br>
+<b>print("s: {0}".format(s))</b>
+</code>
+
+<p>The class is simple enough.  All it aims to do is to store the value that it's initialized with, and to print out the value when the <i>__str__</i> function is invoked.  The code that follows creates an instance of the class with the value 5, then tests the difference between calling <i>__str__</i> directly and then explicitly.  So what output do we get in this case?</p>
+
+<code>
+5<br>
+__str__: None<br>
+5<br>
+Traceback (most recent call last):<br>
+&nbsp;&nbsp;File &quot;sample.py&quot;, line 9, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;s: {0}&quot;.format(s))<br>
+TypeError: __str__ returned non-string (type NoneType)
+</code>
+
+<p>Did you catch that?  I'm still guilty of messing that up every once in a while.</p>
+
+<p>The <i>__str__</i> function, although used to print values most of the time, is designed to return a string, not to print one.  In our class, the <i>__str__</i> function calls <i>print</i> directly and returns nothing.  That explains the output.  Let's step through the first part.</p>
+
+<p>The first line of the output comes from the call to <i>s.__str__()</i> in the first formatted string.  Before our formatted string is sent to the screen, the print statement in <i>s.__str__()</i> is called, and the value 5 is printed to the screen.  Next, our formatted string is built, and since our function returns nothing, the <i>None</i> value is used.</p>
+
+<p>How do we solve this?  Instead of calling <i>print(self.x)</i> in <i>__str__</i>, use <i>return self.x</i>.</p>
+
+<h2>Summary</h2>
+
+<p>Every piece of data in Python is an object. Generally this is a specialized type of object, but at the core, each and every piece of data inherits from the same parent type. This generalization is the reason that variable assignment is so flexible, why each and every object can be converted into a string to be printed, and why equality tests can be made even across types.</p>
+
+<p>Classes offer a stronger way of describing your values with some accompanying behaviour. Contacts can be sorted by their entire set of data, and all of the information about a single person can be stored in a single data structure that has knowledge about itself and how it should be treated in very general conditions.</p>
+
+<p>Understanding the hierarchy of types in Python can allow a programmer to customize classes for very specific purposes. If an existing data type performs a very relevant task, but only requires a very slight change to fit the job perfectly, it may be a good idea to inherit from an existing class and to modify the subtle differences needed to complete the task.</p>
+
+<h2>Exercises</h2>
+
+<p>1) Build a wrapper around the string class called <i>MyString</i>. Construct the comparison methods to automatically check whether or not two <i>MyString</i> instances are equal based strictly on the lower-case representation of the strings. You don't need to inherit from the string class for this task, just complete the following template:</p>
+
+<code>
+<b>class MyString:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;def __eq__(self, other):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# your code here</b>
+</code>
+
+<p>2) Make a new class called <i>FamilyContact</i> that inherits from the <i>Contact</i> class we wrote earlier. Add a new string class parameter called relationship that can store a value like &quot;Mother&quot; or &quot;Uncle&quot;. See how <i>Contact</i> and <i>FamilyContact</i> instances compare against one another using the existing equality tests defined in the <i>Contact</i> class.</p>

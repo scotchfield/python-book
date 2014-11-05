@@ -1,0 +1,518 @@
+<h1>Chapter 6: If-Statements</h1>
+
+<p>So far, the programs we've been writing have been fairly robotic. Each one defines an ordered set of statements that every program will go through, every single time. There aren't any deviations from the main path, so while the programs might be useful, there isn't much difference in the output of any single program. This chapter will introduce the if-statement, a technique for specifying different paths through code based on the program state. Perhaps a user will ask to run a certain part of your program by entering a specific command at an input prompt, or the program will fail to run if they don't enter the valid password. If-statements will grant you the ability to execute a new piece of code if certain conditions are met.</p>
+
+<h2>Decision making</h2>
+
+<p>A computer program is made up of a set of instructions that guide a computer from some starting state to an ending state. You might say that all of our programs so far have been simple stories with a linear plot. At first, we set up a starting state, then we might get some data from the user that changes something very slightly, and we reach the end in the same way we do every other time we run the code. Introducing an if-statement changes a linear story into a choose-your-own-adventure book. Programs get really interesting when we give users the ability to change the way the program works, allowing them to make decisions that guide our program to new states. We're going to look at how to tell Python how to make these decisions based on what the user says, and to act differently in different situations.</p>
+
+<p>Here's a simple example of an if-statement in action.</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<br>
+Enter a number: <b>42</b><br>
+That's a positive number!<br>
+<br>
+Enter a number: <b>-5</b>
+</code>
+
+<p>An if-statement includes a boolean expression called a test condition. If the result of the test condition is True, we execute a given block of code.  If the test condition is False, the block is ignored. Our example above is a simple check for whether or not a number was greater than zero. We can evaluate this in the interpreter to see how Python will treat the check.</p>
+
+<code>
+&gt;&gt;&gt; <b>num = 42</b><br>
+&gt;&gt;&gt; <b>num &gt; 0</b><br>
+True<br>
+&gt;&gt;&gt; <b>num = -5</b><br>
+&gt;&gt;&gt; <b>num &gt; 0</b><br>
+False
+</code>
+
+<p>The important part of this example is the boolean values that are returned when using the greater-than operator. The same type of result occurs when you use other similar operators, such as the equality symbol. We could have substituted <i>num == 0</i> instead of <i>num &gt; 0</i>, and the meaning of the if-statement would change appropriately. A boolean value would be returned for the if-statement to evaluate.</p>
+
+<p>You might be wondering how Python actually knew what code to run when the if-statement test condition was True. At what point does the specified block of code actually end? Python uses indentation to define the boundaries of a section of code that needs to be executed. For example,</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;In fact, it's greater than zero.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is {0}.&quot;.format(num))</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a number: <b>42</b><br>
+That's a positive number!<br>
+In fact, it's greater than zero.<br>
+Your number is 42.<br>
+All done!<br>
+<br>
+Enter a number: <b>-5</b><br>
+All done!
+</code>
+
+<p>A block of code is a section of one or more lines that are indented to the same level. In the example above, there are three lines immediately following the if-statement that are indented by four spaces. Python treats these three lines as a block of code that is only executed when the if-statement is True. When we revert back to the previous indentation level, as seen in the &quot;All done!&quot;, the block is done. If <i>num</i> is not greater than zero, the indented block is skipped outright, and we move down to the &quot;All done!&quot; line immediately.</p>
+
+<p>What if we wanted to add some functionality to tell the user when the number was negative, or even exactly equal to zero? The straightforward approach is to use several if-statements. At this point, it's a fair way to do things. Let's see how that would look.</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>if num &lt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That number is negative.&quot;)</b><br>
+<b>if num == 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is exactly equal to zero!&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a number: <b>42</b><br>
+That's a positive number!<br>
+All done!<br>
+<br>
+Enter a number: <b>-5</b><br>
+That number is negative.<br>
+All done!<br>
+<br>
+Enter a number: <b>0</b><br>
+Your number is exactly equal to zero!<br>
+All done!
+</code>
+
+<p>Great! We've got several if-statements that are all checking various possibilities for the <i>num</i> variable, and any <i>int</i> value that the user can enter is caught by one of these checks. In every case, we hit the end of the program and output our &quot;All done!&quot; string.</p>
+
+<p>When an if-statement doesn't evaluate to True, it necessarily evaluates to False. If <i>num</i> is not greater than zero, it is less than or equal to zero. This sounds obvious, but it's really important to drive home the point that a boolean value is either True or False. This leads to the else-statement, a keyword that can provide a corresponding block of code for the times when the if-statement doesn't give you a True value.</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is not positive!&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a number: <b>42</b><br>
+That's a positive number!<br>
+All done!<br>
+<br>
+Enter a number: <b>-5</b><br>
+Your number is not positive!<br>
+All done!
+</code>
+
+<p>What the else-block provides is a set of code to run when the test condition in the corresponding if-statement evaluates to False. We could have written the following code instead:</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>if num &lt;= 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is not positive!&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b>
+</code>
+
+<p>In this case, it does exactly the same thing as the code that uses the else-statement. However, if we want to change the variable name, or give it a different condition, we also need to change all of the other if-statements that are making similar checks. The else-statement just works in conjunction with the if-statement to say &quot;If something is true, do this code, otherwise, do that code.&quot; The else-statement is the &quot;otherwise&quot;, and is a catch-all for anything that didn't fit with the original if-statement.</p>
+
+<p>How could we use else to do our three-part example from above, where <i>num</i> is either positive, negative, or exactly equal to zero? Well, one approach is to use a technique called nesting to place if-statements inside of each other.</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if num &lt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That number is negative.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is exactly equal to zero!&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b>
+</code>
+
+<p>That's fine, but it's a little verbose. Do we really need to write that much code to accomplish this task? And look at all of that indentation! If this keeps up, we're going to need a bigger screen.</p>
+
+<p>Python has another statement that combines the if-statement and else-statement into a single statement called elif (else-if). An elif-statement combines the else and if keywords together into a check that occurs only if the original if-statement evaluated to False. We can rewrite the previous example to see how similar it looks, and how it saves us an entire additional level of indentation.</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>elif num &lt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That number is negative.&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is exactly equal to zero!&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b>
+</code>
+
+<p>The <i>elif</i>-statement does exactly the same thing that the nested code did, with even less indentation and extra writing. It only gets evaluated if the first check is <i>False</i>, and can even include an else statement at the bottom. We can even have multiple <i>elif</i>-statements. With this in mind, it should be clarified that <i>elif</i>-statments are only examined if all of the previous <i>if</i> or <i>elif</i> checks in the current if-statement have already evaluated to <i>False</i>. The <i>else</i> part of <i>elif</i> still means &quot;only consider this code if you really haven't done anything yet!&quot;</p>
+
+<p>It's perfectly fine to write code like this:</p>
+
+<code>
+<b>num = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>elif num == 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number is exactly equal to zero!&quot;)</b><br>
+<b>elif num == -1:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Negative one? Whoa.&quot;)</b><br>
+<b>elif num == -2:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That is a negative two.&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That number is negative.&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b>
+</code>
+
+<p>There are a few special cases in that code where our elif-statement will print something interesting, and we still have the catch-all else statement at the bottom to get everything that manages to sneak through all the other checks above. </p>
+
+<p>For an example of using if-statements, let's imagine that you're writing a program that should only be usable by someone who knows the secret password. For the sake of this example, we'll have to also imagine that they don't have access to your source code, but that's not unreasonable for the moment. What we'd like to do is present the user with an input prompt asking for the password. If they give an invalid value, we exit the program, and if they give the correct password, we let them in.</p>
+
+<code>
+<b>password = &quot;spam&quot;</b><br>
+<b>user_password = input(&quot;Enter the password: &quot;)</b><br>
+<b>if password == user_password:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;SECRET ACCESS GRANTED.&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's not the password! I can't let you in.&quot;)</b><br>
+<br>
+Enter the password: <b>turkey</b><br>
+That's not the password! I can't let you in.<br>
+<br>
+Enter the password: <b>spam</b><br>
+SECRET ACCESS GRANTED.
+</code>
+
+<p>At the top of the code, we enter in the password we'll be looking for from the user. This can be any string, and in this case we've decided on a fairly simple one. (Alright, it's my password. Keep it secret, okay?) The second line asks the user to enter in the password to access the system. Now the real meat of the program comes in on the third line, where an if-statement is used to compare whether or not the user's password matches the password we're expecting. If it works, we grant access to the secret stuff. If not, output a message explaining that they're not allowed to come in.</p>
+
+<h2>Expressions</h2>
+
+<p>Think back to the definition of a boolean, and how a boolean value is either <i>True</i> or <i>False</i>. We used these in if-statements and elif-statements in the previous section, and referenced them as if it was the if-statement or elif-statement itself that was returning <i>False</i>. In actuality, it's a little more subtle than that. What we're really looking at is the expression contained in the statements themselves. Consider this code:</p>
+
+<code>
+<b>num = 42</b><br>
+<b>print(&quot;Your number is {0}.&quot;.format(num))</b><br>
+<b>if num &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's a positive number!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That number is negative.&quot;)</b><br>
+<br>
+Your number is 42.<br>
+That's a positive number!
+</code>
+
+<p>It was suggested previously that the if-statement itself was <i>True</i>. If you go to the interpreter and type in the actual check that's being performed, you can see what the truth check actually gives.</p>
+
+<code>
+&gt;&gt;&gt; <b>num &gt; 0</b><br>
+True
+</code>
+
+<p>The component of an if-statement or elif-statement that is actually evaluated for truth is called an expression. It uses some values or variables to evaluate a boolean value, which then tells Python whether or not to execute the associated block of code. If the expression returns <i>True</i>, the code is evaluated, and if the expression returns <i>False</i>, the code is skipped over. To show this in code, consider the following:</p>
+
+<code>
+<b>if True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;With True: Success!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;With True: Failure!&quot;)</b><br>
+<br>
+With True: Success!<br>
+<br>
+<b>if False:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;With False: Success!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;With False: Failure!&quot;)</b><br>
+<br>
+With False: Failure!
+</code>
+
+<p>There are two if-statements with associated else-statements, and the expressions are stripped down to the bare boolean values. The output shouldn't surprise you, but it should serve as an illustrative example of what Python does with the expression part of an if-statement. If there are variables used in the expression, such as <i>num &gt; 0</i>, Python attempts to evaluate the expression to determine the <i>True</i> or <i>False</i> value returned.</p>
+
+<p>An expression is a combination of operators and values or variables, organized to always return a <i>True</i> or <i>False</i> value. In the case of if-statements, the code is set up so that the interesting block only gets executed if an interesting condition is <i>True</i>. In the following example, we see that an expression isn't limited to a single variable, or even a single comparison.</p>
+
+<code>
+<b>name = input(&quot;Enter your name: &quot;)</b><br>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>if name == &quot;Alexander&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Hello, me!&quot;)</b><br>
+<b>elif age &lt; 18:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Programming at an early age.. Nice!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Pleasure to meet you!&quot;)</b>
+</code>
+
+<p>Each check is done in an ordered way in isolation from one another. In the example, the first check that is done looks to see whether or not <i>name</i> is equal to &quot;Alexander&quot;. If it is, the following indented block of code is executed, and the other elif and else blocks are ignored entirely. If the string comparison expression evaluates to <i>False</i>, the elif expression will be evaluated. This check doesn't need to involve <i>name</i> in any way. It happens to be used in the if-statement, but any other check can be performed, whether with <i>name</i> or not.</p>
+
+<p>Python also has operators that make use of logic to chain smaller expressions into larger ones. The <i>and</i> and <i>or</i> keywords allow expressions to be combined together to evaluate complicated expressions. It may be convenient to think of the <i>and</i> and <i>or</i> keywords as glue that can hold smaller expressions together. For example, consider the following:</p>
+
+<code>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>if age &gt;= 0 and age &lt;= 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<br>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>if age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.
+</code>
+
+<p>There are two equivalent examples that use <i>and</i> and <i>or</i> to reach the same conclusion. In this case, we're testing the <i>age</i> variable that the user provides to see if it fits inside some acceptable range of valid ages. Your range might differ, and it's certainly true that few 1-year olds are probably using programs like this, but the point should be clear. (Also, if you're 150 and programming, what's your secret? Hook me up!) We could have an if-statement that checks if <i>age</i> is too high, and an associated elif-statement that checks if <i>age</i> is too low, followed by the else-statement stating that everything is fine. What we want to do is to check whether the user is trying to trick us or not. If the age is too low or the age is too high, print an error.</p>
+
+<p>The reason for suggesting that <i>and</i> and <i>or</i> are like glue is that they need valid expressions on either side to be well formed. Many new programmers will read these operators as applying to the values themselves, and will try to write code like this:</p>
+
+<code>
+<b>if age &gt;= 0 or &lt;= 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Alright, you're {0} years old.&quot;.format(age))</b>
+</code>
+
+<p>You can try to run that code, but Python will complain. Go ahead, give it a shot! This book is all about finding creative ways to break stuff, so feel free.</p>
+
+<p>You must include the variable name before the operator, and each side of the or keyword should be able to evaluate in the interpreter. The correct way to write this expression is:</p>
+
+<code>
+<b>if age &gt;= 0 or age &lt;= 0:</b>
+</code>
+
+<p>If it helps, you have the option of including round brackets around the expressions themselves. Python uses this in the same way that mathematics does, where you can ensure that certain operations work in a particular way that might not be obvious at first glance. For example,</p>
+
+<code>
+&gt;&gt;&gt; <b>1 * 2 / 3 * 4</b><br>
+2.6666666666666665
+</code>
+
+<p>A quick look at the top example might lead you to assume that we'd get the result of 1 * 2, then the result of 3 * 4, and that we'd use those results when dividing. In actuality, all of these multiplication and division operations have the same importance in Python, so it works along the expression from left to right. We can use the round brackets to show how the evaluator processes the data.</p>
+
+<code>
+&gt;&gt;&gt; <b>1 * 2 / 3 * 4</b><br>
+2.6666666666666665<br>
+&gt;&gt;&gt; <b>(((1 * 2) / 3) * 4)</b><br>
+2.6666666666666665<br>
+<br>
+&gt;&gt;&gt; <b>(1 * 2) / (3 * 4)</b><br>
+0.16666666666666666<br>
+&gt;&gt;&gt; <b>(2) / (12)</b><br>
+0.16666666666666666
+</code>
+
+<p>We can also use them to force Python to evaluate the multiplications first, identifying the numerator (1 * 2) and the denominator (3 * 4).</p>
+
+<p>The same approach can be taken with expressions in our if-statements, and depending on your comfort level with more complicated expressions, it might help you to read the code better.</p>
+
+<code>
+<b>if age &gt;= 0 or age &lt;= 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<br>
+<b>if (age &gt;= 0) or (age &lt;= 150):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Alright, you're {0} years old.&quot;.format(age))</b>
+</code>
+
+<p>Both of these expressions evaluate to the same result, as the <i>or</i> operator expects an expression on either side of it. Since each side must evaluate to a real expression on its own, you can use the round brackets to visually identify the boundaries of each expression in this way.</p>
+
+<p>The priority of operation for these commands is referred to as operator precedence. Python has a strictly defined order for the priority. For example, multiplication will always occur before addition or subtraction when possible. This is a familiar concept in mathematics, and it is expanded here thanks to the large number of operations available in the language.</p>
+
+<code>
+&gt;&gt;&gt; <b>2 * 3 + 4</b><br>
+10<br>
+&gt;&gt;&gt; <b>(2 * 3) + 4</b><br>
+10<br>
+&gt;&gt;&gt; <b>2 * (3 + 4)</b><br>
+14<br>
+&gt;&gt;&gt; <b>2 + 3 * 4</b><br>
+14<br>
+&gt;&gt;&gt; <b>(2 + 3) * 4</b><br>
+20<br>
+&gt;&gt;&gt; <b>2 + (3 * 4)</b><br>
+14
+</code>
+
+<p>Multiplication has a higher operator precedence than addition, and it doesn't matter at what character position in the expression it occurs. If there is an addition occurring to the left of a multiplication, as in the case of 2&nbsp;+&nbsp;3&nbsp;*&nbsp;4, the multiplication will necessarily be evaluated first. You can see this in the examples above. When the expression reads &quot;two plus three times four,&quot; the &quot;three times four&quot; is evaluated first because multiplication has a higher operator precedence.</p>
+
+<p>A brief table with some of the operators we've seen so far will help show the order in which Python evaluates its expressions. This list is not complete (there are a lot of operators in the language!), but it should cover the likely candidates that you're going to be using for now. It is sorted from lowest precedence to highest precedence, so the operations at the bottom of the list are evaluated first, and the ones at the top of the list are evaluated last.</p>
+
+<code>
+<b>Operator</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Description</b><br>
+or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Boolean OR<br>
+and&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Boolean AND<br>
+not&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Boolean NOT<br>
+&lt;, &lt;=, &gt;, &gt;=, !=, == &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comparisons<br>
++, -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Addition and subtraction<br>
+*, /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multiplication and division<br>
+**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Exponent (to the power of)
+</code>
+
+<h2>Breaking Stuff</h2>
+
+<p>Let's go back to indexes for a moment. The zero-based counting system is a fundamental part of computing, and of software development in particular. When talking about the zeroth element, or the character at position 0 in a string, we make a reference to the first element or character in the object. But one specific case warrants a bit of extra attention. Let's use this simple example:</p>
+
+<code>
+&gt;&gt;&gt; <b>my_string = &quot;Alexander Coder&quot;</b><br>
+&gt;&gt;&gt; <b>my_string.find(&quot;Alexander&quot;)</b><br>
+0<br>
+&gt;&gt;&gt; <b>my_string.find(&quot;Coder&quot;)</b><br>
+10<br>
+&gt;&gt;&gt; <b>my_string.find(&quot;Tomato&quot;)</b><br>
+-1
+</code>
+
+<p>That's unsurprising, of course. My first and last names are found in <i>my_string</i>, and &quot;Tomato&quot; is not. What might be surprising, at least at first glance, is the following code. I say this specifically because I still fall into this trap from time to time. That's right, I'm not afraid to admit it.</p>
+
+<code>
+<b>my_string = &quot;Alexander Coder&quot;</b><br>
+<b>if my_string.find(&quot;Alexander&quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Hi, Alexander!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Who are you?&quot;)</b><br>
+<br>
+Who are you?
+</code>
+
+<p>Did that code just tell me that &quot;Alexander Coder&quot; doesn't contain the string &quot;Alexander&quot;? Well, not exactly, but it kind of looks like it did. I asked the <i>find</i> function to give me the index in <i>my_string</i> where the substring &quot;Alexander&quot; begins, and the if-statement forced the else code block to run. If you're not careful, functions like <i>find</i> can be misunderstood as returning boolean values. In fact, since Python attempts to convert <i>int</i> values to <i>bool</i> ones when you perform an equality test in this way, the <i>int</i> value will actually get converted to a <i>bool</i>. The <i>find</i> function returns 0, as &quot;Alexander&quot; is found in <i>my_string</i> starting at the character at index 0. If &quot;Alexander&quot; was not found in the string, <i>find</i> would return -1.</p>
+
+<p>So what the heck does converting an <i>int</i> to a <i>bool</i> actually mean? What numbers are False, and what numbers are True? Does 37 equal True? What about converting <i>bool</i> values to <i>int</i> values? There's a really subtle but important distinction that you're going to want to be aware of, especially when using functions like <i>find</i>.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(True)</b><br>
+1<br>
+&gt;&gt;&gt; <b>int(False)</b><br>
+0
+</code>
+
+<p>For Python, the <i>bool</i> value True is equal to the <i>int</i> value 1, and the <i>bool</i> value False is equal to the <i>int</i> value 0. If you convert True or False to an <i>int</i>, those are the values that you'll get. We can verify this at the console, like this.</p>
+
+<code>
+&gt;&gt;&gt; <b>True == 1</b><br>
+True<br>
+&gt;&gt;&gt; <b>False == 0</b><br>
+True
+</code>
+
+<p>Python says that True and 1 are equal to each other, and that False and 0 are equal, just as we'd expect. What about converting <i>int</i> values to <i>bool</i> values? Is the opposite also valid?</p>
+
+<code>
+&gt;&gt;&gt; <b>bool(1)</b><br>
+True<br>
+&gt;&gt;&gt; <b>bool(0)</b><br>
+False
+</code>
+
+<p>Aha, just as we'd expect. The boolean result after conversion for the integer value 1 is True, as we'd expect. No surprises from False either, so we're golden, right? .. right?</p>
+
+<p>A boolean variable can have one of two possible values. That's critically important. A boolean is True, or it's False. There is no other option. So what happens when we want to convert another <i>int</i> to a <i>bool</i>? What is the boolean representation of 2?</p>
+
+<code>
+&gt;&gt;&gt; <b>bool(2)</b><br>
+True<br>
+&gt;&gt;&gt; <b>2 == True</b><br>
+False
+</code>
+
+<p>Now you wait just a second, Python. What on Earth is this? Python has converted the <i>int</i> value 2 into the <i>bool</i> value True. It has also told us that 2 and True are not equal to each other. Why, Python? Why? Let's reword the question in terms of <i>int</i> and <i>float</i> values.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(2.5)</b><br>
+2<br>
+&gt;&gt;&gt; <b>2.5 == 2</b><br>
+False
+</code>
+
+<p>The boolean representation of the number 2 is an approximation in the same way that the integer value 2 is an approximation of the floating point value 2.5. As it turns out, any number that isn't 0 will be True.</p>
+
+<code>
+&gt;&gt;&gt; <b>for x in range(-5, 5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print(x, bool(x))</b><br>
+<br>
+-5 True<br>
+-4 True<br>
+-3 True<br>
+-2 True<br>
+-1 True<br>
+0 False<br>
+1 True<br>
+2 True<br>
+3 True<br>
+4 True
+</code>
+
+<p>So what does this mean? It means that you've got to be extremely careful when writing your if-statements. Yes, this is a long winded way of advising you to never write the following piece of code:</p>
+
+<code>
+<b>x = &quot;Alexander&quot;</b><br>
+<b>if x.find(&quot;Alexander&quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Found it!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Didn't find anything!&quot;)</b><br>
+<br>
+Didn't find anything!
+</code>
+
+<p>That code seems to read like a perfectly reasonable request to see if the string <i>x</i> contains the value &quot;Alexander&quot;. In fact, I look at that now and assume that any reasonable Python interpreter would do the sensible thing and tell me that it found the string. However, we must recall what the <i>find</i> function is designed to do. The <i>find</i> function identifies the position of the string you're looking for, and if your value starts with the search string, like <i>x</i> does in this example, you'll get position 0 returned. The if-statement converts that 0 into a boolean, and you're left with something like this:</p>
+
+<code>
+<b>if 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Found it!&quot;)</b><br>
+</code>
+
+<p>In boolean, this is:</p>
+
+<code>
+<b>if False:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Found it!&quot;)</b><br>
+</code>
+
+<p>Of course, if <i>x</i> doesn't start with the string,</p>
+
+<code>
+<b>if x.find(&quot;ott&quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Found it!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Didn't find anything!&quot;)</b><br>
+<br>
+Found it!
+</code>
+
+<p>Watch out for your implicit conversion inside of if-statements, as these are the type of errors that Python won't throw up a big red exception about. These are the really subtle pull-your-hair-out bugs. Don't forget that integer to boolean conversions in if-statements can cause strange side-effects, and always remember to add in explicit type equality testing if you think something like this might pop up!</p>
+
+<code>
+<b>x = &quot;Alexander&quot;</b><br>
+<b>if x.find(&quot;Alexander&quot;) &gt; -1:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Found it!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Didn't find anything!&quot;)</b><br>
+<br>
+Found it!
+</code>
+
+<p>Ahh, that feels better.</p>
+
+<h2>Summary</h2>
+
+<p>The introduction of if-statements is a critically important piece of the programming puzzle, and it's very important that you feel comfortable with them. These statements allow you to control the flow of your program based on the current state. With this, your programs become dynamic pieces of information, and you can respond to changes in new and interesting ways.</p>
+
+<p>Try building some expressions, and using them in your code to take different actions based on the state of your other variables.</p>
+
+<h2>Exercises</h2>
+
+<p>1. Write a small program that gets a word from the user and outputs different results based on the first letter of the string. For example, if the user says &quot;Hello&quot;, have a print statement that does something unique for words that start with &quot;h&quot;. You don't need to do every letter, but pick a few, and for the rest, have an associated else-statement.</p>
+
+<p>2. Modify the tax program you wrote at the end of the last chapter to output an error if the user enters a number less than zero.</p>
+
+<p>3. Take a complicated expression and place round brackets in the appropriate places to show where the operator precedence boundaries lie. For example,</p>
+
+<code>
+3 * 7 + 4 &gt;= 5 ** 2 - 7
+</code>
+
+<p>is equivalent to:</p>
+
+<code>
+(((3 * 7) + 4) &gt;= ((5 ** 2) - 7))
+</code>
+
+<p>What about a larger expression:</p>
+
+<code>
+12 ** 7 + 6 * 4 / 2 &lt; 99 * 85 + 5 - 3 ** 4
+</code>

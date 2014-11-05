@@ -1,0 +1,375 @@
+<h1>Chapter 3: Variables and Data Types</h1>
+
+<p>Variables are references to a part of the program memory, and each variable has a name and an associated value. For example, when you ask someone for their phone number, you probably make an effort to save it somewhere. In the non-programming world, we might write the answer down in an address book on a piece of paper. If you meet me somewhere and ask for my phone number, you might end up with a card that says &quot;Alexander: 555-1234.&quot; In many ways, a variable is like one of these pieces of paper, with the name Alexander (or Alexander's phone number), and the value 555-1234. This chapter will help explain how Python's memory system works, and how you can start storing and retrieving your own values effectively.</p>
+
+<h2>What's a variable?</h2>
+
+<p>When writing code, engaging in conversations with people, or generally going about our lives, we frequently encounter situations where we need to store something away in our memory. If you and I are speaking, you might ask me what my name is. If I answer that my name is Alexander, you'll hopefully tuck that away somewhere in your head. When you see me, you recall that I happen to have the name Alexander. Consider our calculator analogy again, and think about the equations we worked through. We did some simple multiplication, and calculated equations like 3 times 4. On many calculators, you can find a memory key. If you're working through a complicated example, you can store the result of 3 * 4 in the calculator's memory, and you can use the memory recall button to save you the trouble of typing in 3 * 4 each time you want that value.</p>
+
+<p>A variable name is a way of referencing some value that you've specified an interest in keeping track of to potentially have access to it at a later time. In the example where you asked me what my name is, the variable name is vaguely represented in your head as &quot;That guy's name&quot;, and the value associated with that variable is &quot;Alexander&quot;. On the calculator, the memory is usually just called M, and if we store the result of 3 * 4 in M, then M is 12.</p>
+
+<p>Variables are created by using the equals sign. This is called variable assignment (you're assigning a value to a variable), and looks like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 10</b>
+</code>
+
+<p>In this example, Python is asked to create a variable called <i>x</i>, and that the value 10 should be assigned to the new variable. Based on the previous examples, you might be asking where the output is from this statement. After all, we just executed a Python statement, so shouldn't it tell us whether or not it succeeded? In variable assignment, unless you see an error, it's fairly safe to assume that everything worked as planned, and that we've now got a new variable in memory called <i>x</i> that holds the value 10. You can observe this explicitly at the prompt by simply typing in the name of the new variable.</p>
+
+<code>
+&gt;&gt;&gt; <b>x</b><br>
+10
+</code>
+
+<p>That's pretty interesting. When we write code or evaluate equations, Python knows that when <i>x</i> is used, it should use the value 10 in its place. Now we can do interesting things with our variable in the same way that we did interesting things with numbers. When we looked at multiplication, we asked Python to tell us the result of 3 times 4. Additionally, it was suggested that the memory button on a calculator could hold this value. How do we approach this in Python? Well, what about variables?</p>
+
+<code>
+&gt;&gt;&gt; <b>x * 4</b><br>
+40
+</code>
+
+<p>Since <i>x</i> has the value 10, the Python interpreter is able to substitute 10 into our equation, calculate that 10 times 4 is 40, and output the result. Remember, a variable has a name that you can reference in your Python code, along with an associated value. You can say that <i>x</i> has the value 10, the author's name has the value &quot;Alexander&quot;, and so on.</p>
+
+<p>Variables can be used to hold the results from more complicated expressions too. If we want to store the result of 3 * 4, we can write the following code:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 3 * 4</b><br>
+&gt;&gt;&gt; <b>x</b><br>
+12
+</code>
+
+<p>Note that <i>x</i> doesn't hold the equation 3 times 4, but rather the result of the equation. Does it matter?  Well, yes, and it turns out that this is an important distinction to make. The right side of the statement, which in this case is everything after the equals sign, is calculated by Python first. The result of all that calculation is stored in the <i>x</i> variable, and can be accessed later. The variable stores the result of an equation, and not the equation itself. To really show this, let's define a new variable <i>y</i>.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 3</b><br>
+&gt;&gt;&gt; <b>y = x * 4</b><br>
+&gt;&gt;&gt; <b>y</b><br>
+12<br>
+&gt;&gt;&gt; <b>x = 4</b><br>
+&gt;&gt;&gt; <b>y</b><br>
+12
+</code>
+
+<p>If it was true that Python was storing the equation in the variable and not the value, the second time that we'd asked for the value in <i>y</i> would have returned 16 instead of 12. (Sanity check: if the variable <i>y</i> held <i>x * 4</i> instead of 12, setting <i>x</i> to 4 would modify the value in <i>y</i>.) Changing the value of <i>x</i>, used in the initial calculation of <i>y</i>'s value, had no effect on <i>y</i> later on in the interpreter.</p>
+
+<h2>Data types</h2>
+
+<p>Every value in Python, from the number 12 to the name &quot;Alexander&quot;, has something called a type. The type of a variable's value indicates whether the value is an integer number, a string, or a more complicated piece of data. This information is important to Python because things can get a bit messy if you start trying to do addition on the number 12 and the string &quot;Alexander&quot;. It's not intuitively clear what the result of 12 + &quot;Alexander&quot; is, or if it's even defined at all. (Spoiler: It's not defined, and gives a big error if you try it.. You should try it!)</p>
+
+<p>All of the previous numbers that we looked at were integers. An integer is a number without a decimal component, so 12 is an integer and 12.5 is not. Python has a type for integer values, called <i>int</i>. It also has a type for numbers that may have decimal components, called <i>float</i>.</p>
+
+<p>What's a <i>float</i>?  The type <i>float</i> is short for floating-point, and describes the system used for keeping track of the decimal point in the internal representation of numbers on a computer. The numbers 123456789 and 0.123456789 have the same significant digits, but have a different decimal point location. The details of how and why this is done are outside the scope of this book, but when you see <i>float</i> used to describe a value's type, think about that floating decimal point, and you'll know what you're dealing with.</p>
+
+<p>You might be asking yourself why Python goes to the bother of separating out one type of number from another. After all, you can go to the interpreter and type in something like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>3 + 4.5</b><br>
+7.5<br>
+&gt;&gt;&gt; <b>3 + 4</b><br>
+7<br>
+&gt;&gt;&gt; <b>3.5 + 4.5</b><br>
+8.0
+</code>
+
+<p>One big question that is raised is why Python bothers to distinguish between integer and floating point numbers in the first place.  After all, if we can add any two numbers together regardless of their type, what does it matter that one might have a decimal value?  The primary reason for this is performance.  For now, that's slightly outside the scope of what we need to worry about.  You might like to think of it this way.  Storing decimal values is a little more complicated than storing integer values with nothing after the decimal point.  Even though that's just a little bit of work, when you're dealing with boatloads of numbers, all of that little work starts to add up.  And if we're doing the sort of thing that only requires integers--three apples, ten fingers, and so on--then eliminating the need to worry about the decimal value can save of a lot of time.</p>
+
+<p>We can use a built-in function in Python to give us the actual type of our data, and to explain to readers with a keen-eye why 3 + 4 gives 7, but 3.5 + 4.5 gives 8.0 (notice that there is a decimal in the second case). But what is a function? A function is a separate piece of code somewhere that you can use by calling it, possibly with parameters. As a practical example, there is a function in Python called <i>type</i>, that tells us the type of a value.</p>
+
+<code>
+&gt;&gt;&gt; <b>type(10)</b><br>
+&lt;class 'int'&gt;
+</code>
+
+<p>If we give that statement to the interpreter, asking it to call the <i>type</i> function with the parameter 10, it gives us the answer that 10 is an <i>int</i>. If we try using the <i>type</i> function with a number with a decimal value, we get something like the following.</p>
+
+<code>
+&gt;&gt;&gt; <b>type(10.5)</b><br>
+&lt;class 'float'&gt;
+</code>
+
+<p>It's thanks to the decimal value that the new number has type <i>float</i> and not <i>int</i>. By explicitly adding the decimal point to the number, we are actually telling Python that this is the type of value that might have interesting numbers after the decimal. For practical purposes, it's often enough to know that <i>int</i> and <i>float</i> variables are just numbers, and that <i>int</i> variables have no explicit decimal component, whereas <i>float</i> variables do.</p>
+
+<p>What about fragments of text, like the &quot;Alexander&quot; example from earlier? We can find out, again by using the <i>type</i> function.</p>
+
+<code>
+&gt;&gt;&gt; <b>type(&quot;Alexander&quot;)</b><br>
+&lt;class 'str'&gt;
+</code>
+
+<p>In this case, we're dealing with text, and in programming languages, we call that a string (abbreviated to <i>str</i> in the example above).</p>
+
+<p>You might have noticed that in the Python code, we wrapped the actual string value with double-quotes. You also might have noticed that variables have no quoting. It is necessary to make sure that Python is aware of the difference between input values and variable names. This is done by wrapping the string values inside of quotes like this. We can break Python easily by omitting them:</p>
+
+<code>
+&gt;&gt;&gt; <b>type(Alexander)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#17&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type(Alexander)<br>
+NameError: name 'Alexander' is not defined
+</code>
+
+<p>We got a very specific type of error there. Python is telling us that a name isn't defined, and complains about a NameError. That's Python's way of saying that it expected to find a variable called Alexander. We didn't wrap our expected string in quotes, so Python tried to treat our value as a variable and crashed when it wasn't able to find the variable. When using strings, make sure you remember to add quotes!</p>
+
+<p>In this book, we're going to try to stick to double-quotes for strings. You can actually use single-quotes, and even triple-quotes, depending on the situation! Here's what our example would look like with a single-quoted string.</p>
+
+<code>
+&gt;&gt;&gt; <b>type('Alexander')</b><br>
+&lt;class 'str'&gt;
+</code>
+
+<p>All of the formats have a reason for being used, but double-quotes are going to save you the most amount of surprising bugs down the road. The reason for this is that there will often be string values like &quot;What's your name?&quot;, and if single quotes are used, Python won't be able to tell where one string begins and ends. Take a look at this:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 'What's your name?'</b><br>
+SyntaxError: invalid syntax</code>
+
+<p>If you read that, what's to say that the string isn't four characters long, and that the &quot;s your name?&quot; part is just a typo? That's what Python means when it tells you there's a syntax error. It believes something is wrong with the way you've written the code, and that it's not proper Python syntax. Most of the time, it's a quote that's either missing or in a place it shouldn't be. Of course, you can still hit problems if you want double-quotes in your string. We'll get into more detail in the next chapter about how you can solve that problem.</p>
+
+<p>One more type that we'll run into periodically is the boolean, abbreviated to <i>bool</i> in Python. A boolean is very straightforward: the value is either True, or it's False. There are no numbers, and no decimal points. It either is, or it isn't.</p>
+
+<code>
+&gt;&gt;&gt; <b>True</b><br>
+True<br>
+&gt;&gt;&gt; <b>False</b><br>
+False<br>
+&gt;&gt;&gt; <b>x = True</b>
+</code>
+
+<p>You'll want to note the fact that the True and False values are capitalized on the first letter, and if you're using IDLE, they'll show up in a different colour. True and False are special terms inside of Python, and we'll be using them to guide our programs through more complicated decisions later on. For example, we can check whether a user is older than a certain age, and if the result is True, do something specific.</p>
+
+<p>There are a bunch of other types in Python, but for the moment, let's just stick with numbers and strings: <i>int</i>, <i>float</i>, and <i>str</i>. We can do a lot with those, and we'll build up some example code before moving on to bigger examples.</p>
+
+<p>Many programming languages require you to actually declare a variable before you can assign a value to it. For example, if a variable is going to hold someone's name, it is necessary to declare the variable as one that holds strings, since a name is a string. Python has no such requirement. Python is an untyped language, meaning a variable that's holding an integer can later be asked to hold a string value. Again, other languages may require that a variable that has been declared as a string can only hold strings. Python does not have the same strict rules. What does all of this actually mean? Well, it means that we can do something like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 10</b><br>
+&gt;&gt;&gt; <b>type(x)</b><br>
+&lt;class 'int'&gt;<br>
+&gt;&gt;&gt; <b>x</b><br>
+10<br>
+&gt;&gt;&gt; <b>x = &quot;Alexander&quot;</b><br>
+&gt;&gt;&gt; <b>type(x)</b><br>
+&lt;class 'str'&gt;<br>
+&gt;&gt;&gt; <b>x</b><br>
+'Alexander'
+</code>
+
+<p>At first, Python is told to declare a new variable called <i>x</i>, and that <i>x</i> should store the <i>int</i> value 10. We test the type of <i>x</i>, verifying that it is in fact an <i>int</i>, and ask Python what the value of <i>x</i> is. Knowing that <i>x</i> already exists, we overwrite the old value stored in that variable with a new value. We take the variable <i>x</i> that's already been defined, place the new string value &quot;Alexander&quot; in it, and verify the type and value. It's important to note that we didn't destroy <i>x</i> when we did the reassignment, we just gave it a new value. One example is to consider your age as a variable. You don't disappear the moment before your birthday, only to reappear like a phoenix rising from the ashes at the instant you celebrate another year passing by. The value in your age variable just gets increased by one. It's a similar concept in programming. Just change the value inside the variable, forfeit the old one, and keep track of the new one in its place.</p>
+
+<h2>Equality and comparison</h2>
+
+<p>In Python, variable assignment is done by using a single equals sign. Equality also uses the equals sign, but to differentiate between equality and assignment, equality checks use a double-equals sign. Take a look at the code below to see what this means:</p>
+
+<code>
+&gt;&gt;&gt; <b>x = 1</b><br>
+&gt;&gt;&gt; <b>x</b><br>
+1<br>
+&gt;&gt;&gt; <b>x == 1</b><br>
+True
+</code>
+
+<p>The first line defines a variable called <i>x</i>, and tells the new variable <i>x</i> to hold the <i>int</i> value 1. If we want to test whether or not this assignment worked properly, we use the double-equals sign, which reads as &quot;Is it true that variable <i>x</i> is equal to 1?&quot; If the equality statement is True, Python returns the boolean value True. If we give perform another equality check with a value that we know to be different, the equality test should return the boolean value False.</p>
+
+<code>
+&gt;&gt;&gt; <b>x</b><br>
+1<br>
+&gt;&gt;&gt; <b>x == 2</b><br>
+False
+</code>
+
+<p>The same double-equals sign can be used to test the equality of numbers and strings. For example, some fairly obvious tests between values of the same type can be made. We can perform tests to see if <i>int</i> and <i>float</i> numbers retain their equality across types. This is a way of asking whether Python thinks that 2 is equal to 2.0.</p>
+
+<code>
+&gt;&gt;&gt; <b>1 == 2</b><br>
+False<br>
+&gt;&gt;&gt; <b>1 == 1</b><br>
+True<br>
+&gt;&gt;&gt; <b>2 == 2.0</b><br>
+True<br>
+&gt;&gt;&gt; <b>1 == 1.5</b><br>
+False
+</code>
+
+<p>In the third example above, we do the comparison of the <i>int</i> value 2 against the <i>float</i> value 2.0. Intuitively, these two values are equal, and fortunately for us, Python agrees. If an <i>int</i> and <i>float</i> represent the same exact number, the equality test will return True.</p>
+
+<p>The same symbol can be used to test the equality of strings.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; == &quot;Alexander&quot;</b><br>
+True<br>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; == &quot;alexandER&quot;</b><br>
+False
+</code>
+
+<p>Equality of a string is dependent on the capitalization of the two strings being compared. In the example above, even though the same name was used, the capitalization of the first letter affected the overall equality of the string. Two strings are equal only if all the individual characters in the string are equal. The quotes used have no effect on the strings.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; == 'Alexander'</b><br>
+True
+</code>
+
+<p>In addition to basic equality testing, Python also allows for the ordered comparison of variables and values to determine if something is larger or smaller than something else. The greater-than and less-than signs can tell you how one value is different from another. A not-equals operator also exists to tell you if a value is different from the source.</p>
+
+<code>
+&gt;&gt;&gt; <b>1 &gt; 2</b><br>
+False<br>
+&gt;&gt;&gt; <b>1 &lt; 2</b><br>
+True<br>
+&gt;&gt;&gt; <b>1 != 2</b><br>
+True
+</code>
+
+<p>Symbols like the greater-than and less-than signs should be familiar to you. Just like the plus sign and the equals sign, many of these symbols are taken straight out of mathematics. What might be new is the exclamation-mark glued on to the beginning of the equals sign. When you see the != symbol, read it as not-equal-to. You can expect a boolean value to be returned based on whether or not the two values on either side are equal to each other.</p>
+
+<h2>Converting between types</h2>
+
+<p>We know that Python treats numbers and strings differently, and even treats different kinds of numbers differently from one another. But what does it mean to have a string with a number in it? If we have the string &quot;1&quot;, is it the same as the <i>int</i> 1, the <i>float</i> 1.0, both, or neither? It's possible to test things like this by using equality tests.</p>
+
+<p>Look at the following familiar example that identifies the types of two sample numbers and compares the equality of those numbers.</p>
+
+<code>
+&gt;&gt;&gt; <b>type(1)</b><br>
+&lt;class 'int'&gt;<br>
+&gt;&gt;&gt; <b>type(1.0)</b><br>
+&lt;class 'float'&gt;<br>
+&gt;&gt;&gt; <b>1 == 1.0</b><br>
+True
+</code>
+
+<p>You're already familiar with <i>type</i>, one of the built-in functions in Python. It's time to introduce a few more.</p>
+
+<p>It's clear now that 1 is a value of type <i>int</i>, and 1.0 is a value of type <i>float</i>. You might also be comforted to see that the same number represented as either an <i>int</i> or a <i>float</i> is treated as being equal. Python allows you to actually convert between <i>int</i> and <i>float</i> values by using the appropriately named <i>int</i> and <i>float</i> built-in functions. They work in a similar way to <i>type</i> by accepting a parameter, such as a number or other value, and then returning the value in the type you request.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(1.0)</b><br>
+1<br>
+&gt;&gt;&gt; <b>float(1)</b><br>
+1.0</code>
+
+<p>The first example is a conversion from 1.0, a <i>float</i> value, into the equivalent <i>int</i> value, which comes out as 1. The second example takes the <i>int</i> value 1, converts it into a <i>float</i>, and returns 1.0. When you see the built-in functions like this, it might help to read it out in a full sentence until you're comfortable with the code. The first example says &quot;Give me the integer representation of the value 1.0,&quot; and the second says &quot;Give me the floating-point representation of the value 1.&quot;</p>
+
+<p>A nice bonus of the <i>int</i> function is the ability to round numbers down to the nearest integer. It is possible to convert a <i>float</i> into an <i>int</i>, even if the <i>float</i> value has non-zero decimal digits. Converting from type <i>float</i> to type <i>int</i> strips away the decimal component and rounds down. The values that are returned from functions can also be captured in variables, so if we wanted to store the <i>int</i> value of our <i>float</i> with the value 5.9, we treat it like any other variable assignment.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(5.9)</b><br>
+5<br>
+&gt;&gt;&gt; <b>x = int(5.9)</b><br>
+&gt;&gt;&gt; <b>x</b><br>
+5
+</code>
+
+<p>The same concepts apply to string values, but we have to be a little more careful. The corresponding string conversion function is called <i>str</i>, just like the type name that we discovered earlier, and it accepts a single parameter. Any <i>int</i> or <i>float</i> can be converted into a string. When moving from strings to numbers, however, Python will attempt to convert any string that looks like a number into a numeric representation, but it will fail if the string is a word or some other non-numeric value. If you think about it, every number can be stored as a string, but not every string can be stored as a number.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(&quot;1&quot;)</b><br>
+1<br>
+&gt;&gt;&gt; <b>float(&quot;1&quot;)</b><br>
+1.0<br>
+&gt;&gt;&gt; <b>str(1)</b><br>
+'1'<br>
+&gt;&gt;&gt; <b>str(1.0)</b><br>
+'1.0'
+</code>
+
+<p>As you can see in the example above, when we call the <i>str</i> function with a numeric value, it gives you a string (with quotes, as expected -- don't forget to look for the quotes!). When we pass the string &quot;1&quot; into either the <i>int</i> or <i>float</i> built-in functions, Python attempts to convert the string into the related numeric value for that type, and returns the value when it's successful. It's pretty good, but it's certainly not perfect.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(&quot;one&quot;)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#5&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int(&quot;one&quot;)<br>
+ValueError: invalid literal for int() with base 10: 'one'
+</code>
+
+<h2>Breaking Things</h2>
+
+<p>One great way to break your interpreter is to pick a variable name that already has some predefined meaning in Python. In Python, function names and type names are really just variable identifiers. It just happens that those names point to functions or to types instead of numbers or strings. This might sound a little strange, so let's work by example.</p>
+
+<code>
+&gt;&gt;&gt; <b>int</b><br>
+&lt;class 'int'&gt;<br>
+&gt;&gt;&gt; <b>type(int)</b><br>
+&lt;class 'type'&gt;
+</code>
+
+<p>Instead of taking the type of an integer value like 2, we actually took the type of the integer type itself. We can use a few more examples to show what this really means.</p>
+
+<code>
+&gt;&gt;&gt; <b>type(int)</b><br>
+&lt;class 'type'&gt;<br>
+&gt;&gt;&gt; <b>type(float)</b><br>
+&lt;class 'type'&gt;<br>
+&gt;&gt;&gt; <b>type(str)</b><br>
+&lt;class 'type'&gt;
+</code>
+
+<p>We know that variables in Python have an associated type. If you think of all of the different types that a value can have, that set of types is itself a type. An <i>int</i> is a kind of type, and a <i>str</i> is a kind of type.</p>
+
+<p>What happens if we want to declare a variable with the name <i>int</i>? We've already got something defined in the environment called <i>int</i>, so what will Python do if we declare something new? You can do this easily with other variables like <i>x</i>, so what does it mean to use <i>int</i>?</p>
+
+<code>
+&gt;&gt;&gt; <b>int</b><br>
+&lt;class 'int'&gt;<br>
+&gt;&gt;&gt; <b>int = 2</b><br>
+&gt;&gt;&gt; <b>int</b><br>
+2<br>
+&gt;&gt;&gt; <b>type(int)</b><br>
+&lt;class 'int'&gt;
+</code>
+
+<p>Well, it's nice that we were able to declare a variable called <i>int</i>. Python certainly didn't complain about what we were doing, and it doesn't look like we broke anything right away by doing that. It's a pretty serious problem though. Once we do this, we can't use the <i>int</i> function anymore!</p>
+
+<code>
+&gt;&gt;&gt; <b>int(5.0)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#15&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int(5.0)<br>
+TypeError: 'int' object is not callable
+</code>
+
+<p>Whoops! We actually took the function that <i>int</i> was referring to and removed the connection to the <i>int</i> variable name. The TypeError is telling us that <i>int</i> is no longer a function, and that we can't pass parameters to it like we used to. We redefined <i>int</i> as an actual number, so all of the functionality that was built in before is now gone.</p>
+
+<p>Any of the names in the Python environment can be used in this way, so you can start to get some really strange results by using them.</p>
+
+<code>
+&gt;&gt;&gt; <b>int(1.0)</b><br>
+1<br>
+&gt;&gt;&gt; <b>int = str</b><br>
+&gt;&gt;&gt; <b>int(1.0)</b><br>
+'1.0'
+</code>
+
+<p>Pretty wild, huh? This is important to know though, especially when you accidentally use a name for your variable that you expect to be something else. If you want to break your Python environment, choose names like <i>int</i>, <i>str</i>, or <i>type</i> for your variables. If not, choose unique names for your variables!</p>
+
+<p>If you do accidentally overwrite a function that Python uses, you have a few techniques for restoring things to their natural state. The easiest option is to just quit and restart the IDLE interpreter. Any changes you make are temporary, so restarting the Python environment will return things to normal. You can also restore things inside of IDLE by going to the Shell menu and choosing Restart Shell. You'll see a large RESTART message, followed by a new prompt.</p>
+
+<code>
+&gt;&gt;&gt; <b>int</b><br>
+&lt;class 'int'&gt;<br>
+&gt;&gt;&gt; <b>int = str</b><br>
+&gt;&gt;&gt; <b>int</b><br>
+&lt;class 'str'&gt;<br>
+&gt;&gt;&gt; ============================ RESTART ============================<br>
+&gt;&gt;&gt; <b>int</b><br>
+&lt;class 'int'&gt;
+</code>
+
+<p>This is one of the main reasons to be comfortable when breaking things in Python. If you break something, from simple things like adding incorrect types to renaming core functions, you can always restore the environment with a few mouse clicks.</p>
+
+<h2>Summary</h2>
+
+<p>A variable is a reference to a value. In a programming language, the collection of variables constitutes the program state, or the program memory. In Python, a variable is not restricted to holding values of a particular type. However, each value has a particular type associated with it. Values and variables can be tested for equality, and the type of the value has meaning when checking if two pieces of data are equal to one another.</p>
+
+<p>Try defining some new variables and see what happens when you modify them through addition or multiplication. See if you can get comfortable with variable creation, and the differences between types. While you're working with these, try assigning variables to other variables.</p>
+
+<h2>Exercises</h2>
+
+<p>1. Define a variable in Python called <i>name</i>, and assign your name to it. Try making it fairly long by using your full name.</p>
+
+<p>2. Using some of the simple math operations in Python like addition and multiplication, try seeing what happens when you mix an <i>int</i> and a <i>float</i> up in an expression. What happens if you add an <i>int</i> to a <i>float</i>, like 5 plus 10.4? What is the type of the result?</p>
+
+<p>3. Create two variables, each with numbers stored in them. Use these two variables in a math expression. Say you've defined <i>x</i> and <i>y</i>, what happens if you type <i>x + y</i> in IDLE?</p>
+
+<p>4. Convert between <i>int</i> and <i>float</i> types for several numbers with and without decimal values.</p>
+
+<p>5. Play around with converting strings to and from number types. What happens when you try to convert a string like &quot;Alexander&quot; into a number?</p>

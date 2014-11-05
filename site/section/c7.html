@@ -1,0 +1,487 @@
+<h1>Chapter 7: Loops</h1>
+
+<p>As we saw in the last chapter, an if-statement is an incredibly useful programming tool. However, one of the problems with an if-statement is that it is still essentially just a one-time operation. For example, in our password program, it would be nice to return back to the top to ask the user again and again until they either gave up or got it right.</p>
+
+<p>Loops have the same type of functionality as if-statements, but they repeat until you tell them to end. In the password example, when the user's password is entered incorrectly, instead of just ending, a loop could return back to the <i>input</i> statement and start again. We gain a lot of power from this new statement, and this chapter will explain how Python implements it.</p>
+
+<h2>History repeating</h2>
+
+<p>The idea of testing for a necessary condition before executing some code is a fundamental part of computer programming. It is impractical to write useful code that doesn't depend on the input it receives. The input may be strings of text from the prompt, files on a hard drive, or incoming data from the internet. Regardless of the context, checks need to be performed against the values of the variables, and programs get directed to the appropriate path when certain preconditions are satisfied.</p>
+
+<p>With the examples that we saw in the previous chapter, we have gained the ability to route the user through several paths based on their input. Unfortunately, there are still some limitations. Say that a user enters a number outside the valid range, like a negative integer value for their age. The ideal program would realize that the age was invalid, and simply ask them again. For example, we're not turned away from a friend when we tell them that we're negative five years old (well, I suppose that it depends on the friend). So why should our program end when it reaches an invalid value when we could simply ask again?</p>
+
+<p>One solution is to check to see if the user gave us a bad value first, and ask them again if they broke the rules. An example from the previous chapter can be expanded in the following way.</p>
+
+<code>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>if age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>30</b><br>
+Alright, you're 30 years old.
+</code>
+
+<p>It looks good at first glance. But this doesn't really solve our problem, because the user can lie a second time and trick our program again.</p>
+
+<code>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>-5</b><br>
+Alright, you're -5 years old.
+</code>
+
+<p>So how do we get around this problem? We can't just keep embedding input statements inside of if-statements again and again. ... Can we?</p>
+
+<code>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>if age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# hmm.. again?</b><br>
+<b>print(&quot;Alright, you're {0} years old.&quot;.format(age))</b>
+</code>
+
+<p>Eventually we're going to hit the limit of our copy-paste ninjitsu, and a troublesome user is going to be able to convince our program that they're negative five years old. What we need is a more robust solution. How about the <i>while</i> statement?</p>
+
+<code>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>while age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;I think you're trying to trick me.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>-5</b><br>
+I think you're trying to trick me.<br>
+Enter your age: <b>30</b><br>
+Alright, you're 30 years old.
+</code>
+
+<p>The <i>while</i> keyword works like an if-statement and performs the necessary check to see if the inner block of code needs to be executed. The major difference is that when Python reaches the end of that block of code, it does the expression check again. If the check still returns False, the <i>while</i> loop goes back to the beginning of the block and runs it again and again until things in the expression eventually settle.</p>
+
+<p>Let's rework the password example from the previous chapter using a loop. Here's the new code.</p>
+
+<code><b>password = &quot;spam&quot;</b><br>
+<b>done = False</b><br>
+<b>while done == False:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;user_password = input(&quot;Enter the password: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if password == user_password:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That's not the password! I can't let you in.&quot;)</b><br>
+<b>print(&quot;SECRET ACCESS GRANTED.&quot;)</b><br>
+<br>
+Enter the password: <b>turkey</b><br>
+That's not the password! I can't let you in.<br>
+Enter the password: <b>spam</b><br>
+SECRET ACCESS GRANTED.
+</code>
+
+<p>The code adds a new loop, along with a boolean variable called <i>done</i> that is initialized to False. The <i>done</i> variable will only get set to True when the password entered by the user matches the one defined at the start of the program. If the password doesn't match, we print out the same old error message. If they do match, the loop will terminate because <i>done</i> is no longer False, and our secret message and other hidden program code will start to execute.</p>
+
+<p>In the age example above, we have a really clear example of looping that only occurs when necessary. What happens when the user actually enters in a good value the first time instead of entering some invalid negative age that doesn't pass the expression test? In that case, the <i>while</i> loop never enters into the block that asks the user for their age again. The input was acceptable, and we move right past the indented block to the <i>print</i> statement below. The <i>while</i> loop only gets triggered when the data is invalid, and only stays active when the input remains unacceptable.</p>
+
+<p>This type of example can be augmented with counter variables. These are standard variables that are increased based on the number of times a certain type of input has occurred. (Okay, it's really just an int that we increase by 1 every time something interesting happens. I'm just going to call it a counter variable here.) Let's change the above example slightly to add a counter variable that checks how many times the user has been difficult.</p>
+
+<code>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>counter = 1</b><br>
+<b>while age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That was input #{0}, and you tried to trick me.&quot;.format(counter))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;counter = counter + 1</b><br>
+<b>print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<b>print(&quot;Number of times that I had to ask you: {0}&quot;.format(counter))</b><br>
+<br>
+Enter your age: <b>30</b><br>
+Alright, you're 30 years old.<br>
+Number of times that I had to ask you: 1<br>
+<br>
+Enter your age: <b>-5</b><br>
+That was input #1, and you tried to trick me.<br>
+Enter your age: <b>-4</b><br>
+That was input #2, and you tried to trick me.<br>
+Enter your age: <b>-7</b><br>
+That was input #3, and you tried to trick me.<br>
+Enter your age: <b>30</b><br>
+Alright, you're 30 years old.<br>
+Number of times that I had to ask you: 4
+</code>
+
+<p>The addition of a counter provides a visual indication about how many times the loop was executed, and in a sense, actually helps show how the loop is actually working. At first, the counter is set to a starting value of 1 to match the number of times we've presented the input statement to the user and asked them for their age. If they give an acceptable value, we're happy, and the counter never changes. However, the first time that a loop hits an error condition, defined in the code as one that causes the expression in the <i>while</i>-statement to evaluate to True, our counter gets incremented by one.</p>
+
+<p>It is also interesting to note that the <i>while</i> loop never uses the counter variable in its expression. It's an extra variable that is used for information, and something that changes inside the loop block itself but never gets tested in the loop expression.</p>
+
+<h2>The break and continue statements</h2>
+
+<p>Let's say that we hit a case where the user has lied ten times in a row. We might get suspicious, and we might even think that the user is never going to tell us the truth. If that happens, we'll end up stuck inside our loop forever, never to return to normal program execution. How can we get out of this tricky situation?</p>
+
+<p>Loops are pretty neat. They give us the ability to run for an arbitrary amount of time, processing data and collecting input until we hit some programmer-defined stopping point. If we have invalid ages, it's possible to keep forcing the user to give new data until they finally comply and give up their actual age. However, we might have edge cases where it would be better to end the loop early, or even to just stop the current execution and move on to the next iteration of the loop itself. If we ever hit a point in a loop where we'd like to break out for some reason, Python provides a couple of handy statements to allow us to do this.</p>
+
+<code>
+<b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>counter = 1</b><br>
+<b>while age &lt; 0 or age &gt; 150:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;That was input #{0}, and you tried to trick me.&quot;.format(counter))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;age = int(input(&quot;Enter your age: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;counter = counter + 1</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if counter &gt;= 5:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age = 0</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b><br>
+<b>print(&quot;Number of times that I had to ask you: {0}&quot;.format(counter))</b><br>
+<b>if age == 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't follow the rules, and I am sad.&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Alright, you're {0} years old.&quot;.format(age))</b><br>
+<br>
+Enter your age: <b>-5</b><br>
+That was input #1, and you tried to trick me.<br>
+Enter your age: <b>-4</b><br>
+That was input #2, and you tried to trick me.<br>
+Enter your age: <b>-3</b><br>
+That was input #3, and you tried to trick me.<br>
+Enter your age: <b>-2</b><br>
+That was input #4, and you tried to trick me.<br>
+Enter your age: <b>-1</b><br>
+Number of times that I had to ask you: 5<br>
+You didn't follow the rules, and I am sad.
+</code>
+
+<p>In the example above, a condition is set up to make sure that a user who is intent on giving bad data can't succeed in hogging all of the program time. If they give five bad values, we assume they're playing games and get out of there using the <i>break</i> statement. When you break out of a loop, you tell the loop that there's no need to keep testing for the truth condition, and that you're satisfied with the state of the code. By using <i>break</i>, the loop terminates right there, and the rest of the program after the loop starts running.</p>
+
+<p>Let's use a simple example to just show <i>break</i> on its own.</p>
+
+<code>
+<b>i = 1</b><br>
+<b>while i &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;i = i + 1</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if i &gt; 5:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b><br>
+<br>
+1<br>
+2<br>
+3<br>
+4<br>
+5
+</code>
+
+<p>Exiting out of the loop isn't the only action that might be needed. We might also want to stop execution of the current loop block while remaining in the current loop itself. This is different than <i>break</i>, which halts the loop entirely. Here's an example that shows the difference between the two.</p>
+
+<code>
+<b>while True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;num = int(input(&quot;Enter a positive number, or 0 to quit: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if num &lt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Positive numbers only, please!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;elif num == 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;OK, quitting!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;num_squared = num * num</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} times {0} is {1}.&quot;.format(num, num_squared))</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a positive number, or 0 to quit: <b>-1</b><br>
+Positive numbers only, please!<br>
+Enter a positive number, or 0 to quit: <b>3</b><br>
+3 times 3 is 9.<br>
+Enter a positive number, or 0 to quit: <b>5</b><br>
+5 times 5 is 25.<br>
+Enter a positive number, or 0 to quit: <b>-4</b><br>
+Positive numbers only, please!<br>
+Enter a positive number, or 0 to quit: <b>0</b><br>
+OK, quitting!<br>
+All done!
+</code>
+
+<p>We want to get a number from the user so that we can give them the square of that number. In this example, we're only asking for positive numbers, so if the user gives us a negative one, we don't want to quit, but we don't want to actually give them the square. We asked for a positive number, and we'd like to enforce that without quitting in the case of invalid input.</p>
+
+<p>The <i>continue</i> statement acts like the <i>break</i> statement in the context of the current iteration of the loop. Continuing out of a block of code inside a loop will end the current iteration, return to the top of the loop, and continue from the start of the loop again. Breaking out of a block of code ends the loop altogether.</p>
+
+<p>To make sure that the loop runs until we actually tell it to stop, we use an expression that might be a little counter-intuitive at first glance. What does it mean to have a <i>while</i> loop that uses the True expression? Look at an if-statement for an example.</p>
+
+<code>
+<b>if True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Hello, world!&quot;)</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Goodbye.&quot;)</b><br>
+<br>
+Hello, world!
+</code>
+
+<p>Of course it must always be the case that &quot;Hello, world!&quot; gets printed and that &quot;Goodbye.&quot; is never seen. By definition, if the if-statement expression evaluates to True, we run the code in the if-statement's code block. True is always True, and True is never False, so it's impossible for us to get to the &quot;Goodbye.&quot; <i>print</i> statement. However, when blocks of code are repeating, like with while loops, Python is asked to run the code forever until explicitly told to stop.</p>
+
+<code>
+<b>while True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Hello, world!&quot;)</b><br>
+<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!<br>
+[repeat forever..]
+</code>
+
+<p>With <i>break</i> and <i>continue</i>, you gain the ability to write loops that grant you a greater level of control. You aren't bound to just allow the loops to run as they see fit. You have the power to either terminate the entire loop, or to simply terminate the current iteration in the loop by moving to the next one.</p>
+
+<p>Let's build an example with a counter variable.</p>
+
+<code>
+<b>counter = 1</b><br>
+<b>while True:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Hello, world!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;counter = counter + 1</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if counter &gt; 5:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b><br>
+<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!
+</code>
+
+<p>This example still uses the True expression, asking Python to run forever until we tell it otherwise. With the break statement, the kill command is given to the while loop. Based on the number of times we've already printed our statement, we can ask Python to cut the loop short and continue on with the rest of the program code.</p>
+
+<h2>The for statement</h2>
+
+<p>A <i>for</i> statement differs from a <i>while</i> statement by actually requiring a set of elements that it will iterate over. For example, we might want a loop that runs over a range of numbers, like the integer values from 1 to 10. It is possible to set up a counter with a <i>while</i> loop to make this happen, but the <i>for</i> statement is set up to handle this type of situation easily and efficiently. Let's revisit the &quot;Hello, world!&quot; example from the previous section. To see how it can be modified to print out the string five times using a <i>for</i> loop. To do that, we'll learn about a new built-in function called <i>range</i>.</p>
+
+<code>
+<b>for x in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Hello, world!&quot;)</b><br>
+<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!<br>
+Hello, world!
+</code>
+
+<p>The <i>range</i> function provides a way to access a set of numbers in an efficient way. When used with a <i>for</i> statement, it performs a loop that runs a fixed number of times. The example above asks Python to run the &quot;Hello, world!&quot; <i>print</i> statement five times. It does this by assigning the new variable <i>x</i> a particular value in the requested range for each iteration of the loop. If you remember how these indices are calculated with string character positions, you'll recall that these indices start at zero. To show this, look at the following code:</p>
+
+<code>
+<b>for x in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The value of x is {0}.&quot;.format(x))</b><br>
+<br>
+The value of x is 0.<br>
+The value of x is 1.<br>
+The value of x is 2.<br>
+The value of x is 3.<br>
+The value of x is 4.
+</code>
+
+<p>When the <i>for</i> function is combined with the <i>range</i> built-in function, each iteration of the loop sets <i>x</i> to the next value in the range we requested. It's as if we had a counter with a <i>while</i> loop that we were manually requesting. The <i>for</i> loop takes the next value automatically, sets the variable x to the new value, and executes the inner code block. With a <i>while</i> loop, the code might look like this:</p>
+
+<code>
+<b>x = 0</b><br>
+<b>while x &lt; 5:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The value of x is {0}.&quot;.format(x))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;x = x + 1</b><br>
+<br>
+The value of x is 0.<br>
+The value of x is 1.<br>
+The value of x is 2.<br>
+The value of x is 3.<br>
+The value of x is 4.
+</code>
+
+<p>Since the <i>range</i> value gives us this counter behaviour implicitly, we can write code that is a little more readable by combining <i>for</i> and <i>range</i> when the actual number range is known. It is important to note that <i>range(5)</i> gives the first five numbers in the range, starting at 0, and that this range doesn't include the actual number 5. This is a side-effect of the zero-based counting system.</p>
+
+<p>The <i>range</i> function is versatile enough to allow ranges that don't actually start at zero (for example, the numbers from 2 to 4), and ranges that increase or decrease in other ways than incrementing by one. If we wanted to calculate the squares of the first five positive integers, we could specify the starting and ending values in <i>range</i> and use a similar <i>for</i> loop to get our code. In this case, we can use <i>range(1, 6)</i>. As mentioned earlier, we must consider that the end point that is given is never part of the actual range returned. In the <i>range(5)</i> example, the value 5 is never part of the range, and when we use <i>range(1, 6)</i>, the value 6 is never part of the range. The ending value is the stopping condition, the value that we stop the range at and never test.</p>
+
+<code>
+<b>for x in range(1, 6):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The square of {0} is {1}.&quot;.format(x, x * x))</b><br>
+<br>
+The square of 1 is 1.<br>
+The square of 2 is 4.<br>
+The square of 3 is 9.<br>
+The square of 4 is 16.<br>
+The square of 5 is 25.
+</code>
+
+<p>If a starting value is provided, you also have the option of providing a step value. The step is the amount that the value is modified by at each iteration of the loop. For example, if you want to consider the even numbers instead of every one along the way, you specify a starting value of 0 and a step of 2.</p>
+
+<code>
+<b>for x in range(0, 11, 2):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The square of {0} is {1}.&quot;.format(x, x * x))</b><br>
+<br>
+The square of 0 is 0.<br>
+The square of 2 is 4.<br>
+The square of 4 is 16.<br>
+The square of 6 is 36.<br>
+The square of 8 is 64.<br>
+The square of 10 is 100.
+</code>
+
+<p>In general, a <i>for</i> statement can be thought of as a way to define a new variable that is given a set of possible values to exist with in the context of a particular block of code. The squares example has some very general code to output the original variable and its square, and the code makes no assumption on what the variable is, except for the fact that it must be a number. We didn't change the inner block between the <i>range(1, 6)</i> and <i>range(0, 11, 2)</i> examples at all. All that was modified was the range that the code was iterated over. Even the variable name remained the same.</p>
+
+<p>We can use variables in the <i>range</i> function as well. The squares example can be extended to use a user-provided range of numbers to output.</p>
+
+<code>
+<b>lower = int(input(&quot;Enter the lower value of the range: &quot;))</b><br>
+<b>upper = int(input(&quot;Enter the upper value of the range: &quot;))</b><br>
+<b>for x in range(lower, upper):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The square of {0} is {1}.&quot;.format(x, x * x))</b><br>
+<br>
+Enter the lower value of the range: <b>8</b><br>
+Enter the upper value of the range: <b>14</b><br>
+The square of 8 is 64.<br>
+The square of 9 is 81.<br>
+The square of 10 is 100.<br>
+The square of 11 is 121.<br>
+The square of 12 is 144.<br>
+The square of 13 is 169.
+</code>
+
+<p>Neat trick, eh? Give it a shot! What happens if you enter some different numbers, or if you start with the larger number instead of the smaller one? Can you break this code?</p>
+
+<h2>Nested loops</h2>
+
+<p>One powerful technique using loops involves nesting them inside of other loops. If you have two pieces of data that are changing in relation to one another, you can define a new loop inside of the original loop to process your data. Let's use multiplication tables as an example of this.</p>
+
+<code>
+<b>for x in range(1, 6):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for y in range(1, 6):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} * {1} is {2}&quot;.format(x, y, x * y))</b><br>
+<br>
+1 * 1 is 1<br>
+1 * 2 is 2<br>
+1 * 3 is 3<br>
+1 * 4 is 4<br>
+1 * 5 is 5<br>
+2 * 1 is 2<br>
+2 * 2 is 4<br>
+[...]<br>
+5 * 3 is 15<br>
+5 * 4 is 20<br>
+5 * 5 is 25
+</code>
+
+<p>What happened in this example? The <i>for</i> loop using the <i>y</i> variable is sitting inside of the <i>for</i> loop using the <i>x</i> variable. Every time the <i>x</i> loop happens, five iterations of the <i>y</i> loop occur. At first, <i>x</i> is set to 1, and <i>y</i> is set to 1. When the <i>print</i> statement finishes, the <i>y</i> block also finishes, and the next iteration of the <i>y</i> loop begins. This bumps up the <i>y</i> value to 2, while <i>x</i> remains at 1, and the <i>print</i> statement occurs again. Once the <i>print</i> statement finishes showing the result of 1 * 5, the <i>y</i> loop is finished, and the first <i>x</i> block finally finishes. The <i>x</i> variable jumps up to 2, and the <i>y</i> loop starts all over again with <i>y</i> set to 1. The important note there is that the entire <i>y</i> loop is essentially refreshed each time the <i>x</i> loop starts.</p>
+
+<p>Let's use some <i>print</i> statements to provide a clearer example of the way that inner loops actually evaluate in the code.</p>
+
+<code>
+<b>for x in range(3):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;x: {0}&quot;.format(x))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for y in range(3):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;&nbsp;&nbsp;&nbsp;&nbsp;y: {0}&quot;.format(y))</b><br>
+<br>
+x: 0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 2<br>
+x: 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 2<br>
+x: 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y: 2
+</code>
+
+<p>The inner loop runs multiple times, and each time the <i>y</i> loop starts up, it has a different value for <i>x</i>. You can use this to build complicated examples with different data sets. When we look at list variables in the next chapter, you'll see how you can combine things like sets of names, locations, or other variables in ways like this.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>Want to know one of my favourite ways of breaking stuff?  Or, at least, one of the ways that I most frequently break stuff?  It's a little bit embarassing, but it happens all the time, so I might as well fess up to it.</p>
+
+<p>In Python, as in many other programming languages, variable names are important.  You should think very carefully about the names you use, both in how they're capitalized, what information they convey, and in the styles of names used for particular purposes.  Case in point: loops are often written using the identifier <i>i</i>.  Why <i>i</i>?  Well, just because.  And if <i>i</i> is taken in one of the outer loops, just use <i>j</i>.  Lots of loops will default to <i>i</i> or <i>j</i>, just as many simple variables will default to <i>x</i>.</p>
+
+<p>Where we get bit by this is when we forget about the variables that have already been defined, and we reuse them in some context.  Let's look at a simple, and perfectly obvious example, of a broken piece of code.</p>
+
+<code>
+<b>for int in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} times {0} is {1}.&quot;.format(int, int * int))</b><br>
+<br>
+0 times 0 is 0.<br>
+1 times 1 is 1.<br>
+2 times 2 is 4.<br>
+3 times 3 is 9.<br>
+4 times 4 is 16.<br>
+5 times 5 is 25.<br>
+6 times 6 is 36.<br>
+7 times 7 is 49.<br>
+8 times 8 is 64.<br>
+9 times 9 is 81.
+</code>
+
+<p>Seems legit, right?  We define a variable called <i>int</i> and call the range function to give us 10 different values, each of which is assigned to <i>int</i> and used to print out a string showing what the square of the value is.  The code even seems to do the right thing, and ends without any errors.</p>
+    
+<p>What matters in this piece of code is the assignment to <i>int</i>.  The <i>int</i> identifier is currently assigned to a function--in this case, the function that converts another value into an integer.  If we assign a new value to <i>int</i>, we actually tell Python to throw away the reference to the function that converts values into integers, and to instead track the value returned by range.  For example, look at this code:</p>
+
+<code>
+<b>for int in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} times {0} is {1}.&quot;.format(int, int * int))</b><br>
+<br>
+<b>x = int(input(&quot;How high should I go?  &quot;))</b><br>
+<br>
+<b>for int in range(x):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} times {0} is {1}.&quot;.format(int, int * int))</b><br>
+</code>
+
+<p>That code should, at first glance, show us the squares of the values from 0 to 9, then ask us what value we should pass to range, and then do the same thing.  The <i>int</i> call, when used with <i>input</i> has previously converted string representations of numbers into the actual number value itself.  However, by telling Python that <i>int</i>--the identifier <i>int</i>, which is a variable name--is used to store a value now, we can no longer use it to access the function!</p>
+
+<code>
+0 times 0 is 0.<br>
+1 times 1 is 1.<br>
+2 times 2 is 4.<br>
+3 times 3 is 9.<br>
+4 times 4 is 16.<br>
+5 times 5 is 25.<br>
+6 times 6 is 36.<br>
+7 times 7 is 49.<br>
+8 times 8 is 64.<br>
+9 times 9 is 81.<br>
+How high should I go?  15<br>
+Traceback (most recent call last):<br>
+&nbsp;&nbsp;File "sample.py", line 4, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x = int(input(&quot;How high should I go?  &quot;))<br>
+TypeError: 'int' object is not callable
+</code>
+
+<p>We'll get into more detail about why this happens later, don't worry.  For the time being, try not to reuse identifiers.  You might not get what you expect.</p>
+
+<h2>Summary</h2>
+
+<p>Loops are a fundamental part of programming.  Adding control flow gives your program the flexibility to run sections of code multiple times, and allows your code to perform complicated tasks that are otherwise impossible or unwieldy.</p>
+
+<p>In the next section, we'll look at a data structure called a list that is used by Python to enable some very diverse functionality.</p>
+
+<h2>Exercises</h2>
+
+<p>1. Write a program that prints all the multiples of 7 from 0 to 100. Experiment with printing the squares, the reciprocal (one divided by the number), and other expressions.</p>
+
+<p>2. Print out the multiplication tables from 1 to 10 in a table on the screen. You can use the <i>end</i> parameter in print statements to stop Python from printing each string on its own line. For example,</p>
+
+<code>
+<b>for x in range(1, 11):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0:4}&quot;.format(x), end=&quot;&quot;)</b><br>
+<br>
+1&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;9&nbsp;&nbsp;10
+</code>
+
+<p>Set up an outer loop and an inner loop to keep track of the values you're multiplying together, and let each row and column correspond to increasing values from 1 to 10.</p>

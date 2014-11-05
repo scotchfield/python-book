@@ -1,0 +1,636 @@
+<h1>Chapter 8: Lists</h1>
+
+<p>Variables are the memory of Python. Large numbers of variables can be created, and as long as you know what belongs where, you can hold a great amount of data. This can become problematic when we have large sets of related data though, like a collection of student names enrolled in a class. The list data structure aggregates this information into a single place, so rather than forcing you to define name1, name2, name3, and so on, you can declare a list variable and add each name into that structure one-by-one. Think about a class list, or even a phone book. A list is a data structure, like a bucket, that lets you add and remove elements to it as you see fit. This chapter will explain how these collections are created and accessed, and will explain a number of situations where you might like to put them to good use.</p>
+
+<h2>Collections of data</h2>
+
+<p>A list is one of the fundamental data types in Python. It exists to manage collections of data that are not bounded to a certain size and that may actually consist of different types. Lists require a minimal amount of management from a programming standpoint. Thanks to their ease of use, they are bound to become one of the most useful tools in your programming toolbox. To begin the introduction, let's start by revisiting strings.</p>
+
+<p>The individual characters in a string are accessed by their index in the string value. For example, we might have code that looks like this:</p>
+
+<code>
+<b>name = &quot;Alexander&quot;</b><br>
+<b>print(&quot;The first letter is {0}.&quot;.format(name[0]))</b><br>
+<b>print(&quot;The second letter is {0}.&quot;.format(name[1]))</b><br>
+<br>
+The first letter is A.<br>
+The second letter is l.
+</code>
+
+<p>Each position in the string holds a character and is accessed with an index value. By placing the integer index value inside the square brackets after a string, we get the character associated with that index. What if we extend the paradigm to allow us to examine values that are more complicated than a single character? It turns out that this is exactly the type of thing that we can use a list for.</p>
+
+<code>
+<b>country_names = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+<b>print(&quot;The first country is {0}.&quot;.format(country_names[0]))</b><br>
+<b>print(&quot;The second country is {0}.&quot;.format(country_names[1]))</b><br>
+<b>print(&quot;The third country is {0}.&quot;.format(country_names[2]))</b><br>
+<br>
+The first country in the list is Canada.<br>
+The second country in the list is USA.<br>
+The third country in the list is Mexico.
+</code>
+
+<p>A list is defined with the square brackets, and individual elements inside the list object are separated by a comma. The actual elements in the list can be any type, including other lists. In the example above, we have three string values in our list, representing three country names. These values could just as easily be numbers, booleans, or a mix of all the types. To keep things easy, you'll often find that a list is made up of all strings, or all numbers, but no such restriction actually exists in the language.</p>
+
+<p>We can also use the built-in len method to get the length of our list, just as we can use it to get the length of a string. One way to use this is to iterate over the elements of a list by combining len with the range function. Since we know the maximum number of elements inside the list, we'd like to get the range of numbers starting at zero and ending at the maximum index of the list.</p>
+
+<code>
+<b>country_names = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+<b>print(&quot;There are {0} countries in the list.&quot;.format(len(country_names)))</b><br>
+<br>
+There are 3 countries in the list.<br>
+<br>
+<b>counter = 0</b><br>
+<b>while counter &lt; len(country_names):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The country at index {0} is {1}.&quot;.format(counter, country_names[counter]))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;counter = counter + 1</b><br>
+<br>
+The country at index 0 is Canada.<br>
+The country at index 1 is USA.<br>
+The country at index 2 is Mexico.<br>
+<br>
+<b>for counter in range(len(country_names)):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The country at index {0} is {1}.&quot;.format(counter, country_names[counter]))</b><br>
+<br>
+The country at index 0 is Canada.<br>
+The country at index 1 is USA.<br>
+The country at index 2 is Mexico.
+</code>
+
+<p>We can also use for loops to actually iterate directly over the elements of the list, if we're not concerned with the index number. For example, in the same way that range gives us the numbers from a low value up to a high value, a for loop that uses a list can iterate over values from the start of a list up to the end of a list.</p>
+
+<code>
+<b>country_names = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+<b>for country in country_names:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;This country name is {0}.&quot;.format(country))</b><br>
+<br>
+This country name is Canada.<br>
+This country name is USA.<br>
+This country name is Mexico.<br>
+<br>
+<b>age_list = [18, 15, 30, 24, 21, 27, 19]</b><br>
+<b>for age in age_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;This student is {0} years old.&quot;.format(age))</b><br>
+<br>
+This student is 18 years old.<br>
+This student is 15 years old.<br>
+This student is 30 years old.<br>
+This student is 24 years old.<br>
+This student is 21 years old.<br>
+This student is 27 years old.<br>
+This student is 19 years old.
+</code>
+
+<p>For reference, we can use strings in a similar way. The elements inside a string (the characters themselves) can be indexed one by one using a <i>for</i> loop.</p>
+
+<code>
+<b>for x in &quot;Alexander&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The next letter is {0}.&quot;.format(x))</b><br>
+<br>
+The next letter is S.<br>
+The next letter is c.<br>
+The next letter is o.<br>
+The next letter is t.<br>
+The next letter is t.
+</code>
+
+<p>Empty list values are declared in Python using an empty pair of square brackets. These lists have a length of zero, and are similar to the empty string in that even though they are empty and hold no data, they are clearly still a value of that type. Adding elements to a list variable is typically done using the <i>append</i> function. As an example, we can combine <i>append</i> with user input to start collecting larger sets of data.</p>
+
+<code>
+<b>country_list = []</b><br>
+<b>done = False</b><br>
+<b>while done == False:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;country = input(&quot;Enter a country name: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if len(country) == 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;country_list.append(country)</b><br>
+<br>
+<b>for country in country_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Country: {0}&quot;.format(country))</b><br>
+<br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a country name: <b>Canada</b><br>
+Enter a country name: <b>USA</b><br>
+Enter a country name: <b>Mexico</b><br>
+Enter a country name: <br>
+Country: Canada<br>
+Country: USA<br>
+Country: Mexico<br>
+All done!
+</code>
+
+<p>In this example, an empty list is stored in <i>country_list</i>. A boolean variable called <i>done</i> is defined that will be set to True, indicating that we should terminate the user input loop only when the user enters in an empty string as a country name. An empty string has a length of zero, as mentioned above, and the only input that will match is when the user hits enter without typing in a country name. If the input has a length that is greater than zero, we append it to <i>country_list</i> variable using the <i>append</i> method, and restart the user input loop. Once all of the data is collected, a <i>for</i> loop is used to print out each of the country names in the order that they were received.</p>
+
+<p>Let's take a closer look at the <i>in</i> keyword, used above in the <i>for</i> loops that use lists to iterate over values. The <i>in</i> keyword actually evaluates to a boolean in an expression, and if you have a preexisting list with values in it already, you can use <i>in</i> to test membership. Specifically, <i>in</i> returns True or False depending on whether or not an item is present in the list.</p>
+
+<code>
+&gt;&gt;&gt; <b>country_list = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+&gt;&gt;&gt; <b>&quot;Canada&quot; in country_list</b><br>
+True<br>
+&gt;&gt;&gt; <b>&quot;Japan&quot; in country_list</b><br>
+False
+</code>
+
+<p>These expressions can be combined with if-statements. We already know that if-statements use expressions to test whether or not blocks of code should be executed. Let's say that we had a list of acceptable answers from the user, and that we only wanted to go ahead if they gave us some input that was contained in this list.</p>
+
+<code>
+<b>vowel_list = [&quot;a&quot;, &quot;e&quot;, &quot;i&quot;, &quot;o&quot;, &quot;u&quot;]</b><br>
+<b>letter = input(&quot;Enter a letter: &quot;)</b><br>
+<b>if letter in vowel_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The letter {0} is a vowel.&quot;.format(letter))</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The letter {0} is a consonant.&quot;.format(letter))</b><br>
+<br>
+Enter a letter: <b>e</b><br>
+The letter e is a vowel.<br>
+<br>
+Enter a letter: <b>h</b><br>
+The letter h is a consonant.
+</code>
+
+<p>The corresponding if-statement would be a little long, and we definitely save some space by using a list alongside the <i>in</i> keyword to handle a range of non-consecutive values. The vowels fit nicely in a list, and while it may be controversial to omit &quot;y&quot;, we still manage to encapsulate all the common vowels clearly in a single data structure.</p>
+
+<p>Python provides the <i>append</i> function for additions to lists, and has a related <i>remove</i> function to strip items out of the list.</p>
+
+<code>
+<b>vowel_list = [&quot;a&quot;, &quot;e&quot;, &quot;i&quot;, &quot;o&quot;, &quot;u&quot;, &quot;y&quot;]</b><br>
+<b>print(vowel_list)</b><br>
+<b>vowel_list.remove(&quot;y&quot;)</b><br>
+<b>print(vowel_list)</b><br>
+<br>
+['a', 'e', 'i', 'o', 'u', 'y']<br>
+['a', 'e', 'i', 'o', 'u']
+</code>
+
+<p>When using <i>remove</i>, specifying an item that is not found in the list will cause Python to throw a big red error message. Trying to remove a value that isn't found in the list is impossible. Imagine trying to remove bars of gold from a storage box; if there aren't any bars of gold to be found (as is the unfortunate case with my storage boxes -- too many pairs of socks to fit them, I suppose), it is not possible to get the gold out. When you see a <i>ValueError</i> pop up in red text when using <i>remove</i>, it's usually Python's way of telling you that you tried to remove data that wasn't there.</p>
+
+<h2>List features</h2>
+
+<p>Imagine that you teach a course on programming, and that you'd like to collect the first letter of each student's first name as an empirical examination on the distribution of letters. You collect the information from your students and store the letters in a list. If you have ten students in your course, you might end up with something that looks like this.</p>
+
+<code>
+<b>letter_list = [&quot;s&quot;, &quot;t&quot;, &quot;e&quot;, &quot;n&quot;, &quot;s&quot;, &quot;n&quot;, &quot;r&quot;, &quot;c&quot;, &quot;s&quot;, &quot;a&quot;]</b>
+</code>
+
+<p>That's fine, but how can we actually make some sense of it? To start, we can use the Python sorting functions to see the letters in alphabetical order. There are two options for doing this. First, the <i>sorted</i> function accepts a list as an input parameter and returns a new sorted list.</p>
+
+<code>
+&gt;&gt;&gt; <b>sorted(letter_list)</b><br>
+['a', 'c', 'e', 'n', 'n', 'r', 's', 's', 's', 't']
+</code>
+
+<p>Note that we actually get a new list, just like the <i>int</i>, <i>float</i>, and <i>str</i> functions that return a new value instead of changing the old one into the new type. The <i>letter_list</i> variable still has the old jumbled list, and if we wanted to make use of the new sorted list, we could just store it in a new variable with a new name.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(letter_list)</b><br>
+['s', 't', 'e', 'n', 's', 'n', 'r', 'c', 's', 'a']<br>
+&gt;&gt;&gt; <b>sorted_letter_list = sorted(letter_list)</b><br>
+&gt;&gt;&gt; <b>print(sorted_letter_list)</b><br>
+['a', 'c', 'e', 'n', 'n', 'r', 's', 's', 's', 't']
+</code>
+
+<p>If we wanted to change the old list in-place to a sorted list, we could call the <i>sort</i> function of the list object itself. This tells Python to reorganize the old list into a new sorted one.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(letter_list)</b><br>
+['s', 't', 'e', 'n', 's', 'n', 'r', 'c', 's', 'a']<br>
+&gt;&gt;&gt; <b>letter_list.sort()</b><br>
+&gt;&gt;&gt; <b>print(letter_list)</b><br>
+['a', 'c', 'e', 'n', 'n', 'r', 's', 's', 's', 't']
+</code>
+
+<p>It's a lot easier to look at the sorted data than to use a jumbled list. We can immediately see that only a single student has a first name starting with &quot;a&quot;, where there are two students that begin with &quot;n&quot; and three that begin with &quot;s&quot;.</p>
+
+<p>What if there are more than ten students? It might be easy to look at a small list to see that there are three letters that are the same, but with larger lists, it can easily become more complicated. Python has a function called <i>count</i> that retrieves the number of instances of a certain value inside a list. For example, if we wanted to know the number of &quot;s&quot; values in <i>letter_list</i>, <i>count</i> should return 3.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(letter_list.count(&quot;s&quot;))</b><br>
+3
+</code>
+
+<p>This idea can be extended by using all of the techniques we've built up in this chapter so far. Let's write some code that iterates over a sorted list of letters and prints out the total count for each unique letter.</p>
+
+<code>
+<b>letter_list = [&quot;s&quot;, &quot;t&quot;, &quot;e&quot;, &quot;n&quot;, &quot;s&quot;, &quot;n&quot;, &quot;r&quot;, &quot;c&quot;, &quot;s&quot;, &quot;a&quot;]</b><br>
+<b>letter_list.sort()</b><br>
+<b>last_letter = &quot;&quot;</b><br>
+<b>for x in letter_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if last_letter != x:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;last_letter = x</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Number of times {0} occurs: {1}&quot;.format(x, letter_list.count(x)))</b><br>
+<br>
+Number of times a occurs: 1<br>
+Number of times c occurs: 1<br>
+Number of times e occurs: 1<br>
+Number of times n occurs: 2<br>
+Number of times r occurs: 1<br>
+Number of times s occurs: 3<br>
+Number of times t occurs: 1
+</code>
+
+<p>In the code above, we keep track of the last letter that was used so that we don't end up printing &quot;Number of times s occurs: 3&quot; three times. If the current letter is the same as the last letter, just skip by and start the next iteration of the loop. If it's a different letter, print out the new letter along with the returned value from <i>count</i>, and move on.</p>
+
+<p>The sorting functions that Python uses are somewhat independent of the type, given one important precondition. As long as it is possible to actually compare all of the values in the list to one another, the list can be sorted. For example, you can't compare <i>str</i> values and <i>int</i> values, and if you try, you'll get something called a <i>TypeError</i>.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; &lt; 3</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#39&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;Alexander&quot; &lt; 3<br>
+TypeError: unorderable types: str() &lt; int()
+</code>
+
+<p>It doesn't really make any sense to ask whether or not a name is less than the number three. It does make sense to ask if a name is less than the string representation of the number three, and we can do that without any problem.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; &lt; &quot;3&quot;</b><br>
+False
+</code>
+
+<p>Strings can be compared to one another. Integer and floating point values can be compared to one another, and booleans can be compared to one another. Even lists can be compared. You can use this fact to sort many different kinds of lists, as long as the data is reasonably consistent inside the list itself.</p>
+
+<p>We can use this information to experiment with the <i>max</i> and <i>min</i> functions when used with lists. If we have a list of numbers, a list of strings, or a list of any values that can be compared against each other, the <i>max</i> and <i>min</i> functions will return the maximum and minimum values found in the list as expected.</p>
+
+<code>
+&gt;&gt;&gt; <b>letter_list = [&quot;s&quot;, &quot;t&quot;, &quot;e&quot;, &quot;n&quot;, &quot;s&quot;, &quot;n&quot;, &quot;r&quot;, &quot;c&quot;, &quot;s&quot;, &quot;a&quot;]</b><br>
+&gt;&gt;&gt; <b>max(letter_list)</b><br>
+'t'<br>
+&gt;&gt;&gt; <b>min(letter_list)</b><br>
+'a'<br>
+<br>
+&gt;&gt;&gt; <b>number_list = [3, 6, 7.4, 2, 1, 5.2, 5.45, 9]</b><br>
+&gt;&gt;&gt; <b>max(number_list)</b><br>
+9<br>
+&gt;&gt;&gt; <b>min(number_list)</b><br>
+1
+</code>
+
+<p>The <i>max</i>, <i>min</i>, and <i>sorted</i> functions can all be used on lists that have comparable members.</p>
+
+<code>
+&gt;&gt;&gt; <b>sorted([3, 6, 7.4, 2, 1, 5.2, 5.45, 9])</b><br>
+[1, 2, 3, 5.2, 5.45, 6, 7.4, 9]<br>
+&gt;&gt;&gt; <b>sorted([&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;])</b><br>
+['Canada', 'Mexico', 'USA']<br>
+&gt;&gt;&gt; <b>sorted([True, True, False, True, False, False, False])</b><br>
+[False, False, False, False, True, True, True]
+</code>
+
+<p>There are also times when you might be interested in the opposite ordering that a sorted list gives you. If you wanted a list of countries sorted in reverse order, you can use the <i>reverse</i> function in the same way that you'd use the <i>sort</i> function.</p>
+
+<code>
+&gt;&gt;&gt; <b>country_list = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+&gt;&gt;&gt; <b>country_list.sort()</b><br>
+&gt;&gt;&gt; <b>country_list</b><br>
+['Canada', 'Mexico', 'USA']<br>
+&gt;&gt;&gt; <b>country_list.reverse()</b><br>
+&gt;&gt;&gt; <b>country_list</b><br>
+['USA', 'Mexico', 'Canada']
+</code>
+
+<p>And finally, if you've got one list and you'd like to add the values in it to an entirely separate list, the <i>extend</i> function accepts a list as a function parameter and attempts to append each of the values in the source list to the target.</p>
+
+<code>
+&gt;&gt;&gt; <b>country_list = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+&gt;&gt;&gt; <b>country_list.extend([&quot;Japan&quot;, &quot;China&quot;])</b><br>
+&gt;&gt;&gt; <b>country_list</b><br>
+['Canada', 'USA', 'Mexico', 'Japan', 'China']
+</code>
+
+<h2>List operators</h2>
+
+<p>Earlier, we saw that it is possible to concatenate (glue) two strings together to get a new string by using the plus operator. It is also possible to get multiple copies of the same string by using multiplication.</p>
+
+<code>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; + &quot;Coder&quot;</b><br>
+'AlexanderCoder'<br>
+&gt;&gt;&gt; <b>&quot;Alexander&quot; * 3</b><br>
+'AlexanderAlexanderAlexander'
+</code>
+
+<p>The same approach can be taken with lists. The plus and multiplication operators are used to concatenate lists together or to generate copies of a list inside a new list. These operators are reused to serve a similar purpose that fits nicely within the paradigms of addition and multiplication.</p>
+
+<code>
+&gt;&gt;&gt; <b>[&quot;Alexander&quot;] + [&quot;Coder&quot;]</b><br>
+['Alexander', 'Coder']<br>
+&gt;&gt;&gt; <b>[&quot;Alexander&quot;] * 3</b><br>
+['Alexander', 'Alexander', 'Alexander']
+</code>
+
+<p>You might also recall the slicing operator. With a string, we can specify the starting and ending characters to reference by using square brackets along with a colon and optional indices. The same approach exists with lists. Sub-lists can be obtained by slicing larger lists into smaller pieces.</p>
+
+<code>
+&gt;&gt;&gt; <b>country_list = [&quot;Canada&quot;, &quot;USA&quot;, &quot;Mexico&quot;]</b><br>
+&gt;&gt;&gt; <b>country_list[0:2]</b><br>
+['Canada', 'USA']<br>
+&gt;&gt;&gt; <b>country_list[1:]</b><br>
+['USA', 'Mexico']<br>
+&gt;&gt;&gt; <b>country_list[-1:]</b><br>
+['Mexico']<br>
+&gt;&gt;&gt; <b>country_list[-1]</b><br>
+'Mexico'
+</code>
+
+<p>Let's use list slicing in a slightly more practical way. It's time to write a program that, when given a source list of numbers, pulls out all the elements of that list that fall between two user-defined inputs. If our list is a collection of phone numbers, we might want all the numbers that start with 555. If our list is a collection of ages, we might want to know everyone between the ages of 20 and 29. Let's also create a random list of phone numbers.</p>
+
+<code>
+<b>phone_list = [5555593, 5554710, 5554913, 5555772, 5559913]</b>
+</code>
+
+<p>We're already familiar with getting input from the user, so let's write some basic code to retrieve the starting and ending range values.</p>
+
+<code>
+<b>start_int = int(input(&quot;Enter the starting phone number: &quot;))</b><br>
+<b>end_int = int(input(&quot;Enter the ending phone number: &quot;))</b>
+</code>
+
+<p>To get all of the numbers in a range, let's start by using the simple approach of testing each number one-by-one and printing out the results as they are seen.</p>
+
+<code>
+<b>for phone in phone_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if phone &gt;= start_int and phone &lt;= end_int:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Phone number in range: {0}&quot;.format(phone))</b><br>
+<br>
+Enter the starting phone number: <b>5554000</b><br>
+Enter the ending phone number: <b>5556000</b><br>
+Phone number in range: 5555593<br>
+Phone number in range: 5554710<br>
+Phone number in range: 5554913<br>
+Phone number in range: 5555772
+</code>
+
+<p>How about a sorted list? These elements are still in a random order, so we have the option of sorting the <i>phone_list</i> variable using <i>sort</i>.</p>
+
+<code>
+<b>phone_list.sort()</b><br>
+<b>for phone in phone_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if phone &gt;= start_int and phone &lt;= end_int:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Phone number in range: {0}&quot;.format(phone))</b><br>
+<br>
+Enter the starting phone number: <b>5554000</b><br>
+Enter the ending phone number: <b>5556000</b><br>
+Phone number in range: 5554710<br>
+Phone number in range: 5554913<br>
+Phone number in range: 5555593<br>
+Phone number in range: 5555772
+</code>
+
+<p>We don't have information about the indices of these phone numbers. To identify the indices of all elements in the list in the acceptable range, it will be necessary to modify the code to retain this information. In fact, it might even make more sense to view this as two individual problems; find the left-most index that corresponds to the start of the phone numbers in the range, and find the right-most index that corresponds to the last phone number in the range. Let's rewrite the code to perform two searches.</p>
+
+<p>To retrieve the index of the first value, we'll want to define a variable to hold the index value. Let's call it <i>start_index</i>. We can't just use <i>index</i> to get the right value, since our phone number might not actually be in the list. If the starting phone number is 5334000, that number might not exist, but 5333999 and 5334001 could be there. The search will start from the beginning of the list, and steadily move to the right until a value that is larger than or equal to the starting index is encountered. This is the first number in our valid range.</p>
+
+<code>
+<b>start_index = len(phone_list)</b><br>
+<b>for x in range(len(phone_list)):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if phone_list[x] &gt;= start_int:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start_index = x</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b>
+</code>
+
+<p>The starting index is initialized to the size of the list for a meaningful reason. Slicing with a starting index greater than the length of the list will return an empty list. What that actually means in this example is that we asked for a phone number range that begins with a phone number greater than any of the numbers in our list. The returned list should be empty in that case, as there can be no phone numbers that match the request. A <i>for</i> loop with a <i>range</i> is used to iterate over all the values of the list by their index instead of their value. If the loop encounters a phone number that is greater than or equal to the user's request, save the index that is stored in the <i>x</i> variable, and break out of the loop immediately.</p>
+
+<code>
+<b>end_index = len(phone_list)</b><br>
+<b>for y in range(len(phone_list) - 1, 0, -1):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if phone_list[y] &lt;= end_int:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end_index = y</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</b>
+</code>
+
+<p>Getting the ending index is similar to getting the starting index. The major difference is the range of values to iterate over. Since we've moving from the right to the left, we start at the last position in the list, which is one less than the value with index equal to the length of the list. The <i>range</i> function should proceed down to the 0th index, moving by -1 each time (moving along the list to the left).</p>
+
+<p>Close out the program with a final list slice and a <i>print</i> statement similar to the original example, and a properly sliced list is obtained with the indices of the values instead of just the values themselves.</p>
+
+<code>
+<b>valid_list = phone_list[start_index:end_index + 1]</b><br>
+<b>for phone in valid_list:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Phone number in range: {0}&quot;.format(phone))</b>
+</code>
+
+<h2>Lists inside of lists</h2>
+
+<p>A list is a versatile data structure. In earlier sections, we alluded to the fact that lists are capable of holding lists as elements. Let's explore a reason for doing this, and show some of the real power of these structures.</p>
+
+<p>We'll start by writing a program that keeps track of the population of Canadian cities. Each city consists of a name, a province, and a population as determined by the 2006 census. For every city, we'll have a list like the following:</p>
+
+<code>
+&gt;&gt;&gt; <b>city = [&quot;Toronto&quot;, &quot;Ontario&quot;, 5113149]</b><br>
+&gt;&gt;&gt; <b>city[0]</b><br>
+'Toronto'<br>
+&gt;&gt;&gt; <b>city[1]</b><br>
+'Ontario'<br>
+&gt;&gt;&gt; <b>city[2]</b><br>
+5113149
+</code>
+
+<p>One way of storing this data is to collect these city data structures inside of one giant list. We aggregate the collection of cities as individual elements, and when we're looking for a piece of data about a city, we iterate over the container list to find the particular city we want. Let's use the largest Canadian cities as a starting point.</p>
+
+<code>
+<b>city_obj = [</b><br>
+<b>&nbsp;&nbsp;[&quot;Toronto&quot;, &quot;Ontario&quot;, 5113149],</b><br>
+<b>&nbsp;&nbsp;[&quot;Montreal&quot;, &quot;Quebec&quot;, 3635571],</b><br>
+<b>&nbsp;&nbsp;[&quot;Vancouver&quot;, &quot;British Columbia&quot;, 2116581],</b><br>
+<b>&nbsp;&nbsp;[&quot;Ottawa&quot;, &quot;Ontario&quot;, 1130761],</b><br>
+<b>&nbsp;&nbsp;[&quot;Calgary&quot;, &quot;Alberta&quot;, 1079310],</b><br>
+<b>&nbsp;&nbsp;[&quot;Edmonton&quot;, &quot;Alberta&quot;, 1034945],</b><br>
+<b>&nbsp;&nbsp;[&quot;Quebec City&quot;, &quot;Quebec&quot;, 715515],</b><br>
+<b>&nbsp;&nbsp;[&quot;Winnipeg&quot;, &quot;Manitoba&quot;, 694668],</b><br>
+<b>&nbsp;&nbsp;[&quot;Hamilton&quot;, &quot;Ontario&quot;, 692911],</b><br>
+<b>&nbsp;&nbsp;[&quot;London&quot;, &quot;Ontario&quot;, 457720]</b><br>
+<b>]</b><br>
+<b>print(city_obj[0])</b><br>
+<br>
+['Toronto', 'Ontario', 5113149]
+</code>
+
+<p>Each inner element inside the city_obj list is itself a list, and can be referenced just like any other list value by an index. It is also possible to iterate over the values using a <i>for</i> loop, just like the previous examples.</p>
+
+<code>
+<b>for city in city_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}, {1}, population: {2}&quot;.format(city[0], city[1], city[2]))</b><br>
+<br>
+Toronto, Ontario, population: 5113149<br>
+Montreal, Quebec, population: 3635571<br>
+Vancouver, British Columbia, population: 2116581<br>
+Ottawa, Ontario, population: 1130761<br>
+Calgary, Alberta, population: 1079310<br>
+Edmonton, Alberta, population: 1034945<br>
+Quebec City, Quebec, population: 715515<br>
+Winnipeg, Manitoba, population: 694668<br>
+Hamilton, Ontario, population: 692911<br>
+London, Ontario, population: 457720
+</code>
+
+<p>The <i>city</i> variable is set to every element of the <i>city_obj</i> list as the <i>for</i> loop progresses, and each of the parameters of the <i>city</i> variable corresponds to one of the indices of the individual city list. The name, province, and population are all available, once the source list is identified using the <i>for</i> loop.</p>
+
+<p>With all of this data in one place, it is now possible to write programs to access and retrieve information about these Canadian cities. Let's start with a simple test to determine whether or not a city is in the list, and if so, what is known about it.</p>
+
+<code>
+<b>city_name = input(&quot;Enter a city name: &quot;)</b><br>
+<b>for city in city_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if city[0].lower() == city_name.lower():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}, {1}, population: {2}&quot;.format(city[0], city[1], city[2]))</b><br>
+<br>
+Enter a city name: <b>Toronto</b><br>
+Toronto, Ontario, population: 5113149<br>
+<br>
+Enter a city name: <b>QUEBEC CITY</b><br>
+Quebec City, Quebec, population: 715515<br>
+<br>
+Enter a city name: <b>kingston</b>
+</code>
+
+<p>Each of the cities is accessed one after the other, and the name element in the list is compared to the input retrieved from the user. The code takes advantage of the <i>lower</i> function to ignore capitalization, and uses straightforward string comparison to see if the current city in the list matches what the user asked for. If the city is found, we print out the full set of information about the city, and move on. It would have also been possible to insert a break statement to terminate the loop. Now let's look for substrings in the city name.</p>
+
+<code>
+<b>city_name = input(&quot;Enter part of a city name: &quot;)</b><br>
+<b>for city in city_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if city[0].lower().find(city_name.lower()) &gt;= 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}, {1}, population: {2}&quot;.format(city[0], city[1], city[2]))</b><br>
+<br>
+Enter part of a city name: <b>on</b><br>
+Toronto, Ontario, population: 5113149<br>
+Montreal, Quebec, population: 3635571<br>
+Edmonton, Alberta, population: 1034945<br>
+Hamilton, Ontario, population: 692911<br>
+London, Ontario, population: 457720
+</code>
+
+<p>This new version of the code uses the <i>find</i> function and relies on <i>lower</i> to convert all the data to lower case to simplifiy string comparison. If the substring that was requested by the user is found in the original string, the code will print out the data.</p>
+
+<p>Of course, this code can be modified to find all cities in a particular province by swapping out the <i>city[0]</i> comparison with a <i>city[1]</i> comparison. The value at index 0 in the source list is the city, and since we know that index 1 holds the province, we swap out the index value, change the input text, and run again.</p>
+
+<code>
+<b>province_name = input(&quot;Enter a province name: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for city in city_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if city[1].lower() == province_name.lower():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}, {1}, population: {2}&quot;.format(city[0], city[1], city[2]))</b><br>
+<br>
+Enter a province name: <b>ontario</b><br>
+Toronto, Ontario, population: 5113149<br>
+Ottawa, Ontario, population: 1130761<br>
+Hamilton, Ontario, population: 692911<br>
+London, Ontario, population: 457720
+</code>
+
+<p>Alternately, if we'd like to modify the code to check for cities with a population over a certain size, we can simply change the expression in the if-statement inside the city loop, in conjunction with the data type of the input that we request from the user. You'll find this as a challenge in the exercises section at the end of this chapter.</p>
+
+<p>Have a shot at using some lists in your own examples now. See what data you can stuff inside of there, and set up some loops and inputs to build interesting structures. Try storing different types of data other than cities.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>The quickest way to break a list is to reference an element outside the length of the list.  For example, if you try to get the fifth element in a list with only four items in it, you're going to get an error.</p>
+
+<code>
+<b>x = [1, 2, 3, 4]</b><br>
+<b>for i in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(x[i])</b><br>
+<br>
+1<br>
+2<br>
+3<br>
+4<br>
+Traceback (most recent call last):<br>
+&nbsp;&nbsp;File &quot;sample.py&quot;, line 3, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(x[i])<br>
+IndexError: list index out of range
+</code>
+
+<p>However, this is easy stuff.  It's usually pretty obvious when you've broken something and you get an <i>IndexError</i> that suggests that your list index is out of range.  We should be breaking stuff like that all the time now in our pursuit of knowledge.</p>
+
+<p>To show you something that might look especially wacky at first glance, consider the following example.</p>
+
+<p>Let's say that we have a list of numbers.  These numbers are important to us, and we want to hold on to them--we don't want to go about changing the data.  However, we want to use those numbers in interesting ways, like determining the squares of those numbers, or applying some other mathematical operation to them.  Consider this code:</p>
+
+<code>
+<b>my_list = [5, 15, 25, 35, 45]</b><br>
+<br>
+<b>for i in range(len(my_list)):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}, {1}&quot;.format(my_list[i], my_list[i] * my_list[i]))</b><br>
+<br>
+5, 25<br>
+15, 225<br>
+25, 625<br>
+35, 1225<br>
+45, 2025
+</code>
+
+<p>In that code, we have an important list of values called <i>my_list</i> that we use to determine some other set of important values later.  In the code above, we are printing the data to the screen, which for the moment is fine.  However, let's say that someone else insists that we store those values for later use.  We propose creating another list called <i>new_list</i> and storing the new values there.  To do this, we write the following code:</p>
+
+<code>
+<b>my_list = [5, 15, 25, 35, 45]</b><br>
+<b>new_list = my_list</b><br>
+
+<b>for i in range(len(new_list)):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_list[i] = new_list[i] * new_list[i]</b><br>
+<br>
+<b>print(new_list)</b><br>
+<br>
+[25, 225, 625, 1225, 2025]
+</code>
+
+<p>Okay, we've got a new list with the squares of the values in <i>my_list</i>.  Everything looks great.  Or rather, everything looks great until we look at the values in <i>my_list</i> again as a sanity check.</p>
+
+<code>
+<b>my_list = [5, 15, 25, 35, 45]</b><br>
+<b>new_list = my_list</b><br>
+
+<b>for i in range(len(new_list)):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_list[i] = new_list[i] * new_list[i]</b><br>
+<br>
+<b>print(new_list)</b><br>
+<b>print(my_list)</b><br>
+<br>
+[25, 225, 625, 1225, 2025]<br>
+[25, 225, 625, 1225, 2025]
+</code>
+
+<p>What the heck happened there?  Why did the values in <i>my_list</i> get changed as well?  We only modified the values referenced in <i>new_list</i>, so what caused the others ones to change?</p>
+
+<p>Remember, Python is a pass by reference language.  What this means is that identifiers--variable names--are just a reference to some value in memory.  A list, as a value, exists separately from the identifier.</p>
+
+<p>When we made the assignment to <i>new_list</i>, what we actually said was to make <i>new_list</i> point to the same value that <i>my_list</i> pointed to.  Making a change to <i>new_list</i>, in that case, would also make a change to the value pointed to by <i>my_list</i>.  For a simpler example, check this out:</p>
+
+<code>
+<b>a = []</b><br>
+<b>b = a</b><br>
+<br>
+<b>print(b)</b><br>
+<b>a.append(True)</b><br>
+<b>print(b)</b><br>
+<br>
+[]<br>
+[True]
+</code>
+
+<p>To actually get the functionality we're looking for, we have to use a list copy.  Just like a string slice from earlier, we can write the code in the following way:</p>
+
+<code>
+<b>my_list = [5, 15, 25, 35, 45]</b><br>
+<b>new_list = my_list[:]</b><br>
+
+<b>for i in range(len(new_list)):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_list[i] = new_list[i] * new_list[i]</b><br>
+<br>
+<b>print(new_list)</b><br>
+<b>print(my_list)</b><br>
+<br>
+[25, 225, 625, 1225, 2025]<br>
+[5, 15, 25, 35, 45]
+</code>
+
+<p>By forcing an explicit copy, we make sure that the identifier <i>new_list</i> points to a copy of the <i>my_list</i> value, and we don't stomp on a value we don't want to change.</p>
+
+<h2>Summary</h2>
+
+<p>Lists are one of the most powerful data structures in Python due to their combination of flexibility and ease-of-use.  They abstract away the complicated elements of a data structure called a linked list, which is another fundamental concept in programming.  Due to the ability to resize the list at will, to add elements in arbitrary places, to remove elements, and to compare, index, and who knows what else, you'll find yourself using these all the time.</p>
+
+<p>Lists aren't the only way to store data, however.  In the next section, we'll look at the dictionary, a similar data structure that orders your values differently.  Each data structure has their use, and by trying them out (and of course by breaking them once in a while), you'll come to understand where and why to use each one.</p>
+
+<h2>Exercises</h2>
+
+<p>1. Take the <i>city_obj</i> example code from the Lists inside of Lists section, and change it so that instead of searching by city name, the code searches by city size. Accept an <i>int</i> from the user, and return any city with a population greater than or equal to the population provided.</p>
+
+<p>2. Set up a simple address book program, where you provide a list of individuals with names, phone numbers, and addresses, and allow the user to search based on one of these parameters. Populate the data in the address book yourself, but use a similar program structure to the <i>city_obj</i> example to search through and find the people you're looking for.</p>

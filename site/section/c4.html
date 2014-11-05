@@ -1,0 +1,291 @@
+<h1>Chapter 4: Input and Output</h1>
+
+<p>Most programs need a user at the helm to perform interesting operations. Just like the tools that you pick up at the hardware store, a program can be a powerful aid when performing some task. It's important to know how to get input from the user, and how to present them with a way to see how the program is running with the results that are coming back. The basic input and output functions in Python are explained in this chapter, and there's plenty of sample code to help get you started with your own programs.</p>
+
+<h2>Speaking to the user</h2>
+
+<p>We've had an introduction to variables, the building blocks of memory in programming. We've stored our own numbers and strings in them, we've compared them to one another, and we've mixed and matched them in interesting ways. Ultimately though, we're a little bound to the results we type in at that moment. You can't expect every user to learn what a variable is, how types are used in Python, and how to perform variable assignment. Fortunately for us, there are easier ways to get data from users.</p>
+
+<p>Input and output functions in Python exist so that programmers can speak to users through the code, instead of having to manually enter in data by themselves. We write programs to automate these processes, and we don't want to have to type in every piece of data ourselves. In most cases, we can't even know what the data will be until the moment we run the code.</p>
+
+<h2>The input function</h2>
+
+<p>If we want to ask the user a question, like &quot;How old are you?&quot; or &quot;What is your name?&quot;, we are asking the user for some input. We'd like to pose a question, give a prompt, and wait for the user to enter in the answer. There is a built-in function called <i>input</i> that does exactly this. As a simple example, look at the following code:</p>
+
+<code>
+&gt;&gt;&gt; <b>input(&quot;Enter your name: &quot;)</b><br>
+Enter your name:
+</code>
+
+<p>By using the input statement along with a string containing the question you'd like to ask the user, you can get the response you're looking for. In this case, the interpreter is actually waiting for some input from us, and we don't yet see the &gt;&gt;&gt; prompt, because we haven't given our name. Let's finish things up, and type in a name.</p>
+
+<code>
+&gt;&gt;&gt; <b>input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>Alexander</b><br>
+'Alexander'
+</code>
+
+<p>You might be wondering why it just printed out our answer at the end. It's acting in a similar way to our calculator examples by printing out the result of the statement. When we typed in 3 + 4 at the prompt, it printed 7. When we typed in a statement asking for the user's name, it gave us a result in the same way. Here, the result is the string &quot;Alexander&quot;, exactly as we typed it in.</p>
+
+<p>Take a second now to go to your interpreter and type a simple <i>input</i> statement like the one above. You should see some similar output in your own example. The <i>input</i> function prints out your question string to the screen, immediately pauses and waits for you to enter a string that ends as soon as Enter or Return are hit. When it's all done, it gives you back the value at the end.</p>
+
+<p>So with this knowledge, how can we use <i>input</i> functions in our code? We know that we can use variables to capture the output from a math equation. We can use the same approach with the <i>input</i> function. Since <i>input</i> is a function that returns a result (the string we got from the user), we can use variable assignment like we learned in the previous chapter to capture the response.</p>
+
+<code>
+&gt;&gt;&gt; <b>name = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>Alexander</b><br>
+&gt;&gt;&gt; <b>name</b><br>
+'Alexander'</code>
+
+<p>We declare a variable called <i>name</i>, and use it to capture the value that <i>input</i> returns to us. Notice that we didn't get an immediate response with the &quot;Alexander&quot; string from the interpreter once the input completed. It's almost as if adding the variable assignment causes the interpreter to immediately place the value that gets returned from the input function into the variable, whereas omitting the assignment forces it to take the value and dump it onto the screen. The interpreter wants to send the value somewhere. Adding variable assignment gives Python a convenient place to hold the value.</p>
+
+<p>The <i>input</i> function always returns a string, so how can these functions also be used to get numbers from the user? If you recall, at the end of the last chapter, we learned how strings can be converted into numbers using the <i>int</i> and <i>float</i> built-in functions. By using the same techniques as before, we can convert returned strings from the <i>input</i> function into numbers.</p>
+
+<code>
+&gt;&gt;&gt; <b>age = input(&quot;Enter your age: &quot;)</b><br>
+Enter your age: <b>21</b><br>
+&gt;&gt;&gt; <b>age</b><br>
+'21'<br>
+&gt;&gt;&gt; <b>int(age)</b><br>
+21
+</code>
+
+<p>Even though we get a string back from the <i>input</i> function, our type conversion functions can transform a <i>str</i> value into an <i>int</i> or a <i>float</i> for us. We also don't need to use the <i>str</i> function with <i>input</i>, as the results are already coming back as a string, and we don't gain anything by converting a string into a string.</p>
+
+<p>Built-in functions and return values can actually be chained together to simplify the creation of variables and the number of lines use in our program. We know that <i>input</i> is a function that returns a value, so we can actually use the <i>input</i> function as input to one of our built-in type conversion functions like <i>int</i>. For example, we can write code like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+Enter your age: <b>21</b><br>
+&gt;&gt;&gt; <b>age</b><br>
+21
+</code>
+
+<p>Take a moment to stop and make sure you understand what's happening there, as it might look quite a bit different than what you've seen before! It's equivalent to the following set of instructions:</p>
+
+<code>
+&gt;&gt;&gt; <b>temp = input(&quot;Enter your age: &quot;)</b><br>
+Enter your age: <b>21</b><br>
+&gt;&gt;&gt; <b>age = int(temp)</b><br>
+&gt;&gt;&gt; <b>age</b><br>
+21
+</code>
+
+<p>We could go through the trouble of defining the <i>temp</i> variable, assigning it the returned string from the <i>input</i> function, and using the new <i>temp</i> variable as input to the <i>int</i> function. It is less work to simply substitute the <i>input</i> statement into the second line as we did in the first example, and to omit the declaration of the <i>temp</i> variable altogether. This is what is meant by chaining the function calls together. We move the input statement right into the <i>int</i> function parameter, because we know that it returns a string for us. So if you need to get a number from the user, like their age, you can use <i>int(input(&quot;Question: &quot;))</i>, with the <i>input</i> function call directly in the <i>int</i> function's parameter.</p>
+
+<h2>The print function</h2>
+
+<p>Each time we use one of the functions like <i>input</i> or <i>int</i> without variable assignment, or when we type in a variable name into the interpreter prompt, it appears as though we're printing out a value. What's really happening though, as we alluded to earlier in the chapter, is that a value is being returned by these functions and dropped to the screen because there's nowhere else to put it. We're not really printing anything for the user, and we don't yet have a way to use these values in a meaningful way. We can't say &quot;Your name is Alexander&quot; yet, or &quot;You are 21 years old&quot;, because we don't have a way to output this information in collaboration with the variables we're storing.</p>
+
+<p>The <i>print</i> built-in function allows us to do all of these things. When you print information, you're telling Python to send some data to the screen for the user to see. It's not printing to a printer, but printing to the available display, like the interpreter window.</p>
+
+<p>The traditional example for printing has traditionally been to say &quot;Hello world!&quot;. Let's try that one now. Type the following into the IDLE window:</p>
+
+<code>
+&gt;&gt;&gt; <b>print(&quot;Hello world!&quot;)</b><br>
+Hello world!
+</code>
+
+<p>Well, hello yourself! In that single statement, a simple greeting is printed out to the window. Since there are no quotes around the result, you can tell that it's been printed and that it's not just a string being returned. By using the <i>print</i> function, we actually printed our data right to the screen.</p>
+
+<p>To use variables and other pieces of interesting information, we can add more parameters to the <i>print</i> function when we call it. Let's play around with the name example and see if we can get something a little more complicated.</p>
+
+<code>&gt;&gt;&gt; <b>name = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>Alexander</b><br>
+&gt;&gt;&gt; <b>print(&quot;Hey, it's&quot;, name, &quot;-- hello!&quot;)</b><br>
+Hey, it's Alexander -- hello!
+</code>
+
+<p>Great! That's pretty different from what we've seen before. It also shows you how to use the variables that have been collected along the way from equations and inputs. We have a dynamic piece of information (the <i>name</i> variable) that we don't know when we're actually writing our program. The user could enter anything for their name, and our code would just handle it in the <i>print</i> statement, regardless of what they'd put in. We can play around with this to show how things really are variable, and how a variable got its name as a container for dynamic memory objects.</p>
+
+<code>
+&gt;&gt;&gt; <b>name = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>a ham sandwich</b><br>
+&gt;&gt;&gt; <b>print(&quot;Hey, it's&quot;, name, &quot;-- hello!&quot;)</b><br>
+Hey, it's a ham sandwich -- hello!
+</code>
+
+<p>The <i>print</i> statement doesn't need to know anything about the contents of the <i>name</i> variable. It just sends it as output to the screen as it would for any other piece of data.</p>
+
+<p>We aren't restricted to a single parameter in the <i>print</i> function either, as seen in the previous example. We can have long lists of strings or variables, as long as everything is separated by commas. In the <i>print</i> statement above, we have three function parameters. First is the &quot;Hey, it's&quot; string that comes before the actual name in our output. Second is the <i>name</i> variable, and of course Python knows to use the variable because we've omitted quotes from it. Last is the &quot;-- hello!&quot; string that ties everything together in our output.</p>
+
+<p>One nice thing about the <i>print</i> statement that differs from our math equations is that <i>print</i> can send strings, numbers, and boolean values without any conversion. It already knows how to print a number to the screen by automatically converting it to a string, so you don't have to worry about doing that yourself. For example,</p>
+
+<code>
+&gt;&gt;&gt; <b>name = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>Alexander</b><br>
+&gt;&gt;&gt; <b>age = int(input(&quot;Enter your age: &quot;))</b><br>
+Enter your age: <b>30</b><br>
+&gt;&gt;&gt; <b>print(name, &quot;is&quot;, age, &quot;years old.&quot;)</b><br>
+Alexander is 30 years old.
+</code>
+
+<p>There is no need to use <i>str(age)</i>, although we could have done so, since the <i>print</i> statement tries to convert everything to a string object when it's printing to the screen. This <i>print</i> statement has four parameters, using two variables and two raw string values.</p>
+
+<p>By default, the <i>print</i> statement adds a space between each of the parameters before printing to the screen. If we wanted our name to be the last word in a sentence, we'd need to change things slightly. For example, the following code doesn't work exactly as we might expect:</p>
+
+<code>
+&gt;&gt;&gt; <b>name = input(&quot;Enter your name: &quot;)</b><br>
+Enter your name: <b>Alexander</b><br>
+&gt;&gt;&gt; <b>print(&quot;Your name is&quot;, name, &quot;.&quot;)</b><br>
+Your name is Alexander .
+</code>
+
+<p>The final output has an extra space between <i>name</i> and the period. If you'd like to tell <i>print</i> to forget about the spaces, you can add another parameter to the statement when you call the function. An optional parameter called <i>sep</i>, an abbreviation for separator, is set to a single space by default. When you call <i>print</i> without specifying <i>sep</i>, you're implicitly doing the following:</p>
+
+<code>
+&gt;&gt;&gt; <b>print(&quot;Your name is&quot;, name, &quot;.&quot;, sep=&quot; &quot;)</b><br>
+Your name is Alexander .
+</code>
+
+<p>The <i>sep</i> variable is used internally in <i>print</i> to separate each of the parameters. It's made available if you want to change how the data is sent to the screen. You have the option of setting it to a string with no spaces to format your output in a different way. Note that now we have to actually add a string to the first parameter to make sure we don't lose the separator space that we do want!</p>
+
+<code>
+&gt;&gt;&gt; <b>print(&quot;Your name is &quot;, name, &quot;.&quot;, sep=&quot;&quot;)</b><br>
+Your name is Alexander.
+</code>
+
+<p>To show this explicitly, try changing <i>sep</i> to something completely different.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(&quot;Your name is&quot;, name, &quot;.&quot;, sep=&quot;:)&quot;)</b><br>
+Your name is:)Alexander:).
+</code>
+
+<h2>Saving your Python program</h2>
+
+<p>Up until this point, you've probably been relying on the interpreter and the prompt, and typing in each statement one after the other. If you're like me, you've been using the copy and paste functionality of the editor to save yourself from typing things over and over again. And if you're like me, your typing could use some work!</p>
+
+<p>Fortunately, the IDLE environment offers a very convenient way to store our source code in a reusable way, and to make changes by just editing our program in a file. Python programs are generally stored as text files, only instead of ending in .txt like a typical file, or .doc like a document your word processor might produce, Python files end in .py.</p>
+
+<p>Go to the IDLE File menu, and click on New Window. You should get another similar window to pop up with a header that reads &quot;Untitled&quot;. Go to the File menu in this new untitled window, and click on the Save option. You can save this file anywhere you'd like, but make sure that when you give it a name, you call it something like program.py and not program.txt or just program. Give your file a name that ends in .py so that the IDLE interpreter will know this is a Python file.</p>
+
+<p>Once you've saved your Python file, try typing in a small program. We'll use a familiar one to start with. Don't be alarmed when you don't see the &gt;&gt;&gt; prompt! By saving our source code in a Python file, we gain the ability to type in many statements at once, along with the ability to run them all one after the other in a full program. Type in the following two lines in your new file:</p>
+
+<code>
+<b>name = input(&quot;Enter your name: &quot;)</b><br>
+<b>print(&quot;Hi,&quot;, name)</b>
+</code>
+
+<p>Make sure you save the file, and once it's ready to go, click on &quot;Run Module&quot; under the Run menu. The original prompt window should pop up, and you should see something like the following:</p>
+
+<code>
+&gt;&gt;&gt; ============================= RESTART =============================<br>
+&gt;&gt;&gt; <br>
+Enter your name:
+</code>
+
+<p>If you see that, congratulations! You've officially run your first multi-line Python program! It's just like the previous examples where Python code was sent one line at a time to the prompt. In this case, your action of saving the source to a file and running the entire thing has told Python that you've got a more complicated program with multiple lines. You can go ahead and type in your name to observe the results. It runs just like the previous code, but with no need to stop in the middle to manually enter in the <i>print</i> statement.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>With the introduction of unknown input data from the user, you now have the ability to break your programs in ways you might never have considered possible. It's wonderful! Imagine asking the user for some input. Any input will do, really! You might ask them to constrain themselves to numbers, or to names, but <i>input</i> doesn't force them to actually do this. Essentially, we've just opened all sorts of doors for breaking our code in new and interesting ways.</p>
+
+<p>An important thing to remember is that the values returned by <i>input</i> are always strings. The <i>input</i> statement doesn't know if you're asking for a number. It's your responsibility to convert the string that is always returned from input into the correct type. You can see an example of this in the following code.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = input(&quot;Enter a number: &quot;)</b><br>
+Enter a number: <b>50</b><br>
+&gt;&gt;&gt; <b>x + 60</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#7&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x + 60<br>
+TypeError: Can't convert 'int' object to str implicitly
+</code>
+
+<p>There's an exception again. It's a <i>TypeError</i>, so what does that mean? We know that <i>input</i> returns a string, and that it always returns a string. If we try to use the value that is returned by <i>input</i> in an addition statement, the Python interpreter is going to complain enthusiastically. It looks like the values 50 and 60 will be added together to get 110. In reality, you're attempting to add the string &quot;50&quot; and the number 60. These two values are of different types, so Python isn't able to add them together like you might expect. This leads to the <i>TypeError</i> exception, and the warning about <i>int</i> and <i>str</i> objects.</p>
+
+<p>To make things more complicated, it turns out that Python doesn't always complain when the type of your value is inappropriate. You've seen how you can add <i>float</i> and <i>int</i> numbers together. Technically they're different types, but the language is designed to understand that these values can be treated in similar ways in many instances. There is some support for treating numbers as strings implicitly, as you can see in the following example.</p>
+
+<code>
+&gt;&gt;&gt; <b>input(60)</b><br>
+60<b>100</b><br>
+'100'
+</code>
+
+<p>What happened there? We passed in the number 60 to <i>input</i>, which expected a string as a parameter. Python was able to infer that the number 60 could be converted to the string &quot;60&quot; and used as the user request string. The second line is made up of our question string (&quot;60&quot;), and our response (&quot;100&quot;), and the returned value is the string &quot;100&quot;. It looks a bit strange. Watch out for implicit type conversion!</p>
+
+<p>You can start to think about this parameter in more general terms, and you are highly encouraged to start being a bit silly. One great way to show what it actually means to return a value from a function is in the following code:</p>
+
+<code>
+&gt;&gt;&gt; <b>input(input(&quot;What question should I ask? &quot;))</b><br>
+What question should I ask?
+</code>
+
+<p>Now honestly, what on Earth is that all about? In that code, we've nested a user request string inside of an <i>input</i> statement like we'd normally do. However, we've nested the <i>input</i> statement inside of another <i>input</i> statement! Does this even make sense? Take a second to think about what this code is doing, and try to convince yourself that a statement like this can actually exist.</p>
+
+<p>The code is actually using the inner <i>input</i> function call to ask the user to provide a question for the outer <i>input</i> function call. We know that <i>input</i> returns a string containing <i>input</i> from the user after asking some question. If we know that to be true, then we can actually place an <i>input</i> statement inside of another one, knowing that the inner nested <i>input</i> will return a string for the outer one to use as a question. Let's rewrite it like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>question = input(&quot;What question should I ask? &quot;)</b><br>
+What question should I ask? <b>How old are you?</b><br>
+&gt;&gt;&gt; <b>input(question)</b><br>
+How old are you? <b>25</b><br>
+'25'
+</code>
+
+<p>It's a lot more readable like this, but the two pieces of code are basically equivalent. If <i>input</i> returns a string, then we can nest it inside of other functions that expect string parameters. With that in mind, we could use the code in the following way:</p>
+
+<code>
+&gt;&gt;&gt; <b>input(input(&quot;What question should I ask? &quot;))</b><br>
+What question should I ask? <b>How old are you?</b> <br>
+How old are you? <b>25</b><br>
+'25'
+</code>
+
+<p>You're actually asking the user to provide the question that they want to ask themselves! Crazy stuff.</p>
+
+<p>What about <i>print</i>? What does <i>print</i> return?</p>
+
+<code>
+&gt;&gt;&gt; <b>input(print(&quot;How old are you? &quot;))</b><br>
+How old are you? <br>
+None<b>30</b><br>
+'30'
+</code>
+
+<p>What the heck is None? This looks a lot like the previous code, except that we got a strange None value in the middle of our question.</p>
+
+<p>The <i>print</i> function doesn't return a value like <i>input</i>. When you print something to the screen, nothing is returned. We don't need to return the string that was printed, and we don't need to know if it succeeded or failed to print to the screen. The <i>print</i> function does its job, and we move on with things. If we try to use <i>print</i> to provide a string for <i>input</i>, it actually returns the Python built-in value <i>None</i>. This means that the question that we are asking the user either doesn't exist or is <i>None</i> when converted to a string, and the response (&quot;30&quot;) only exists because we saw the result of the print statement on the previous line. It's awfully strange, so you should take a minute to type in that code and play around with it.</p>
+
+<p>If you'd like to use <i>None</i>, you can assign it to variables just like any other value.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = None</b><br>
+&gt;&gt;&gt; <b>print(x)</b><br>
+None
+</code>
+
+<p>We don't have a lot of use for <i>None</i> right now, but there are lots of good reasons to use it when our programs start getting more complicated. For example, we might ask the user for input, and if we don't like the result, we set the variable to <i>None</i> instead. If we ask them for their age, and they give us a negative value, we set the <i>age</i> variable to <i>None</i> so that we know things went wrong later on in the code.</p>
+
+<p>A final note about saving your source code: Saving a Python source code file without the .py extension doesn't show colour formatting in some versions of IDLE! If you are working in IDLE and you don't see colours in your source code display, make sure you've saved your file with a .py extension. It doesn't change any of the functionality of your code, but it sure does make it easier to see what you're doing.</p>
+
+<h2>Summary</h2>
+
+<p>Now that you can write more complicated programs, try adding a few more lines at the end of your new program. Can you add in the age request? What about asking for the user's last name, or their hometown? Can you make your new print statements use old variables, stating things like &quot;Well, Alexander, you appear to be from Kingston,&quot; if the name and city correspond to the input you have stored in your variables?</p>
+
+<p>Try to play around with some other programs in your new Python file. Feel free to save it, and to open a new one so that you don't lose your old programs. It might be helpful to create a particular directory to save everything in so that you don't misplace any of your work.</p>
+
+<h2>Exercises</h2>
+
+<p>1. Write a small series of input and output statements to ask the user some questions you might want answered. In your questionnaire, ask a question that results in a <i>float</i> value, and see how the <i>print</i> statement formats the result.</p>
+
+<p>2. Make a very simple calculator example. Retrieve two string variables one after another as input from the user, convert them into numbers, and print out the result of adding them together. Try again with other operations like multiplication.</p>
+
+<p>3. Earlier in this chapter, we played around with placing the <i>input</i> function call directly inside of the <i>int</i> function, so that our returned string value would immediately be converted into a number for us. Review that section, and then type the following line into either the IDLE command prompt or your Python source file:</p>
+
+<code>
+<b>print(input(&quot;Enter your name: &quot;))</b>
+</code>
+
+<p>What is this code doing? Can you come up with a two-line example that uses a variable to capture the result from input to accomplish the same thing?</p>
+
+<p>4. As an example of the reason to add .py at the end of your source code files, try creating a new file inside of the IDLE development environment, and save it with a .txt extension. Type in some Python code, and use the Run Module command. The program should still run, but do you notice any differences that might make it more useful to use a file that ends in .py? In particular, what happens to the colour formatting when you don't save with a .py extension?</p>
+
+<p>5. In the Breaking Stuff section, we placed a call to <i>input</i> inside of another <i>input</i> function. We also placed a <i>print</i> inside of an <i>input</i> function. What happens when you try an <i>input</i> inside of a <i>print</i> statement?</p>
+
+<code>
+<b>print(input(&quot;How old are you? &quot;))</b>
+</code>
+
+<p>What does the output mean? Is a value returned, and why?</p>

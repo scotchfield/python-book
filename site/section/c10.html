@@ -1,0 +1,365 @@
+<h1>Chapter 10: Reading and Writing from Text Files</h1>
+
+<p>Believe it or not, you aren't required to rely on <i>input</i> for all your input from a user. If you've got documents, configuration files, or other text documents sitting on your hard drive, these can all be used as input as easily as reading data from the keyboard. In this chapter, we'll build some sample applications that both accept text files as input and write text files as output.</p>
+
+<h2>File objects</h2>
+
+<p>The <i>input</i> statement is fairly abstract because there's really only one way to query the keyboard for a string. It isn't necessary to tell <i>input</i> to use the active keyboard, to wait until the new line character comes through before it's over, or any other extraneous information. Before we can read input from a file, it is necessary to identify a specific reference to the file itself. With a file, we have two key pieces of information, the location of the file, and whether we'd like to open the file for reading or for writing. To get this file reference, we use the <i>open</i> command. In this example, we use a file in the same directory as the program source code called it <i>hello.txt</i>, containing a single line of text.</p>
+
+<code>
+<b>input_file = open(&quot;hello.txt&quot;, &quot;r&quot;)</b>
+</code>
+
+<p>This <i>open</i> statement uses the file name as the first parameter. Since the file is in the same directory as my source code, we don't need to include the full system path. The second parameter is the single letter &quot;r&quot;, which is short for &quot;read&quot;. This tells Python that we want to open the file for reading access, meaning that we aren't going to make any changes to hello.txt. We're just going to see what it contains.</p>
+
+<p>There are a number of different ways to get data contained in the file, but we focus on the two most common ones here. You can either read the entire file into memory at once as a list by using <i>readlines</i>, or you can read a file one line at a time by using the <i>in</i> keyword. For smaller examples, you really won't notice any difference. For larger files, you don't want to load the entire thing into memory at once, so in general, we're going to stick with single lines at a time.</p>
+
+<p>First, let's take a look at <i>readlines</i>.</p>
+
+<code>
+<b>input_file = open(&quot;hello.txt&quot;, &quot;r&quot;)</b><br>
+<b>lines = input_file.readlines()</b><br>
+<b>input_file.close()</b><br>
+<b>print(&quot;The entire hello.txt file:&quot;)</b><br>
+<b>print(lines)</b><br>
+<b>print(&quot;The hello.txt file, line-by-line:&quot;)</b><br>
+<b>for x in lines:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(x)</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+The entire hello.txt file:<br>
+['Hello world!\n']<br>
+The hello.txt file, line-by-line:<br>
+Hello world!<br>
+<br>
+All done!
+</code>
+
+<p>The <i>readlines</i> method is called on the opened file object to read the entire file into memory. This means that when <i>readlines</i> finishes, the returned variable is a list with a length equal to the number of lines in the text file itself. The hello.txt file created earlier is a single line terminated by a new-line character. You can see the results in <i>lines</i> when it is printed to the screen. The list has a length of one and consists of a single string that terminates with the newline character &quot;\n&quot;.</p>
+
+<p>You can see how we can use the list in a loop to access each of the lines in turn. The lines of the file exist in memory now, so individual lines can be accessed by index. Notice that we also called the <i>close</i> method for the <i>input_file</i> file object. When the file is no longer needed, you'll want to make sure that access to the file is stopped. Python will often close files automatically if they're still open when the program terminates, but as your program continues running and you keep opening files again and again, you can run into access problems.</p>
+
+<p>The alternative way to read the lines from a file is one-by-one. A loop can be used to do this using the file object as an iterator. The format for this is as follows:</p>
+
+<code>
+<b>input_file = open(&quot;hello.txt&quot;, &quot;r&quot;)</b><br>
+<b>print(&quot;The hello.txt file, line-by-line using a for-loop:&quot;)</b><br>
+<b>for x in input_file:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(x)</b><br>
+<b>input_file.close()</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+The hello.txt file, line-by-line using a for-loop:<br>
+Hello world!<br>
+<br>
+All done!
+</code>
+
+<p>Each of the lines in hello.txt is accessed by using the <i>in</i> keyword. It requires much less memory when used with larger files, and its syntax is slightly more straightforward. We'll use both <i>in</i> and <i>readlines</i> going forward. You are of course free to use the one that feels most comfortable.</p>
+
+<p>So far, we've only looked at an input file with a single line of text. How do larger source files appear? As a sample, let's use the Project Gutenberg text version of The Time Machine, by H. G. Wells. This file was downloaded from http://www.gutenberg.org/cache/epub/35/pg35.txt and saved in the same folder as the source code that will attempt to read it.</p>
+
+<code>
+<b>input_file = open(&quot;pg35.txt&quot;, &quot;r&quot;)</b><br>
+<b>lines = input_file.readlines()</b><br>
+<b>print(&quot;The input file has {0} lines of text.&quot;.format(len(lines)))</b><br>
+<b>print(lines[0])</b><br>
+<b>for x in range(37, 49):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}: {1}&quot;.format(x, lines[x]), end=&quot;&quot;)</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+The input file has 3604 lines of text.<br>
+Project Gutenberg's The Time Machine, by H. G. (Herbert George) Wells<br>
+<br>
+37: The Time Traveller (for so it will be convenient to speak of him)<br>
+38: was expounding a recondite matter to us. His grey eyes shone and<br>
+39: twinkled, and his usually pale face was flushed and animated. The<br>
+40: fire burned brightly, and the soft radiance of the incandescent<br>
+41: lights in the lilies of silver caught the bubbles that flashed and<br>
+42: passed in our glasses. Our chairs, being his patents, embraced and<br>
+43: caressed us rather than submitted to be sat upon, and there was that<br>
+44: luxurious after-dinner atmosphere when thought roams gracefully<br>
+45: free of the trammels of precision. And he put it to us in this<br>
+46: way--marking the points with a lean forefinger--as we sat and lazily<br>
+47: admired his earnestness over this new paradox (as we thought it)<br>
+48: and his fecundity.<br>
+All done!
+</code>
+
+<p>You might have noticed the change to the <i>print</i> statement in the for-loop above. Since each of the lines is read in by <i>readlines</i>, the real full line of text is accepted. Each of these lines of text actually ends in a newline character, so each of the elements in the list itself has a newline. You can verify this in the interpreter.</p>
+
+<code>
+&gt;&gt;&gt; <b>lines[0]</b><br>
+&quot;Project Gutenberg's The Time Machine, by H. G. (Herbert George) Wells\n&quot;
+</code>
+
+<p>The &quot;\n&quot; character at the end of the string is the newline.</p>
+
+<code>
+&gt;&gt;&gt; <b>lines[37:49]</b><br>
+['The Time Traveller (for so it will be convenient to speak of him)\n', 'was expounding a recondite matter to us. His grey eyes shone and\n', 'twinkled, and his usually pale face was flushed and animated. The\n', 'fire burned brightly, and the soft radiance of the incandescent\n', 'lights in the lilies of silver caught the bubbles that flashed and\n', 'passed in our glasses. Our chairs, being his patents, embraced and\n', 'caressed us rather than submitted to be sat upon, and there was that\n', 'luxurious after-dinner atmosphere when thought roams gracefully\n', 'free of the trammels of precision. And he put it to us in this\n', 'way--marking the points with a lean forefinger--as we sat and lazily\n', 'admired his earnestness over this new paradox (as we thought it)\n', 'and his fecundity.\n']
+</code>
+
+<p>If you'd like to just acquire the text in each line without the unnecessary whitespace on either end, we can go back to the old string method <i>strip</i> so that the <i>print</i> statement doesn't need to be supplemented with the end parameter. This is usually what I do in my own code, but of course your mileage may vary.</p>
+
+<code>
+<b>input_file = open(&quot;pg35.txt&quot;, &quot;r&quot;)</b><br>
+<b>lines = input_file.readlines()</b><br>
+<b>print(&quot;The input file has {0} lines of text.&quot;.format(len(lines)))</b><br>
+<b>print(lines[0])</b><br>
+<b>for x in range(37, 40):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}: {1}&quot;.format(x, lines[x].strip()))</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+The input file has 3604 lines of text.<br>
+Project Gutenberg's The Time Machine, by H. G. (Herbert George) Wells<br>
+<br>
+37: The Time Traveller (for so it will be convenient to speak of him)<br>
+38: was expounding a recondite matter to us. His grey eyes shone and<br>
+39: twinkled, and his usually pale face was flushed and animated. The<br>
+All done!
+</code>
+
+<h2>Writing to a text file</h2>
+
+<p>When opening a text file, we must decide whether to open the file for reading or for writing. It doesn't realy make sense to do both at the same time, so a distinction between the two is made. For example, when opening The Time Machine, we never intended to rewrite the story. Rather, we were interested in opening the story and reading the data for some purpose.</p>
+
+<p>Let's consider writing to files first.  With writing, the <i>open</i> function is used a similar way as reading, but the second parameter is either &quot;w&quot; for write or &quot;a&quot; for append. If you open a file for appending, any new information written to the file is pasted onto the end.</p>
+
+<p>When you open a file for writing, a new empty file is created in the specified location. If the file already exists and you use &quot;w&quot;, it will be deleted and overwritten by the new file. That's important! Be careful when specifying your target, because it is fantastically easy to overwrite your input file by accidentally using &quot;w&quot; instead of &quot;r&quot; when opening. I speak from experience on this one.</p>
+
+<code>
+<b>output_file = open(&quot;output.txt&quot;, &quot;w&quot;)</b>
+</code>
+
+<p>To start getting data into the file, we can use <i>write</i>. The <i>write</i> function works a lot like <i>print</i>, except that it sends data to a file instead of to the screen. When a string is written to a file, the newline character won't be added unless it is explicitly specified. Let's build a sample program to see how we can start writing user input to a file.</p>
+
+<code>
+<b>output_file = open(&quot;output.txt&quot;, &quot;w&quot;)</b><br>
+<b>print(&quot;Enter a few strings to write to the file, and type quit when finished.&quot;)</b><br>
+<b>done = False</b><br>
+<b>while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;st = input(&quot;&gt; &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if st == &quot;quit&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;output_file.write(&quot;{0}\n&quot;.format(st))</b><br>
+<b>output_file.close()</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Enter a few strings to write to the file, and type quit when finished.<br>
+&gt; <b>This is a test.</b><br>
+&gt; <b>Writing to a file is fun!</b><br>
+&gt; <b>Wowwwwwww.</b><br>
+&gt; <b>quit</b><br>
+All done!<br>
+<br>
+output.txt:<br>
+This is a test.<br>
+Writing to a file is fun!<br>
+Wowwwwwww.
+</code>
+
+<p>Now if we run the code a second time and enter in some more data, the original output.txt will be deleted and replaced by the new set of user input. Let's change the &quot;w&quot; in the open function to &quot;a&quot; and see how it works instead.</p>
+
+<code>
+<b>output_file = open(&quot;output.txt&quot;, &quot;a&quot;)</b><br>
+<br>
+Enter a few strings to write to the file, and type quit when finished.<br>
+&gt; <b>Appending data is also fun.</b><br>
+&gt; <b>quit</b><br>
+All done!<br>
+<br>
+output.txt:<br>
+This is a test.<br>
+Writing to a file is fun!<br>
+Wowwwwwww.<br>
+Appending data is also fun.
+</code>
+
+<p>As long as the data is a string, it can be safely written to the file. Unlike <i>print</i>, <i>write</i> won't automatically attempt to convert your data to a string, so you'll have to do it manually. For example, if we try to write a number to the file, we'll hit a <i>TypeError</i> exception.</p>
+
+<code>
+<b>output_file = open(&quot;output.txt&quot;, &quot;w&quot;)</b><br>
+<b>output_file.write(5)</b><br>
+<b>output_file.close()</b><br>
+<b>print(&quot;All done!&quot;)</b><br>
+<br>
+Traceback (most recent call last):<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 2, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;output_file.write(5)<br>
+TypeError: must be str, not int
+</code>
+
+<p>The way around this is to wrap the number in <i>str</i> to explicitly convert the number 5 into the string &quot;5&quot;.</p>
+
+<code>
+<b>output_file.write(str(5))</b>
+</code>
+
+<p>The same thing goes for other data types. Just make sure that the actual conversion is done manually, and <i>write</i> will be able to send the data to the file.</p>
+
+<h2>Combining reads and writes</h2>
+
+<p>Now let's take an input file and do some interesting processing on it before writing some new data to an output file. We'll have two file objects, one for input and one for output. For this program, we'll use The Time Machine again, and count the number of words. To do that, we'll strip out any character that isn't a letter and assume that any continuous set of letters makes up a word. For example, let's take an arbitrary string from <i>input</i> and split it up into each of the words one by one.</p>
+
+<code>
+<b>input_string = input(&quot;Enter a string: &quot;)</b><br>
+<b>new_string = &quot;&quot;</b><br>
+<b>for x in input_string:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if x.isalpha() or x == &quot; &quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_string = &quot;{0}{1}&quot;.format(new_string, x.lower())</b><br>
+<b>while new_string.find(&quot; &quot;) &gt;= 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_string = new_string.replace(&quot; &quot;, &quot; &quot;)</b><br>
+<b>new_string = new_string.strip()</b><br>
+<b>words = new_string.split(&quot; &quot;)</b><br>
+<b>words.sort()</b><br>
+<b>print(&quot;The words in your string are:&quot;)</b><br>
+<b>print(words)</b><br>
+<br>
+Enter a string: <b>This is a test.</b><br>
+The words in your string are:<br>
+['a', 'is', 'test', 'this']
+</code>
+
+<p>The <i>isalpha</i> function returns True if all of the characters in the non-empty string are alphabetic. In the program above, we look at each letter in <i>input_string</i> one at a time, test whether they are either in the alphabet or are a space, and if they are what we want, concatenate them to <i>new_string</i>. When we're done, <i>new_string</i> should only consist of letters and spaces. Any pattern of two or more spaces is eliminated by replacing two spaces with one space. Finally, <i>split</i> is called to get a list of the words in the string. If we didn't replace all pairs of spaces, <i>split</i> would give us some empty words as results. For example, if you remove the <i>replace</i> call, you can see output like this:</p>
+
+<code>
+Enter a string: <b>This&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is a test.</b><br>
+The words in your string are:<br>
+['', '', '', '', '', '', '', '', '', '', 'a', 'is', 'test', 'this']
+</code>
+
+<p>Since there can be extra spaces at the start or end of a string that can still throw off the results, we also make a call to <i>strip</i> to clean up the ends. Finally, we sort the word list, and print it to the screen.</p>
+
+<p>Let's use the same approach with the input file. Instead of printing the entire list to the screen, let's print a subset of the words, along with the length of the word list. The previous code will need a slight modification because the new code will be using multiple lines.</p>
+
+<code>
+<b>input_file = open(&quot;pg35.txt&quot;, &quot;r&quot;)</b><br>
+<b>words = []</b><br>
+<b>for line in input_file:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_string = &quot;&quot;</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for x in line:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if x.isalpha() or x == &quot; &quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_string = &quot;{0}{1}&quot;.format(new_string, x.lower())</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_string = &quot;{0} &quot;.format(new_string)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while new_string.find(&quot; &quot;) &gt;= 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_string = new_string.replace(&quot; &quot;, &quot; &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_string = new_string.strip()</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if len(new_string) &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for word in new_string.split(&quot; &quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words.append(word)</b><br>
+<b>words.sort()</b><br>
+<b>print(&quot;There are {0} words in the file.&quot;.format(len(words)))</b><br>
+<b>print(&quot;Some of the words in your file are:&quot;)</b><br>
+<b>print(words[:10])</b><br>
+<b>print(words[10000:10010])</b><br>
+<br>
+There are 35261 words in the file.<br>
+Some of the words in your file are:<br>
+['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a']<br>
+['front', 'front', 'frugivorous', 'fruit', 'fruit', 'fruit', 'fruit', 'fruit', 'fruit', 'fruits']
+</code>
+
+<p>This looks great, and we've got a full list of all the words in the file. However, it would be nice to have each word show up only once. In particular, it would be handy to have a count of the actual number of times each word occurs. Let's change the list to a dictionary and track each word a little more closely.</p>
+
+<code>
+<b>input_file = open(&quot;pg35.txt&quot;, &quot;r&quot;)</b><br>
+<b>words = {}</b><br>
+<b>for line in input_file:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_string = &quot;&quot;</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for x in line:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if x.isalpha() or x == &quot; &quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_string = &quot;{0}{1}&quot;.format(new_string, x.lower())</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while new_string.find(&quot; &quot;) &gt;= 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_string = new_string.replace(&quot; &quot;, &quot; &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;new_string = new_string.strip()</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if len(new_string) &gt; 0:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for word in new_string.split(&quot; &quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if word in words:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words[word] += 1</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words[word] = 1</b><br>
+<b>words_keys = sorted(words)</b><br>
+<b>print(&quot;There are {0} words in the file.&quot;.format(len(words)))</b><br>
+<b>print(&quot;Some of the words in your file are:&quot;)</b><br>
+<b>for x in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(words_keys[x], words[words_keys[x]])</b><br>
+<br>
+There are 5173 words in the file.<br>
+Some of the words in your file are:<br>
+a 861<br>
+abandon 1<br>
+abandoned 1<br>
+abide 1<br>
+able 3<br>
+abnormally 1<br>
+abominable 2<br>
+abominations 1<br>
+about 78<br>
+above 23
+</code>
+
+<p>Much better! We can see how frequent the words are, and with the sorted keys from the dictionary, it's possible to view a sorted list of the elements of the dictionary.</p>
+
+<p>Let's go back to writing files so that this information can be saved in an output file. Change the last part of the program to this:</p>
+
+<code>
+<b>words_keys = sorted(words)</b><br>
+<b>output_file = open(&quot;output.txt&quot;, &quot;w&quot;)</b><br>
+<b>output_file.write(&quot;There are {0} words in the file.\n&quot;.format(len(words)))</b><br>
+<b>output_file.write(&quot;Some of the words in your file are:\n&quot;)</b><br>
+<b>for key in words_keys:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;output_file.write(&quot;{0}: {1}\n&quot;.format(key, words[key]))</b><br>
+<b>output_file.close()</b>
+</code>
+
+<p>If you run this program and take a look at the new contents of the output.txt file we just wrote, you'll see the following data:</p>
+
+<code>
+There are 5173 words in the file.<br>
+Some of the words in your file are:<br>
+a: 861<br>
+abandon: 1<br>
+abandoned: 1<br>
+abide: 1<br>
+able: 3<br>
+abnormally: 1<br>
+abominable: 2<br>
+abominations: 1<br>
+about: 78<br>
+above: 23<br>
+[..]
+</code>
+
+<p>In a single program, we've managed to read in an entire story line by line, do some word analysis on the data, and send the results to an output file based on the frequency of the words. The amount of data we're looking at is too great to print to the screen at once, so saving it as a file works as a great way to keep track of things. When you have too much data to work with at once, saving as a file can give you a manageable way of handling the information.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>Reading and writing to text files is fairly straightforward using Python.  There's an important caveat there though: reading and writing to files that are made up of text data is fairly straightforward.  There is another type of data stored in files that is usually referred to as binary data.  Binary data doesn't look like sentences or natural language.  It's not structured for people to read directly.  Instead, it's used by computers to store the data it needs in an efficient way.</p>
+
+<p>If you try to open a binary file, like an archived zip file, you'll get some strange results on the screen.  Consider this simple program:</p>
+
+<code>
+<b>input_file = open(&quot;test.zip&quot;, &quot;r&quot;)</b><br>
+<b>for line in input_file:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(line)</b><br>
+<b>input_file.close()</b>
+</code>
+
+<p>This code works perfectly fine as long as the input file is made up a collection of individual lines.  Each line will be printed to the screen, one-by-one, and the file will be closed.  However, as you might have noticed in the code block, we're opening a zip file here.  What do we get in this case?  Well, in my terminal, I get the following:</p>
+
+<code>
+.]1Dt.pyUX<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7]?R7]?R?+J?,NUp?HN-(????P??P??WT???P??H.]1D??H?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;??t.pyU7]?R7]?RPK>_
+</code>
+
+<p>Not particularly helpful.  This file actually consists of a single python file that I created as an example called t.py.  You can see hints that the file name is stored in the binary data.  However, the contents of the file are compressed and unreadable, so what you get on the screen is a bunch of spaghetti.</p>
+
+<p>Note that Python didn't crash when we tried to open a binary file in this way.  All that we said was to open the file and to treat it as a text file with line breaks.  There were no exceptions and no bright red warnings.  The output was the only clue that we'd done something unexpected.</p>
+
+<h2>Summary</h2>
+
+<p>Reading and writing information using text files is a common operation in Python that is implemented in an elegant way. Reading a file looks just like accessing elements in a list, and writing strings to a file is extremely similar to printing to the screen.</p>

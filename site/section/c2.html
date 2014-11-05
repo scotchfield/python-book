@@ -1,0 +1,144 @@
+<h1>Chapter 2: Getting Started</h1>
+
+<p>This chapter will explain what the programming environment you'll be using is all about, including how to save your programs, and how to use Python to run them. It will also show you how to get going if you're on a Windows machine or on a Mac, and how to get started in the actual development environment, called the interpreter.</p>
+
+<p>Python isn't guaranteed to be installed on your computer by default, so it might be necessary for you to have access to a computer that you can install software on. The operating system that you're using doesn't matter; Python has downloadable software packages for computers running Windows, Macs, and Linux. The examples in this book will run on any system.</p>
+
+<h2>What is IDLE?</h2>
+
+<p>To make our initial Python experience as easy as possible, we're going to use a development environment called IDLE. It should come by default with the distribution of Python that you download, and this chapter will explain where you can find and install everything needed. But first, what is a development environment, and why would we want to use it?</p>
+
+<p>Let's start by thinking about a simple calculator. If you want to send a simple addition request to your calculator, you enter the first number, followed by the plus key, then the second number, and finally the equals key. The calculator responds with the answer by displaying it on the screen. That's great, and it's certainly very intuitive for simple equations. When you start to increase the complexity of your commands though, the calculator becomes a little trickier to use. What if you want to get the sum of the square of the first number and the square root of the second number? What about calculating the value of the first number to the power of the second number times the first number squared divided by a third number plus the first number? Obviously these examples are a little bit silly, but there are plenty of real examples that get progressively more difficult to perform with a calculator. How about interest rates over several years, or the average height of a classroom full of students?</p>
+
+<p>A programming language is a way of organizing commands to write computer programs. With a calculator, you can think of the programming language as consisting of the set of symbols that you can enter on the keypad, and the acceptable orderings in which those symbols can be structured. The programming language of your simple calculator will accept programs like 3 + 4 for two reasons.  First, each of the three symbols has meaning. The symbol 3 is a way for the calculator to express the number three, and the symbol 4 expresses the number four.  The plus symbol indicates that addition will be used. Second, the addition sign has a number on the left and on the right. In total, 3 + 4 is a meaningful statement that can be evaluated by your calculator, and so in this context, it is a valid program.</p>
+
+<p>This leads to the development environment.  Why is a development environment beneficial for a programmer?  It might be helpful to think of the calculator as a development environment for mathematics.  While it is possible to perform addition and multiplication in our head, the development environment provided by the calculator allows us to externalize those equations clearly and efficiently.  The calculator is a tool for performing math in the same way that a development environment is a tool for allowing programmers to easily write program code.</p>
+
+<p>There are lots of ways to build programs using Python, and although I recommend IDLE as a tool to get you started, you can work in other development environments if it suits you. If you're new to this, it's probably best to work in IDLE for now.  As you begin to write more complicated code, you should feel free to explore other options.</p>
+
+<h2>Installing IDLE</h2>
+
+<p>IDLE is included in most distributions of Python, including the official one that we're going to use. You can get this distribution from the Python homepage at http://python.org in the Downloads section. Be careful though, as there are a couple of things that you'll need to be aware of before downloading your Python distribution.</p>
+
+<p>At this time, there are two versions of Python that are actively used and maintained. Why are there two versions? There is a lot of industry code running Python 2, and a lot of other code out there that people still depend on. Python 3 is a strong version of the language that fixes some important issues with the design (and that are outside the scope of this book). Python 2 code looks a lot like Python 3 code, so you'll need to make sure you've got the right version. Version 2.7 (or any version starting with a 2) is the older version of the language. This book uses Python 3, so make sure you download one of the version 3 packages. The 2.x language has some subtle differences that will give you some unexpected errors if you download and install it by accident. We want version 3.</p>
+
+<p>Also, be careful to read the fine print, and make sure you get the correct version for your operating system. If you're on a Windows machine, the first link (Windows Installer, does not include source) is probably enough for you. If you're not sure whether or not your machine is 64-bit, don't worry about it. You can just download the Windows file that is labelled as a generic Windows binary instead of the 64-bit one. The 64-bit version allows you to access more memory when you're writing programs, and for our purposes, we won't need to do that. Even if you are on a machine that supports it, we don't want to get caught up in unnecessary details, especially when most people are using the 32-bit distribution by default anyway.</p>
+
+<p>Once you download and install the Python distribution, you're ready to go! On a Windows machine, your Python installation can be found under the Start Menu in a folder named &quot;Python 3.x&quot; (where the x corresponds to the version you downloaded). Mine is called &quot;Python 3.3.3&quot;, and if that's not the latest and greatest by the time you're reading this sentence, it's probably time for <i>me</i> to upgrade to a newer version. The IDLE development environment is in that Start Menu folder. On a Mac, Python will be placed in your Applications folder, and the IDLE shortcut should be in there too.</p>
+
+<p>When you double-click on the IDLE icon, you should see something similar to the following:</p>
+
+<code>
+Python 3.3.3 (v3.3.3:c3896275c0f6, Nov 18 2013, 21:18:40) [MSC v.1600 32 bit (Intel)] on win32<br>
+Type &quot;copyright&quot;, &quot;credits&quot; or &quot;license()&quot; for more information.<br>
+&gt;&gt;&gt;
+</code>
+
+<p>If you get into IDLE and see the three greater-than signs right below the copyright/credits line, your installation has been successful. Congratulations, and welcome to IDLE!</p>
+
+<h2>Using IDLE</h2>
+
+<p>So now that we're here, how do we actually use IDLE? What are those three greater-than signs anyway? Well, the three greater-than signs are the IDLE prompt, which we'll just refer to generically as the prompt. If I say &quot;Type <i>x</i> at the prompt,&quot; I'm asking you to type <i>x</i> right after those signs. As an example, try asking Python what 2 plus 4 is. You can just type 2 + 4 in at the prompt, like this.</p>
+
+<code>&gt;&gt;&gt; <b>2 + 4</b><br>
+6<br>
+&gt;&gt;&gt;
+</code>
+
+<p>Looks good! Python handles math like your calculator does. You use the symbols on your keyboard to tell Python what equations you'd like to solve, and it goes off and processes that information to get you an answer. The answer to 2 plus 4 is indeed 6, just as expected.</p>
+
+<p>It's also nice to note that we got another prompt immediately after we got our answer. In the Python environment, the prompt will continue to request commands one after the other until you explicitly exit out of IDLE. You won't need to restart IDLE after you run a program or type in an equation like this. After one program is done, it gets ready to start up the next one.</p>
+
+<p>As we talked about earlier, the development environment for Python is like a program that sits on top of the Python engine. Python waits, hidden neatly behind those three greater-than signs, eager to get commands from us. If we write a program inside of IDLE, or we use IDLE to send Python statements to the engine, it'll chug away and give us some answers through the development environment window.</p>
+
+<p>Let's try multiplication next. You might have seen the asterisk (the star) used as a multiplication symbol, as in 3 * 4. Instead of 3 x 4 or 3 times 4, Python expects 3 * 4. Try typing 3 * 4 at the IDLE prompt and see what Python tells you.</p>
+
+<code>
+&gt;&gt;&gt; <b>3 * 4</b><br>
+12
+</code>
+
+<p>Perfect, we got the expected result of 3 times 4. Make sure to make a mental note that multiplication uses the asterisk. Also note that I've omitted the prompt that followed the answer, since we're going to see that regardless when single statements like addition or multiplication complete. In the rest of this book, I'll stick to this convention, where the opening prompt will be given when we're typing something into IDLE in this way, but the empty prompts that come up once the statement is finished will be omitted.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>Even at this early stage, we're still completely capable of breaking Python, so let's go ahead and do it. If we know that we can add and multiply numbers, it's a safe assumption that we can do other mathematical operations. What about division? In Python, the division operator is the forward slash sign.</p>
+
+<code>
+&gt;&gt;&gt; <b>12 / 3</b><br>
+4.0
+</code>
+
+<p>One good way to gum up a calculator is to try to divide by zero. There is no meaning to the answer, as there is no number that can be multiplied by zero to give a non-zero answer. So what happens if we try to divide by zero in Python?</p>
+
+<code>
+&gt;&gt;&gt; <b>12 / 0</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#3&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;12 / 0<br>
+ZeroDivisionError: int division or modulo by zero
+</code>
+
+<p>Ouch! Welcome to Python's error handling system. If you break something, chances are good that you're going to get something called a traceback, followed by a bunch of information about what broke and how. To be brief, we tried to divide by zero, and Python gave us something called a ZeroDivisionError. These error messages are called exceptions, and are used by Python to get out of a bad situation gracefully instead of crashing your computer. The programming environment was able to detect that we'd tried to do something silly, and halted before any real danger could spring up.</p>
+
+<p>This book will get into more detail about dealing with exceptions properly in a later chapter. Yeah, even though this book will show you lots of ways to break stuff, we'll have to learn how to fix them eventually too. Until then, we're going to be seeing many more exceptions, so let's go ahead and bring up one more to get better acquainted.</p>
+
+<p>A common way of writing multiplication expressions on paper is to use parentheses. For example, if we want to multiply the result of 1 + 2 and 3 + 4, we can write something like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>(1 + 2) * (3 + 4)</b><br>
+21
+</code>
+
+<p>When we do this on paper, it's common to omit the multiplication operator and to just leave the parentheses. For example:</p>
+
+<code>
+&gt;&gt;&gt; <b>(1 + 2) (3 + 4)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#8&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(1 + 2) (3 + 4)<br>
+TypeError: 'int' object is not callable
+</code>
+
+<p>So what's the big deal here? We might expect Python to evaluate the expression (1 + 2), then the expression (3 + 4), and then to multiply the two numbers together in the same way that we saw before. Unfortunately for us, that's not how the interpreter works.</p>
+
+<p>Python, and programming languages in general, work with a tightly structured grammar. Expressions are a good example of this. You and I might be able to look at the expression above and see that the two values should be multiplied together. Python makes no such assumption about the code. If you leave out operators like the multiplication or division signs, you'll start to see traceback warnings like this.</p>
+
+<p>This particular TypeError warning comes from Python's evaluation of the first part of the expression, then detecting an open parenthesis.</p>
+
+<code>
+&gt;&gt;&gt; <b>1 (2 * 3)</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#11&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1 (2 * 3)<br>
+TypeError: 'int' object is not callable<br>
+&gt;&gt;&gt; <b>1 * (2 * 3)</b><br>
+6</code>
+
+<p>This is a common error for beginners, so hopefully it will be helpful to see it early.  If you want to break Python code, leave out some operators!</p>
+
+<h2>Summary</h2>
+
+<p>By this point, you should have the correct version of Python installed, along with a bit of experience working inside of the IDLE development environment. Congratulations, you've already started programming in Python! It was mentioned in the introduction that the introductory programming period would be humble, so please don't be discouraged if it seems like all you've done is added and multiplied a few numbers together. We're building a strong foundation to construct larger programs later on. And hey, multiplying numbers isn't easy! Feel free to drop some larger numbers in there too and see how Python handles it.</p>
+
+<p>In the next chapter, we're going to learn how to save a result in memory using something called a variable, which will allow us to write more complicated and more interesting programs.</p>
+
+<h2>Exercises</h2>
+
+<p>1) Construct some different equations using larger numbers and solve them using IDLE. For example, what is 12345 * 12345? How about 3 * 4 * 5?</p>
+
+<p>2) You can write negative numbers by adding a dash immediately before the number, with no space. What does Python say when you ask for the result of -1 * 2? What about -1 + -1? Remember to always omit the space between the dash and the number when making negative values.</p>
+
+<p>3) Whitespace is important in Python, but you have some flexibility. Try adding extra spaces and see where Python complains about it and where it doesn't. For example:</p>
+
+<code>
+&gt;&gt;&gt; <b>2 + 2</b><br>
+4<br>
+&gt;&gt;&gt; <b>2 + 2</b><br>
+4<br>
+&gt;&gt;&gt; &nbsp;&nbsp;<b>2 + 2</b> <br>
+SyntaxError: unexpected indent</code>
+
+<p>4) Operators like * and + depend on expressions. So far, an expression has been a valid mathematical equation, or a single number. Try making some longer equations using all of the operators we've seen so far. For example, you might start with 2 + 3, and swap out the 2 for another expression to get (1 + 1) + 3. Does this give the same answer at the prompt? How long can you make your expression?</p>
+
+<p>5) Make a list of the error messages (<i>SyntaxError</i>, <i>TypeError</i>, and so on) that you've seen so far. Do you understand why Python complained about each one? If not, try to go back to reproduce another instance of the error, and see if you can figure out what particular problem forced Python to holler.</p>

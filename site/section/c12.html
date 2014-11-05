@@ -1,0 +1,512 @@
+<h1>Chapter 12: Functions</h1>
+
+<p>In software, a surprising amount of program source code is very general. The copy-paste action is an extremely common programming practice. For example, when code is written to get a number from the user, that same code might get reused in a large number of future programs. These common blocks of Python code might include a block to verify that numbers are in acceptable ranges, that strings fit a certain requirement, or complicated <i>print</i> statements work with general data structures. Instead of copying and pasting over and over again, duplicating code and making things more complicated, it is possible to write functions to handle repeated tasks. For example, getting input from the user doesn't require writing complicated keyboard handling code with a termination condition that occurs when the user hits enter. You just call <i>input</i>, and it does the magic. You can write functions like this in this same way, abstracting away the details of an otherwise common set of program code.</p>
+
+<h2>Building simple functions</h2>
+
+<p>Let's start with a very simple example. Let's look at the <i>max</i> function, and specifically <i>max</i> with two parameters. The <i>max</i> function accepts two values, usually numbers, and returns the maximum value out of those two numbers.</p>
+
+<code>
+&gt;&gt;&gt; <b>max(3, 5)</b><br>
+5<br>
+&gt;&gt;&gt; <b>max(7, -2)</b><br>
+7
+</code>
+
+<p>It's been easy so far to just accept that this function takes some parameters, makes some magic happen, and then returns a value that fits the function's purpose. In the first example, the two numbers are 3 and 5. Since 5 is clearly the maximum number out of those two, <i>max</i> should return a 5. So how could we actually write this function for ourself?</p>
+
+<p>Recall that when we've talked about these functions previously, we've used the idea that they accept parameters as input and return a value as output. A convenient paradigm that might help is simply asking another person for the answer. Let's say you walk up to me and ask me to tell you whether 3 or 5 is bigger. I stand there, think about it for a second, and tell you that 5 is bigger. You seem satisfied, and walk away. It isn't important how I came up with the answer, only that it's right.</p>
+
+<p>In my head, I might have remembered that you first gave me the number 3, and that you next gave me the number 5. In a function, the variable names that the input parameters are going to take are specified.</p>
+
+<code>
+<b>firstNumber = 3</b><br>
+<b>secondNumber = 5</b>
+</code>
+
+<p>Next, I probably used the equivalent of an if-statement to see if the first number was larger than the second number. If it was, I returned the first number to you. If it wasn't bigger, I returned the second. In Python, <i>return</i> statement does this. The way that <i>max</i>, <i>input</i>, and other familiar functions give a value back isn't with <i>print</i>, but with <i>return</i>.</p>
+
+<code>
+<b>if firstNumber &gt; secondNumber:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return firstNumber</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return secondNumber</b>
+</code>
+
+<p>If you try to run this on its own, Python will complain about a <i>SyntaxError</i>, and inform you that you can't <i>return</i> outside of a function. To allow us to make calls like <i>myMax(3, 5)</i> in the same way that we called <i>max(3, 5)</i>, we'll use a keyword called <i>def</i>, while is short for define. It tells Python that we are defining a function to be used just like the other built-in functions. In the same statement, we'll indicate whether or not we're expecting any variables to be passed as parameters to the function, and what we'd like to call them in the context of our new code.</p>
+
+<code>
+<b>def myMax(firstNumber, secondNumber):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if firstNumber &gt; secondNumber:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return firstNumber</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return secondNumber</b>
+</code>
+
+<p>The new <i>myMax</i> function assumes that the user is going to provide two numbers, and that we're going to refer to them as <i>firstNumber</i> and <i>secondNumber</i>. We take the same if-statement given above and return a value based on which input is bigger. For this function, that's really all that we need. Let's test it out, just like we tried the <i>max</i> function.</p>
+
+<code>
+&gt;&gt;&gt; <b>max(3, 5)</b><br>
+5<br>
+&gt;&gt;&gt; <b>myMax(3, 5)</b><br>
+5<br>
+&gt;&gt;&gt; <b>max(7, -2)</b><br>
+7
+&gt;&gt;&gt; <b>myMax(7, -2)</b><br>
+7
+</code>
+
+<p>The new <i>myMax</i> looks exactly the same as <i>max</i>, except that it has a different name. Each time we call it, the function takes the two values and assigns them to the variable names in the function definition. It's as if we're doing something like the following:</p>
+
+<code>
+<b>def myMax():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;firstNumber = 3</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;secondNumber = 5</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if firstNumber &gt; secondNumber:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return firstNumber</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return secondNumber</b>
+</code>
+
+<p>Of course, we can't write the function that way, since we wouldn't be able to run it with the 7 and -2 in the second case (or any other case, for that matter). Python knows that when you specify the function parameters in the definition and call the function later on, it should take those values and substitute them into the variable names you give.</p>
+
+<p>One important thing to note is that these variable names only occur in the context of the function itself. There is a fundamental mechanism in Python called variable scope, specifying the lifetime of a variable while the program is running. For a function, the scope of a variable exists as far as the function is running in that instance. Once the function returns a value, all the other values it creates disappear. We can show this with an example.</p>
+
+<code>
+&gt;&gt;&gt; <b>myMax(4, 9)</b><br>
+9<br>
+&gt;&gt;&gt; <b>firstNumber</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#11&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;firstNumber<br>
+NameError: name 'firstNumber' is not defined
+</code>
+
+<p>If <i>myMax</i> gets called, we know that a <i>firstNumber</i> variable is created and set to 4. So why do we get a <i>NameError</i> when trying to reference <i>firstNumber</i> after the function is completed? It's thanks to the variable scope just referenced. Once the function is done executing, it cleans up after itself and gets rid of the other unnecessary variables.</p>
+
+<p>In a similar vein, variables that you define inside your program itself aren't necessarily visible inside the function. If you want a function to be able to use a value, you really should be passing it in as a function parameter.</p>
+
+<h2>Time-saving functions</h2>
+
+<p>As stated earlier, a big advantage of functions is that they allow you to write efficient pieces of code that you can use again and again. One example of this occurred where we used a <i>try</i> block to repeatedly ask for input until a valid number was received. So how can we turn this code into a function?</p>
+
+<p>First, ask yourself what the input and output conditions of this function should be. Are there any values to consider as input? In this simple case, there aren't. We know that we want to get a number from the user, so we can write a function called <i>getNumber</i> with no function parameters.</p>
+
+<code>
+<b>def getNumber():</b>
+</code>
+
+<p>Next, what are we expecting as output from this function? In this case, we'd like to get a single <i>int</i> value returned. For example, it would be nice to use our function like this:</p>
+
+<code>
+<b>print(getNumber())</b><br>
+<b>age = getNumber()</b><br>
+<b>x = getNumber() + y</b>
+</code>
+
+<p>It should ideally look like any of the other previous built-in functions that we've come across, and should operate as a function that gets a value from <i>input</i> and returns the int representation of that value. If the code from the previous chapter is copy-pasted and modified to include the <i>def</i> statement above and a <i>return</i> statement that provides the value retrieved, it can be used in the following way.</p>
+
+<code>
+<b>def getNumber():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;done = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number other than zero: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return user_number</b>
+</code>
+
+<p>Again, the only changes that have been made in this block of code are the define statement at the start, and the return statement at the end. All of the other code is the same. With this function, we now have access to a reusable piece of code that hides away all the error checking and verification, and just does the right thing.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(getNumber())</b><br>
+Enter a number other than zero: <b>Alexander</b><br>
+You didn't enter a number! Shame on you.<br>
+Enter a number other than zero: <b>5</b><br>
+5<br>
+&gt;&gt;&gt; <b>print(&quot;Your number is: {0}&quot;.format(getNumber()))</b><br>
+Enter a number other than zero: <b>5</b><br>
+Your number is: 5
+</code>
+
+<p>In the <i>contacts_obj</i> example from the dictionaries chapter, we asked the user for a nickname and printed out the full contact information based on the presence of a key, and gave an appropriate message if the key wasn't found. Let's pull out the full contact section as a function, and see what that changes.</p>
+
+<code>
+<b>def printContact(contact_dictionary):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for key in contact_dictionary:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;&nbsp;&nbsp;&nbsp;&nbsp;{0}: {1}&quot;.format(key, contact_dictionary[key]))</b><br>
+<br>
+<b>nickname = input(&quot;Enter the contact you would like to see: &quot;)</b><br>
+<b>if nickname in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Contact: {0}&quot;.format(nickname))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;printContact(contacts_obj[nickname])</b><br>
+<b>else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Sorry, I don't know {0}!&quot;.format(nickname))</b><br>
+<br>
+Enter the contact you would like to see: <b>alexander</b><br>
+Contact: alexander<br>
+&nbsp;&nbsp;&nbsp;&nbsp;town: Kingston<br>
+&nbsp;&nbsp;&nbsp;&nbsp;phone: 5551763<br>
+&nbsp;&nbsp;&nbsp;&nbsp;first_name: Alexander<br>
+&nbsp;&nbsp;&nbsp;&nbsp;last_name: Coder
+</code>
+
+<p>Nothing about the behaviour of the program has changed. It still runs exactly as it did before, and we're able to search based on contact information. What is new is the <i>printContact</i> function, which takes care of all the key-based output for a contact dictionary. Instead of referencing <i>contacts_obj[nickname]</i>, as was the case for the previous example, we pass in the <i>contacts_obj[nickname]</i> dictionary as a function parameter to the <i>printContact</i> function. Now <i>printContact</i> expects that there is a dictionary in the <i>contact_dictionary</i> variable, and runs the exact same code with the new variable.</p>
+
+<p>Function parameters can be any variable type. Whether you want to pass numbers, strings, lists, dictionaries, or other types, you'll have no problem giving the information to your function.</p>
+
+<h2>Parameter passing by value</h2>
+
+<p>An important distinction in Python's treatment of function parameters that differs from standard variables is that the function parameters are passed by value. If you walked up to me on the street and asked me to tell you whether or not 3 was bigger than 5, I probably wouldn't be able to trick you into believing that you asked if 6 is bigger than 3. Whether or not it's true that 6 is bigger than 3 (last time I checked, it was), that wasn't the question that you asked me. You asked about 5, and it shouldn't be possible for me to switch that value on you.</p>
+
+<p>This is the sort of thing meant when speaking about passing by value. With basic variable types, you're not passing a mutable piece of data to me that can be modified and given back to you. Function parameters are sacred. If you give me an <i>int</i>, you're essentially giving me a copy of that variable with the same value. You're giving me the value in that variable, and not access to the variable itself.</p>
+
+<code>
+<b>def modifyValue(firstNumber, secondNumber):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;firstNumber = firstNumber + secondNumber</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;secondNumber = secondNumber - 10</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return True</b><br>
+<br>
+<b>a = 3</b><br>
+<b>b = 5</b><br>
+<b>modifyValue(a, b)</b><br>
+<b>print(&quot;a = {0}, b = {1}&quot;.format(a, b))</b><br>
+<br>
+a = 3, b = 5
+</code>
+
+<p>If it was true that you'd literally given <i>modifyValue</i> access to the <i>a</i> and <i>b</i> variables and not the values stored in <i>a</i> and <i>b</i>, the function could have actuallymodified <i>firstNumber</i> and <i>secondNumber</i>. That sort of behaviour would be very bad, and might allow me to trick you into believing that your data wasn't what it actually was in the first place. Imagine if we had a <i>verifyPassword</i> function where the function could change your password inside of itself. That's not okay.</p>
+
+<p>Passing by value is Python's way of making sure that functions have a minimal ability to be malicious with your data, whether intentional or not. When you call the <i>modifyValue</i> function above, the value in <i>a</i> is copied into <i>firstNumber</i>, and the value in <i>b</i> is copied into <i>secondNumber</i>. When the function finishes, <i>a</i> doesn't have the value 8 (<i>firstNumber</i> + <i>secondNumber</i>), and <i>b</i> isn't equal to -5 (<i>secondNumber</i> - 10). They retain their original values.</p>
+
+<p>Surprisingly, not all variables hold completely true to this concept. Even passing by value doesn't mean that the copy that you get is guaranteed to be exactly what it was when you made the copy the first time. I know, I just said... Well, hear me out. Imagine that you found a treasure map while walking around town and you wanted to show a copy to me. To make sure that you didn't lose the map, you photocopied it, and gave the copy to me. You still have your own copy of the map. Even if I tear it up or change the route, nothing happens to your copy. However, if I go and steal the treasure, your map doesn't really have the same value that it did before, since there's no treasure at the end. Thanks for the treasure though!</p>
+
+<p>Lists and dictionaries are examples of data structures that exhibit this type of behaviour. When you pass a list or a dictionary to the function, it doesn't change the fact that you're pointing to the same list that you were the first time. However, the function can insert or delete elements inside the data structure. For example,</p>
+
+<code>
+<b>def noChangeList(yourList):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourList = []</b><br>
+<br>
+<b>def addToList(yourList):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourList.append(25)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourList.append(70)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourList.remove(yourList[0])</b><br>
+<br>
+<b>myList = [3, 5, 9, 12, 99]</b><br>
+<b>print(&quot;Original myList: {0}&quot;.format(myList))</b><br>
+<b>noChangeList(myList)</b><br>
+<b>print(&quot;Unchanged myList: {0}&quot;.format(myList))</b><br>
+<b>addToList(myList)</b><br>
+<b>print(&quot;Modified myList: {0}&quot;.format(myList))</b><br>
+<br>
+Original myList: [3, 5, 9, 12, 99]<br>
+Unchanged myList: [3, 5, 9, 12, 99]<br>
+Modified myList: [5, 9, 12, 99, 25, 70]
+</code>
+
+<p>The <i>noChangeList</i> function attempts to set <i>yourList</i> to an empty list. If Python wasn't using pass by value, you might expect <i>myList</i> to have a new list. It isn't true though, just as you wouldn't be fooled by me handing you an empty treasure map. However, <i>addToList</i> is able to take the list data structure and make changes to the values inside of it. The pass by value requirement only occurs at the top-most level of the data structre, and the values inside that data structure can be shifted around.</p>
+
+<p>A dictionary will exhibit the same behaviour. Let's modify <i>addToList</i> and create <i>addToDict</i> to insert and delete elements from a dictionary.</p>
+
+<code>
+<b>def noChangeDict(yourDict):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourDict = {}</b><br>
+<br>
+<b>def addToDict(yourDict):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourDict.clear()</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;yourDict[&quot;Alexander&quot;] = True</b><br>
+<br>
+<b>myDict = {&quot;test&quot;: 35, &quot;foo&quot;: 21, &quot;bar&quot;: 5}</b><br>
+<b>print(&quot;Original myDict: {0}&quot;.format(myDict))</b><br>
+<b>noChangeDict(myDict)</b><br>
+<b>print(&quot;Unchanged myDict: {0}&quot;.format(myDict))</b><br>
+<b>addToDict(myDict)</b><br>
+<b>print(&quot;Modified myDict: {0}&quot;.format(myDict))</b><br>
+<br>
+Original myDict: {'test': 35, 'foo': 21, 'bar': 5}<br>
+Unchanged myDict: {'test': 35, 'foo': 21, 'bar': 5}<br>
+Modified myDict: {'Alexander': True}
+</code>
+
+<p>These changes are acceptable because lists and dictionaries are mutable types, while strings and numbers are immutable. A list and a dictionary are data structures that can be modified in-place; adding an element to a list doesn't return a new list, but changes the very list that you are actually adding the element to. When you try modify a string, you're not able to do so, and have to resort to getting a new string based on the old one. You can't change numbers or strings normally, so you also can't modify them as function parameters.</p>
+
+<h2>Default function parameters</h2>
+
+<p>The <i>print</i> statement has a couple of optional parameters that don't need to be specified if the defaults are acceptable. The <i>sep</i> parameter acts as a separator when multiple parameters are being passed in. By default, the separator is a single empty space. The <i>end</i> parameter indicates how <i>print</i> should terminate the string being printed to the screen, and the default is terminating by moving to the next line.</p>
+
+<code>
+<b>a = &quot;Alexander&quot;</b><br>
+<b>b = &quot;Coder&quot;</b><br>
+<b>print(a, b)</b><br>
+<b>print(a, b, sep=&quot;&quot;)</b><br>
+<b>print(a, b, sep=&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;)</b><br>
+<b>print(a, b, sep=&quot;:)&quot;)</b><br>
+<br>
+Alexander Coder<br>
+AlexanderCoder<br>
+Alexander&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Coder<br>
+Alexander:)Coder<br>
+<br>
+<b>print(a)</b><br>
+<b>print(b)</b><br>
+<b>print(a, end=&quot;&quot;)</b><br>
+<b>print(b)</b><br>
+<br>
+Alexander<br>
+Coder<br>
+AlexanderCoder
+</code>
+
+<p>We've come an awfully long way since <i>print</i> was introduced, but the behaviour exhibited here might be a little unfamiliar. The idea of specifying optional function parameters to modify the function in a particular way is different than forcing the user to explicitly say what the default separator and the default end string are.</p>
+
+<p>So what's different in the <i>print</i> statement? How did the code define an optional default parameter that isn't required, but is there if the programmer wants to access it? Let's modify <i>getNumber</i> from earlier to allow an optional minimum value for the number. At first, we'll set this as a variable inside the function itself. If the value of the variable is <i>False</i>, we'll assume the user doesn't have an actual minimum requirement. Otherwise, the code should check to see if the number is in the acceptable range, and repeat the loop if the number is too low.</p>
+
+<code>
+<b>def getNumber():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;minimum_value = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;done = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if minimum_value == False or user_number &gt;= minimum_value:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number was too low!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The minimum value is {0}.&quot;.format( minimum_value))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return user_number</b><br>
+<br>
+&gt;&gt;&gt; <b>getNumber()</b><br>
+Enter a number: <b>Alexander</b><br>
+You didn't enter a number! Shame on you.<br>
+Enter a number: <b>-500</b><br>
+-500
+</code>
+
+<p>Now modify <i>minimum_value</i> to have the value 5. Any number less than 5 should be rejected.</p>
+
+<code>
+<b>def getNumber():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;minimum_value = 5</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;# The rest of the previous code follows here..</b><br>
+<br>
+&gt;&gt;&gt; <b>getNumber()</b><br>
+Enter a number: <b>-500</b><br>
+Your number was too low!<br>
+The minimum value is 5.<br>
+Enter a number: <b>5</b><br>
+5
+</code>
+
+<p>Excellent! Now this code has a variable to check whether or not a value is too low, and if so, forces the user to enter in a new value. We were modifying this variable manually in the function, but it seems like the perfect candidate for a function parameter. Let's move it right up into the function definition itself and see how this changes things.</p>
+
+<code>
+<b>def getNumber(minimum_value):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;done = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(&quot;Enter a number: &quot;))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if minimum_value == False or user_number &gt;= minimum_value:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number was too low!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The minimum value is {0}.&quot;.format(minimum_value))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return user_number</b>
+</code>
+
+<p>The only things that are actually different here are the <i>minimum_value</i> statement being moved up to the function parameter list, and the lack of a default starting value for the <i>minimum_value</i> variable. When this function gets called now, we'll have to specify the value that should be placed in that variable.</p>
+
+<code>
+&gt;&gt;&gt; <b>getNumber(5)</b><br>
+Enter a number: <b>-500</b><br>
+Your number was too low!<br>
+The minimum value is 5.<br>
+Enter a number: <b>5</b><br>
+5<br>
+&gt;&gt;&gt; <b>getNumber(False)</b><br>
+Enter a number: <b>-500</b><br>
+-500
+</code>
+
+<p>This is working exactly as we'd expect. If we give it a number value, it'll treat that as the minimum acceptable value for <i>input</i>. If it gets <i>False</i> instead, there is no minimum requirement.</p>
+
+<p>To make this code really useful, it would be nice if the programmer didn't need to know that <i>False</i> was the magic value that allowed the code to ignore the minimum value check. Why didn't we use <i>None</i>? Or <i>True</i> for &quot;allow any value&quot;? By default, the programmer probably doesn't want to specify a minimum value, and we'd like to save them the trouble of having to specify <i>False</i> each time they want to get a number.</p>
+
+<p>If you include an equals sign in the parameter definition, the function will treat that as the default value if it isn't provided by the programmer. Also, if the programmer wants to set that value, they have to give the variable name when they're calling it, just like in the <i>sep</i> and <i>end</i> examples with <i>print</i>. To get this in our new function, we only have to make one simple change.</p>
+
+<code>
+<b>def getNumber(minimum_value=False):</b>
+</code>
+
+<p>The default we'd like to use is <i>False</i>, so we advise the function that if the variable isn't set when the function is called, the default is already in place. The function is then free to use that variable, even if the programmer doesn't know or doesn't care about it.</p>
+
+<code>
+&gt;&gt;&gt; <b>getNumber()</b><br>
+Enter a number: <b>-500</b><br>
+-500<br>
+&gt;&gt;&gt; <b>getNumber(minimum_value=5)</b><br>
+Enter a number: <b>-500</b><br>
+Your number was too low!<br>
+The minimum value is 5.<br>
+Enter a number: <b>5</b><br>
+5
+</code>
+
+<p>You can omit these default parameter values entirely, or you can have one or more, as long as they all show up at the end of the parameter list. You aren't necessarily required to give the variable name when calling the function. We could have just written <i>getNumber(5)</i> instead of specifying explicitly that we were modifying <i>minimum_value</i>. However, once you get into multiple defaults, you need some way of telling Python exactly which default you're changing, so it's good practice to include the variable name when you're writing code like this.</p>
+
+<p>To show multiple default parameter values, let's make the input string a customizable value. Instead of the boring old &quot;Enter a number&quot; string, let's make it something that the programmer specifies. Maybe they want an age, or a year, or some other relevant numeric value that may or may not have a minimum. We'll call it <i>input_text</i>.</p>
+
+<code>
+<b>def getNumber(minimum_value=False, input_text=&quot;Enter a number: &quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;done = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(input_text))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if minimum_value == False or user_number &gt;= minimum_value:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number was too low!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The minimum value is {0}.&quot;.format(minimum_value))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return user_number</b><br>
+<br>
+&gt;&gt;&gt; <b>getNumber()</b><br>
+Enter a number: <b>-500</b><br>
+-500<br>
+&gt;&gt;&gt; <b>getNumber(minimum_value=10)</b><br>
+Enter a number: <b>5</b><br>
+Your number was too low!<br>
+The minimum value is 10.<br>
+Enter a number: <b>15</b><br>
+15<br>
+&gt;&gt;&gt; <b>getNumber(minimum_value=10, input_text=&quot;Enter your age: &quot;)</b><br>
+Enter your age: <b>3</b><br>
+Your number was too low!<br>
+The minimum value is 10.<br>
+Enter your age: <b>18</b><br>
+18
+</code>
+
+<p>Now the <i>input</i> function is a little more customizable. The <i>input</i> statements have more character, and you can probably imagine using them in a wider range of situations. What about other default variables that a general function like <i>getNumber</i> might want to include, like a maximum value in addition to the minimum value? Consider this a challenge; this example is actually left as an exercise at the end of the chapter, and you'll get a lot of good practice by going through and coding it up. In fact, you might gain a new function that you use in many of your own programs going forward!</p>
+
+<h2>Advanced sorting</h2>
+
+<p>We've taken some time to discuss lists, and given a simple built-in way to sort the elements of a list using <i>sorted</i>. Unfortunately for us, the only elements that can be sorted are ones that have implemented comparisons between one another. Dictionaries have no such ordering, so we can't do something like this:</p>
+
+<code>
+<b>my_obj = [</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;name&quot;: &quot;Alexander&quot;, &quot;age&quot;: 30},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;name&quot;: &quot;Old Guy&quot;, &quot;age&quot;: 85},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;name&quot;: &quot;Young Kid&quot;, &quot;age&quot;: 2},</b><br>
+<b>]</b><br>
+<br>
+<b>print(sorted(my_obj))</b><br>
+<br>
+Traceback (most recent call last):<br>
+ File &quot;C:\Python33\sandbox.py&quot;, line 10, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(sorted(my_obj))<br>
+TypeError: unorderable types: dict() &lt; dict()
+</code>
+
+<p>It would be nice to get a list of those dictionaries, sorted by age or even by name, but there is no built-in way to order one dictionary against another.</p>
+
+<p>The <i>sort</i> and <i>sorted</i> functions have an optional function parameter called <i>key</i> that you can specify. The <i>key</i> value, rather than being a list or a string, is actually a reference to a function that returns a comparable value. What that means is that you'll tell <i>sort</i> how exactly to sort the dictionaries by suggesting that it call <i>key(d)</i> for dictionary <i>d</i> and using the returned value as the ordering. If <i>key</i> is a function that accepts a dictionary and returns the value for the &quot;age&quot; key, we can obtain a sorted list of the elements in <i>my_obj</i>.</p>
+
+<code>
+<b>def getAge(d):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return d[&quot;age&quot;]</b><br>
+<br>
+<b>my_obj = [</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;name&quot;: &quot;Alexander&quot;, &quot;age&quot;: 30},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;name&quot;: &quot;Old Guy&quot;, &quot;age&quot;: 85},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;name&quot;: &quot;Young Kid&quot;, &quot;age&quot;: 2},</b><br>
+<b>]</b><br>
+<br>
+<b>print(sorted(my_obj, key=getAge))</b><br>
+<br>
+[{'age': 2, 'name': 'Young Kid'}, {'age': 30, 'name': 'Alexander'}, {'age': 85, 'name': 'Old Guy'}]
+</code>
+
+<p>The syntax is a little peculiar, and requires a bit of explanation. It isn't the case that we're calling the <i>getAge</i> function ourselves. We simply define a function that can be used on our dictionaries, and give a reference to that function to the <i>sort</i> functions so they can use it to handle our data. It's like providing an instruction manual for a gadget that you might not otherwise know how to use. The <i>sort</i> functions can't sort arbitrary dictionaries on their own, but they can do it if you tell them how.</p>
+
+<p>Passing a function as a value is a funny idea too, but it is important to realize that the functions themselves are actually variables. By declaring <i>key=getAge</i>, we're allowing <i>sorted</i> to call <i>key(d)</i> instead of having to write a new <i>sorted</i> function that explicitly uses <i>getAge(d)</i>. Function implementations are small programs, and the names are simply references to those pieces of code.</p>
+
+<p>You can show this by using a function as a variable in your own code, although you are definitely advised to use this as an experiment and not as an actual coding practice!</p>
+
+<code>
+<b>alexander = sorted</b><br>
+<b>print(alexander(my_obj, key=getAge))</b><br>
+<br>
+[{'age': 2, 'name': 'Young Kid'}, {'age': 30, 'name': 'Alexander'}, {'age': 85, 'name': 'Old Guy'}]
+</code>
+
+<p>Holy smokes.</p>
+
+<p>This idea of functions as variables can give <i>sorted</i> the ability to sort arbitrary lists of data, as long as you're able to give it a way to compare the elements against each other. A function like <i>getAge</i> that accepts a single parameter empowers <i>sorted</i> to make sense of the data and to move things around in a sensible way.</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>Functions are clever ways of compartmentalizing code blocks so that they can be called outside of another part of the code.  They are a core part of programming, and are so widely used that you're probably starting to think of them as just another part of the language.  However, there's one thing we haven't touched on yet.  Can a function call itself?</p>
+
+<p>Let's start with a problem: we want to write a piece of code that, when given an integer as input, calculates the total sum of the squares less than or equal to that integer.  For example, the sum of squares for the value 3 should return 14 because the square of three is nine, the square of two is four, the square of one is one, and the sum of those squares is fourteen.  Now consider the following piece of code.</p>
+
+<code>
+<b>def sum_squares(x):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return x * x + sum_squares(x - 1)</b><br>
+<br>
+<b>print(sum_squares(3))</b>
+</code>
+
+<p>At first glance, that looks fair enough.  We define a new function called <i>sum_squares</i> that takes a single variable called <i>x</i> as input.  To calculate the sum of squares, we could write a loop that iterates over the values from 1 to <i>x</i>.  However, for the sake of trying something new, we consider the fact that calculating the sum of squares for a variable <i>x</i> is the same as calculating the sum of the square of <i>x</i> plus the sum of the squares of all the values less than <i>x</i>.  That clever insight allows us to consider the problem recursively, or in other words, allows us to consider the solution in terms of the original problem.  We write a function that phrases the solution in relation to itself, and write the code such that it calls itself.</p>
+
+<p>In the example code, we solve this problem by returning the square of the current value stored <i>x</i> and the value returned by our new <i>sum_squares</i> function when called with a value of <i>x-1</i>.</p>
+
+<p>Now, if we try to run this code, we get a surprising result:</p>
+
+<code>
+...<br>
+RuntimeError: maximum recursion depth exceeded
+</code>
+
+<p>What on Earth does that mean?  What's the maximum recursion depth, and why did we exceed it?</p>
+
+<p>Recursion, as we stated above, is a way of writing code that calls itself.  This is a wonderful way of writing code, but it requires one important truth.  To be useful as a piece of recursive code, the function must, at some point, stop calling itself.  If it doesn't, the code will call itself forever.</p>
+
+<p>Consider the code that we wrote above.  It manages to state the problem of finding the sum of squares in terms of itself, and that's fine.  However, it never stops doing this!  When called with the value 3, it tries to find the sum of squares of the value 2.  When called with the value 2, it tries to find the sum of squares of the value 1.  When called with the value 1, it tries to find the sum of squares of the value 0, and so on.  This causes a problem when the computer gets so deep in calls to <i>sum_squares</i> that it runs out of room.  This is the maximum recursion depth error; we've called the function too many times, and we've run out of space to call it again.</p>
+
+<p>Our code needs a stopping condition, or what is also called a base case.  At some point, we have to return a value that doesn't depend on <i>sum_squares.</i>  One way to do this is to write something like the following:</p>
+
+<code>
+<b>def sum_squares(x):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if x == 1:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x * x + sum_squares(x - 1)</b><br>
+</code>
+
+<p>Now when we ask for the value, we should eventually hit that anchor.</p>
+
+<p>To be thorough, you'll need to add some additional checks to see if the value is less than or equal to zero, if the value isn't an integer, or any other number of strange things.  However, be aware of recursion, and have fun trying to break it in other ways!</p>
+
+<h2>Summary</h2>
+
+<p>Python functions are an ideal way to make your code more efficient, readable, and understandable. They can help chop up longer programs into smaller, more manageable pieces, and can provide you with individual components that can be brought into your other programs. The art of designing functions can help you understand how other built-in functions actually operate, and will quickly become a major building block in your arsenal of programming tools.</p>
+
+<h2>Exercises</h2>
+
+<p>1) Add the maximum value as an optional parameter value to the <i>getNumber</i> example from this chapter. Test it out by writing a program that asks the user what year they were born in, and come up with reasonable minimum and maximum values.</p>
+
+<p>2) Revisit an older and reasonable large piece of code that you've already written, and try to refactor out a piece of the code into a function. In particular, look for a piece of code that is used in multiple places in your code, like an <i>input</i> function. How many functions are you able to identify without making every individual line its own function?</p>
+
+<p>It is an interesting exercise to look at a piece of code to determine how many functions you can identify without going too far. You certainly don't want to replace a statement like <i>x = a + b</i> with a new function, as you'd just be duplicating the work of the addition operation. However, if you're doing a more complicated mathematical function, it might make sense to pull the entire line out and to replace it with a function. Where do you intuitively feel the line lies in the code you're written so far? There is no right answer for all cases, so feel free to experiment to see what feels right for you.</p>
+
+<p>3) Add a <i>getName</i> function to the sorting example, and write a sorting call that sorts <i>my_obj</i> by the name of the person instead of the age. Add some new values to the dictionaries and some more entries, and build more complicated sorts.</p>

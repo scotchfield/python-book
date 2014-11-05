@@ -1,0 +1,256 @@
+<h1>Chapter 13: Modules</h1>
+
+<p>With the introduction of functions, a new world of additional resources has been opened up. Python has a large number of libraries, referred to as modules, that can be imported and used by your programs. They are similar to the built-in functions, but large sets of libraries have specific purposes. This chapter will discuss a few of the available modules and will explain how to get them into your program and how to take advantage of them.</p>
+
+<h2>Importing modules</h2>
+
+<p>You've seen a number of what we've referred to as built-in functions already. These functions are a core part of the Python language. Using the <i>len</i>, <i>max</i>, or <i>print</i> functions is a trivial task; just type in the keyword along with the required parameters, and the correct values are returned. Even mathematical operators, such as the addition and multiplication symbols, are available right out of the box.</p>
+
+<p>One of the mathematical functions that we've missed is the square root. This is a fairly common operation in math, but certainly not one that is as common as adding or multiplying. As it turns out, Python does offer a way to access the square root function. To get there, we'll need to import a module called <i>math</i>.</p>
+
+<p>The <i>math</i> module is a collection of mathematical functions that are less common than the core functions, but still very likely to be required in your programs at some point. To access them, we use an <i>import</i> statement and specify the name of the module.</p>
+
+<code>
+<b>import math</b>
+</code>
+
+<p>It's as easy as that. Now, we've got access to the full suite of functions inside the <i>math</i> module. When calling a function inside of a module, you need to specify the module itself where the function exists in addition to the function name. It's not quite like writing a function and just calling <i>getNumber</i>. Modules define a namespace, and methods like <i>sqrt</i> (the square root function that we're about to encounter) exist inside that namespace. The namespace is referenced like this:</p>
+
+<code>
+&gt;&gt;&gt; <b>import math</b><br>
+&gt;&gt;&gt; <b>math.sqrt(4)</b><br>
+2.0
+</code>
+
+<p>This function call looks almost exactly like the other function calls except for the fact that a module is specified with the function. With the module imported, methods in <i>math</i> can be used just like the other functions. Let's modify the division program from earlier so that the square root function is used instead.</p>
+
+<code>
+<b>import math</b><br>
+<br>
+<b>def getNumber(minimum_value=False, input_text=&quot;Enter a number: &quot;):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;done = False</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;while not done:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_number = int(input(input_text))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;except ValueError:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;You didn't enter a number! Shame on you.&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if minimum_value == False or user_number &gt;= minimum_value:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done = True</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Your number was too low!&quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;The minimum value is {0}.&quot;.format(minimum_value))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return user_number</b><br>
+<br>
+<b>user_number = getNumber(minimum_value=0, input_text=&quot;Enter a number to obtain the square root: &quot;)</b><br>
+<b>print(&quot;The square root of {0} is {1}.&quot;.format(user_number, math.sqrt(user_number)))</b><br>
+<br>
+Enter a number to obtain the square root: <b>25</b><br>
+The square root of 25 is 5.0.
+</code>
+
+<p>A call to <i>math.sqrt</i> requires a single numeric value as input, and a <i>float</i> number equal to the square root of the source parameter is returned. The <i>math</i> module has a whole set of useful functions, serving as an ideal example of a situation where you'd benefit from offloading a suite of related functions into a single location.</p>
+
+<p>Included in the <i>math</i> functions are some helpful rounding operations. The <i>round</i> function is available as a built-in function, so we don't need to import <i>math</i> to use it. Two additional functions called <i>ceil</i> (short for ceiling) and <i>floor</i> can be used to round-up or round-down.</p>
+
+<code>
+<b>import math</b><br>
+<br>
+<b>x = 2.4</b><br>
+<b>print(&quot;x = {0}&quot;.format(x))</b><br>
+<b>print(&quot;Round: {0}&quot;.format(round(x)))</b><br>
+<b>print(&quot;Ceiling: {0}&quot;.format(math.ceil(x)))</b><br>
+<b>print(&quot;Floor: {0}&quot;.format(math.floor(x)))</b><br>
+<br>
+x = 2.4<br>
+Round: 2<br>
+Ceiling: 3<br>
+Floor: 2
+</code>
+
+<p>Another useful module called <i>random</i> contains several random number generators, along with other related functions including ways to randomise sequences like lists.</p>
+
+<p>Let's say, for example, that you wanted to build a dice-rolling program.</p>
+
+<code>
+<b>import random</b><br>
+<br>
+<b>for i in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Rolling a six sided die: {0}&quot;.format(random.randint(1, 6)))</b><br>
+<br>
+Rolling a six sided die: 3<br>
+Rolling a six sided die: 1<br>
+Rolling a six sided die: 4<br>
+Rolling a six sided die: 5<br>
+Rolling a six sided die: 3<br>
+Rolling a six sided die: 2<br>
+Rolling a six sided die: 1<br>
+Rolling a six sided die: 6<br>
+Rolling a six sided die: 4<br>
+Rolling a six sided die: 3
+</code>
+
+<p>The <i>random.randint</i> function takes two numbers and returns a random number inside the inclusive range defined by the input. What that means is that in the example above, we're asking for an integer between 1 and 6.</p>
+
+<p>You can also use the <i>random</i> module to shuffle lists of data in place, similar to sorting or reversing a list. Let's use <i>random</i> to build a list of randomly-generated integers, to sort and shuffle the list, and then to return an element at random.</p>
+
+<code>
+<b>import random</b><br>
+<br>
+<b>my_list = []</b><br>
+<b>for i in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;my_list.append(random.randint(1, 100))</b><br>
+<b>print(my_list)</b><br>
+<br>
+<b>my_list.sort()</b><br>
+<b>print(my_list)</b><br>
+<br>
+<b>random.shuffle(my_list)</b><br>
+<b>print(my_list)</b><br>
+<br>
+<b>print(random.choice(my_list))</b><br>
+<br>
+[52, 39, 54, 62, 59, 95, 98, 10, 45, 28]<br>
+[10, 28, 39, 45, 52, 54, 59, 62, 95, 98]<br>
+[54, 10, 39, 98, 95, 59, 52, 62, 45, 28]<br>
+39
+</code>
+
+<p>An an interesting aside, &quot;random&quot; numbers, are actually &quot;pseudo-random&quot;. These numbers only appear random. A random number generator has a seed value that acts as a way of determining the starting random number, along with all successive random values after that. If you start with the same seed every time, you actually get the same set of random numbers. Generally, the computer will use its clock time as the starting seed, so unless you have the ability to travel back in time to the same exact moment that your code was executed the first time, you're extremely unlikely to have the same random values showing up. You can play with this quirk by setting the random seed manually and generating lists of random values.</p>
+
+<code>
+<b>import random</b><br>
+<br>
+<b>print(&quot;Random lists with a random seed:&quot;)</b><br>
+<b>for x in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;my_list = []</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for i in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my_list.append(random.randint(1, 100))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(my_list)</b><br>
+<br>
+<b>print(&quot;Random lists with a non-random seed:&quot;)</b><br>
+<b>for x in range(5):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;my_list = []</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;random.seed(0)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for i in range(10):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my_list.append(random.randint(1, 100))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(my_list)</b><br>
+<br>
+Random lists with a random seed:<br>
+[87, 10, 92, 61, 42, 3, 21, 32, 85, 11]<br>
+[63, 96, 27, 95, 54, 97, 94, 77, 3, 85]<br>
+[93, 13, 7, 58, 69, 3, 30, 48, 40, 30]<br>
+[47, 79, 13, 74, 14, 95, 41, 8, 60, 66]<br>
+[90, 18, 41, 72, 8, 77, 24, 45, 6, 85]<br>
+Random lists with a non-random seed:<br>
+[85, 76, 43, 26, 52, 41, 79, 31, 48, 59]<br>
+[85, 76, 43, 26, 52, 41, 79, 31, 48, 59]<br>
+[85, 76, 43, 26, 52, 41, 79, 31, 48, 59]<br>
+[85, 76, 43, 26, 52, 41, 79, 31, 48, 59]<br>
+[85, 76, 43, 26, 52, 41, 79, 31, 48, 59]
+</code>
+
+<p>Wacky, eh?</p>
+
+<h2>Writing your own modules</h2>
+
+<p>We'll talk more about additional modules as we move forward. For now, let's look at how you can write your own modules to save time by not copying and pasting the useful functions you develop. Naturally, modules can be defined by a programmer. If you've got a few input function helpers to get numbers or other values, you can set up your own importable module that will make it easier to write the code you want to write.</p>
+
+<p>To begin, let's create a new file in IDLE. Save it with the name <i>getinput.py</i>, and don't forget the <i>.py</i> extension! This new file will become the module to import. You can think of the import statement as a way of asking Python to include an existing file right into your code at the point where you include the import statement. Any functions that you define in <i>getinput.py</i> will then become accessible to your source code that imports <i>getinput</i> in the future. Let's start with the previous <i>getNumber</i> function. Copy and paste <i>getNumber</i> into the new <i>getinput.py</i> source file, and save it.</p>
+
+<p>Now go back to your other source code file, and at the very top of the file, write the following lines:</p>
+
+<code>
+<b>import getinput</b><br>
+<br>
+<b>getinput.getNumber()</b>
+</code>
+
+<p>You don't need the <i>.py</i> extension in <i>import</i>; Python is able to infer that an <i>import</i> is asking for a file that ends in .py, so you can just omit the extension. Now try to run your file. If all goes well, you should see the following:</p>
+
+<code>
+<b>Enter a number: </b>
+</code>
+
+<p>If you see that, congratulations! You've written a module! You no longer have to copy and paste <i>getNumber</i> in each of your future source files. You can just import the <i>getinput</i> module, a Python source file that you've written yourself and placed in the same directory as your source file, and you've got access to the right functions. Remember, you need the <i>getinput</i> prefix for the <i>getNumber</i> function, and the module has to be in the same directory as your current working file so that Python can find it.</p>
+
+<p>Let's add some more code to <i>getinput</i>. How about a function that asks the user for a minimum and a maximum value, and returns a random number in that range using the <i>random</i> module. In <i>getinput.py</i>, add the following line to the top of the file.</p>
+
+<code>
+<b>import random</b>
+</code>
+
+<p>And at the bottom of the file, add the following new function.</p>
+
+<code>
+<b>def getRandomRangeNumber():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;min_number = getNumber(input_text=&quot;Enter the minimum value: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;max_number = getNumber(minimum_value=min_number, input_text=&quot;Enter the maximum value: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;return random.randint(min_number, max_number)</b>
+</code>
+
+<p>This is a new function that asks the user for a minimum value and a maximum value that must be at least as big as the minimum they just entered. Using this range, it queries <i>random.randint</i> for a random number, and returns it.</p>
+
+<p>Why doesn't the new <i>getRandomRangeNumber</i> need to prefix the calls to <i>getNumber</i> with the <i>getinput</i> namespace? It's because <i>getRandomRangeNumber</i> is in the same namespace; all the functions in the same namespace know about each other, so if you're calling one from the other, you don't need to specify that we're in the current file.</p>
+
+<p>Now let's modify the original source that uses <i>getInput</i> so that it calls the new method we just wrote.</p>
+
+<code>
+<b>import getinput</b><br>
+<b>print(getinput.getRandomRangeNumber())</b><br>
+<br>
+Enter the minimum value: <b>5</b><br>
+Enter the maximum value: <b>25</b><br>
+18
+</code>
+
+<p>If you want to add in additional methods to your module, just place them in <i>getinput.py</i> and they'll be accessible to other Python source files that import the module. Awfully convenient, isn't it?</p>
+
+<h2>Importing subsets of modules</h2>
+
+<p>In some rare instances, you might want to only import a small section of the module. It might be the case that you feel you'll only need the <i>sqrt</i> function from <i>math</i>, or that you know that a module is itself broken down into further modules -- modules can actually be nested inside one-another, and we'll see an example of this.</p>
+
+<p>One module that you might get a lot of use from is <i>datetime</i>. The <i>datetime</i> collection of functions and objects gives you a way to collect and manipulate dates and times. It gives you a set of methods for formatting date strings for printing to the screen. It also allows you to perform arithmetic on dates, as you might do when asking for the date two days from now. The <i>now</i> function gives you the current date and time.</p>
+
+<code>
+<b>import datetime</b><br>
+<b>print(datetime.datetime.now())</b><br>
+<br>
+2010-11-24 16:17:58.521000
+</code>
+
+<p>It looks a little unusual when <i>datetime</i> is entered twice like that. This is an artifact of the <i>datetime</i> module and how it's been structured in the original source. It turns out that there's a <i>datetime</i> object inside the <i>datetime</i> module that is responsible for getting values like the current date. The reason for this is that the <i>datetime</i> module does something analogous to defining <i>datetime</i> as a type. It sets up an object called <i>datetime</i>, and that new <i>datetime</i> object is assigned a value corresponding to the current time.</p>
+
+<p>What? This might be a little confusing, and that's completely fair. The next chapter will talk about classes, and will open up some more of these details. For the moment, consider that importing the <i>datetime</i> module defines the <i>datetime</i> namespace (the first <i>datetime</i>), and inside that namespace is a <i>datetime</i> object (the second <i>datetime</i>) upon which the <i>now</i> function is called. Confused yet?</p>
+
+<p>For this very reason, we can use a slightly different form of the <i>import</i> statement. We can ask Python to import the <i>datetime</i> object (not the module) directly into the current namespace, instead of into the <i>datetime</i> namespace.</p>
+
+<code>
+<b>from datetime import datetime</b><br>
+<b>print(datetime.now())</b><br>
+<br>
+2010-11-24 16:17:58.521000
+</code>
+
+<p>As a simplification of this, we can also write the following code:</p>
+
+<code>
+<b>from math import sqrt</b><br>
+<b>sqrt(4)</b><br>
+<br>
+2.0
+</code>
+
+<p>The <i>from</i> statement used in conjunction with <i>import</i> asks Python to import a subset of the module instead of the whole thing. In the case of the <i>math</i> module, we ask Python to just bring in the <i>sqrt</i> function, but not the whole module.</p>
+
+<h2>Summary</h2>
+
+<p>Modules offer a way of organizing large sets of code in the same way that functions allow you to place related lines of code in a single location. They save you the hassle of copying and pasting the functions you use most frequently by tucking them away behind an <i>import</i> statement, ready to be used at your demand. If you don't need to use them, they're still safely organized in your source code directory.</p>
+
+<p>These abstractions move programming from a hacky collection of random lines of code towards a well-structured piece of engineering. In fact, when we refer to software engineering as a practice, it is with the intent of approaching the rigour that professional engineers in the physical sciences apply to their work. When building a bridge, the designers go to great lengths to ensure that everything makes sense, to prevent the bridge from collapsing. It might seem strange to think about software in the same way at first, but when you consider that software is now found in cars, airplanes, and hospital equipment, the demand on software developers to write well-structured and maintainable code is greater than ever. Functions and modules are a step in this direction, and a step away from the chaotic development practices that many developers fall in to.</p>
+
+<p>With practice, you'll figure out the best ways to structure your code, giving you an ideal amount of reuse and a minimal amount of rewriting. It's always really nice to find yourself in need of a function, and then realizing that you're already written it and can import it with a single line of code.</p>
+
+<h2>Exercises</h2>
+
+<p>1) Go back and look at some of the code that you're written previously when working through this book. Find some examples that you might like to use in other programs that you write, and extract them out to a module. Save the file in your working directory, and write some test programs to import the module and use the new functions.</p>

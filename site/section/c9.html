@@ -1,0 +1,446 @@
+<h1>Chapter 9: Dictionaries</h1>
+
+<p>The idea behind a dictionary is straightforward. Start by thinking about an actual dictionary book. The words and definitions are indexed together in a single document. In fact, you can probably imagine it as a list. Each word and definition can make up a string, meaning the value at index 0 will be something like &quot;a: the first letter in the English language.&quot; However, it would be nice to think of the index as the word itself, and the value as the definition for that word. For example, instead of the 0th index, what about the &quot;a&quot; index? This is how a real dictionary is used. We look up by word instead of by the index of the word. Instead of <i>englishDictionary[0]</i>, we could instead refer to <i>englishDictionary[&quot;a&quot;]</i>, and get definitions based on a much more intuitive indexing system. This is the idea behind Python dictionaries; retrieve values based on keys that have more meaning than a collection of numbers.</p>
+
+<p>This chapter will provide an overview of the situations where you might want to use a dictionary instead of a list, along with some of the more subtle details between lists and dictionaries. These data structures share many similarities, but although they are both extremely useful, you must be aware of the differences between one and the other.</p>
+
+<h2>Keys and values</h2>
+
+<p>Lists collect data by placing everything inside of a single linear structure and retrieving values by index. If a set of ten pieces of data are stored in a list, we expect that the list will be ten elements long and that the order of the elements will correspond to the order that we inserted them. Of course, this order can be modified by sorting or reversing the list. In essence, a list is just a linear collection of data.</p>
+
+<p>In a dictionary, the index must be explicitly provided when inserting a value. When a value is placed into a dictionary, the index, also known as the key, is specified by which the value can be retrieved later. These index and data pairs are known as key-value pairs, as each value can be retrieved with a certain key. In a real dictionary from the bookstore, each word in the dictionary has an associated definition. In this paradigm, each word is a key, and the definition for that word is the value.</p>
+
+<p>Dictionaries are identified using curly-braces, and key-value pairs are separated using a colon. For example, to set up a simple dictionary about me, I could write the following Python code:</p>
+
+<code>
+<b>my_dictionary = {</b><br>
+<b>&nbsp;&nbsp;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;birth_year&quot;: 1979,</b><br>
+<b>&nbsp;&nbsp;birth_month&quot;: 12,</b><br>
+<b>&nbsp;&nbsp;birth_day&quot;: 27</b><br>
+<b>}</b><br>
+<b>print(my_dictionary)</b><br>
+<br>
+{'birth_day': 27, 'first_name': 'Alexander', 'last_name': 'Coder',<br>
+ 'birth_month': 12, 'birth_year': 1979}<br>
+<br>
+<b>print(my_dictionary[&quot;first_name&quot;])</b><br>
+<br>
+Alexander
+</code>
+
+<p>Unlike a list, the values inside a dictionary aren't referenced by a number index. We would never expect to be asked to look up the 40,000th word in the English dictionary. Each value has an associated key, and to get the value, you use the same syntax as you used with lists, only with the actual key that had been originally associated with the value.</p>
+
+<p>Values in a dictionary can be any type. In a dictionary, strings, numbers, lists, and even other dictionaries can be stored. However, keys are a separate matter. Keys must be immutable values. A key can be a string or a number, but it can't be a list because a list isn't guaranteed to be static. Let's see what that means.</p>
+
+<code>
+&gt;&gt;&gt; <b>x = {}</b><br>
+&gt;&gt;&gt; <b>a = [0, 1, 2]</b><br>
+&gt;&gt;&gt; <b>x[a] = True</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#2&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x[a] = True<br>
+TypeError: unhashable type: 'list'
+</code>
+
+<p>An unhashable type error indicates an attempt to use a mutable type, such as a list, as a key for the dictionary. The fact that the list can be modified later means that there is no guarantee of knowing the actual value of the key at any given point in time. If you use the key <i>False</i>, that key will never change. <i>False</i> is immutable, so <i>False</i> will always be <i>False</i>. A list can be changed, and so it is an unacceptable dictionary key.</p>
+
+<p>Adding new elements to a dictionary is a simple matter. To add a new element, just write a statement setting the new dictionary value for a certain key to that value. There isn't an <i>append</i> function, as the <i>append</i> concept doesn't even really make sense when you're working with key-value pairs. For example, when we decide that &quot;blog&quot; is a new word that warrants addition to the English dictionary, we don't append it to the end of the dictionary. The same idea applies here.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(my_dictionary)</b><br>
+{'first_name': 'Alexander', 'last_name': 'Coder', 'birth_month': 12, 'birth_day': 27, 'birth_year': 1979}<br>
+&gt;&gt;&gt; <b>my_dictionary[&quot;birth_town&quot;] = &quot;Kingston&quot;</b><br>
+&gt;&gt;&gt; <b>print(my_dictionary)</b><br>
+{'first_name': 'Alexander', 'last_name': 'Coder', 'birth_town': 'Kingston',<br>
+ 'birth_month': 12, 'birth_day': 27, 'birth_year': 1979}
+</code>
+
+<p>To remove an element, the <i>del</i> function is used along with the key from the key-value pair to delete.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(my_dictionary)</b><br>
+{'first_name': 'Alexander', 'last_name': 'Coder', 'birth_town': 'Kingston',<br>
+ 'birth_month': 12, 'birth_day': 27, 'birth_year': 1979}<br>
+&gt;&gt;&gt; <b>del(my_dictionary[&quot;birth_town&quot;])</b><br>
+&gt;&gt;&gt; <b>print(my_dictionary)</b><br>
+{'first_name': 'Alexander', 'last_name': 'Coder', 'birth_month': 12,<br>
+ 'birth_day': 27, 'birth_year': 1979}
+</code>
+
+<p>A <i>for</i> loop can be used with a dictionary to iterate over all of the elements in the data structure. However, it works differently with a dictionary than with a list, in that the actual elements you end up getting in the loop are the keys. It sounds strange, but let's examine why this is true.</p>
+
+<code>
+<b>for key in my_dictionary:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}: {1}&quot;.format(key, my_dictionary[key]))</b><br>
+<br>
+birth_day: 27<br>
+first_name: Alexander<br>
+last_name: Coder<br>
+birth_month: 12<br>
+birth_year: 1979
+</code>
+
+<p>Instead of getting the dictionary values back in <i>key</i>, you get each of the key index values. The actual value from the dictionary can be obtained by using the key, obviously, but it's an important distinction to be aware of. With a list, you get the opposite effect, and if you recall, we had to go through some hoops to retrieve the indices. A dictionary is a data structure similar to a list, except for the fact that you might actually care more about the keys than the values themselves.</p>
+
+<p>A fact that follows from this is that sorting a dictionary works in a different way than sorting a list. Think back to the analogy of working with an actual English dictionary, and how you'd go about sorting those values. There aren't really any cases where you would want to sort on the definition of the word, since you're never looking words up based on a definition that an editor has provided. For example, the word "python" could be defined as "a large constricting snake" or "name for a large nonvenomous snake" and each definition would show up in a different location after a definition sort. You want a sorted list of words. With a dictionary, that means that we want a sorted list of the keys.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(my_dictionary)</b><br>
+{'first_name': 'Alexander', 'last_name': 'Coder', 'birth_month': 12,<br>
+ 'birth_day': 27, 'birth_year': 1979}<br>
+&gt;&gt;&gt; <b>sorted(my_dictionary)</b><br>
+['birth_day', 'birth_month', 'birth_year', 'first_name', 'last_name']
+</code>
+
+<p>Note that the value returned from <i>sorted</i> is a list instead of a dictionary. If you ask for a sorted dictionary, you get a sorted list where the values are the keys. Rather than sorting on the elements of my birthdate and my name, the sorted function returns an alphabetized list of the keys that are present in the <i>my_dictionary</i> variable.</p>
+
+<code>
+<b>for key in sorted(my_dictionary):</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0}: {1}&quot;.format(key, my_dictionary[key]))</b><br>
+<br>
+birth_day: 27<br>
+birth_month: 12<br>
+birth_year: 1979<br>
+first_name: Alexander<br>
+last_name: Coder
+</code>
+
+<p>This is a particularly important point, especially considering the fact that the other large data structures seen so far return sorted data structures of the same type. A dictionary is inherently unsortable, and this is kind of unsatisfying at first glance. It seems to make a lot of sense to sort the keys. This isn't the goal of the dictionary data structure. In Python, a dictionary is designed to allow you to look up values extremely fast. If a programmer is doing thousands of these lookups, the dictionary data structure will operate extremely efficiently.</p>
+
+<p>The individual keys and values can be isolated from a dictionary using functions like sorted. Python has a number of related built-in functions that can be used.</p>
+
+<code>
+&gt;&gt;&gt; <b>my_dictionary.keys()</b><br>
+['birth_day', 'first_name', 'last_name', 'birth_month', 'birth_year']<br>
+&gt;&gt;&gt; <b>my_dictionary.values()</b><br>
+[27, 'Alexander', 'Coder', 12, 1979]<br>
+&gt;&gt;&gt; <b>my_dictionary.items()</b><br>
+[('birth_day', 27), ('first_name', 'Alexander'),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;('last_name', 'Coder'), ('birth_month', 12), ('birth_year', 1979)]
+</code>
+
+<p>And as we saw with lists, the <i>max</i> and <i>min</i> functions are also available. You might guess (correctly) that the <i>max</i> and <i>min</i> functions operate on the keys instead of the values.</p>
+
+<code>
+&gt;&gt;&gt; <b>max(my_dictionary)</b><br>
+'last_name'<br>
+&gt;&gt;&gt; <b>min(my_dictionary)</b><br>
+'birth_day'
+</code>
+
+<h2>Practical dictionaries</h2>
+
+<p>Let's build a more complicated address book application. In the previous chapter, we built an address book program that used a list of lists to keep track of our contacts. This time, we'll use a list to hold our contacts, but each contact will be represented by a dictionary. The benefit is that we know which index is the name and which is the phone number. If we add more elements to the dictionary later, we don't have to fidget around with numeric indices that might have changed because more data was added. For example, let's say we add an element to the address book list that gives us the person's middle name.</p>
+
+<code>
+&gt;&gt;&gt; <b>old_contact = [&quot;Alexander&quot;, &quot;Coder&quot;, 5551234, &quot;Kingston&quot;]</b><br>
+&gt;&gt;&gt; <b>new_contact = [&quot;Alexander&quot;, &quot;Andrew&quot;, &quot;Coder&quot;, 5551234, &quot;Kingston&quot;]</b>
+</code>
+
+<p>Now any code that previously referenced the 2nd index as the phone number will need to be changed! If we miss a single spot, our code won't work properly anymore. Rage.</p>
+
+<p>Let's try it with a dictionary. Each contact will consist of a first name, a last name, a phone number, and a home town. We can add more later, but for now, let's build a list of contact dictionaries.</p>
+
+<code>
+<b>contacts_obj = [</b><br>
+<b>&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;phone&quot;: 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;town&quot;: &quot;Kingston&quot;},</b><br>
+<b>&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;last_name&quot;: &quot;Jordan&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;phone&quot;: 5558722,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;town&quot;: &quot;Chicago&quot;},</b><br>
+<b>&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;last_name&quot;: &quot;Benes&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;phone&quot;: 5551915,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;town&quot;: &quot;New York&quot;},</b><br>
+<b>&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;last_name&quot;: &quot;F&uuml;nke&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;phone&quot;: 5556742,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&quot;town&quot;: &quot;Newport Beach&quot;},</b><br>
+<b>]</b>
+</code>
+
+<p>In the data structure we've just created, each contact is represented by a dictionary with four elements. The keys are explicitly named, so while the values in each dictionary may change, each dictionary shares the same set of keys. Three of the values are strings, while <i>phone</i> is a number.</p>
+
+<p>The searching examples from the city program in the previous chapter can be reused here, but we'll need to change the index from a number to an actual key.</p>
+
+<code>
+<b>user_input = input(&quot;Enter a last name: &quot;)</b><br>
+<b>for contact in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if contact[&quot;last_name&quot;].lower() == user_input.lower():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} {1} ({2}): {3}&quot;.format(</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contact[&quot;first_name&quot;], contact[&quot;last_name&quot;],</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contact[&quot;town&quot;], contact[&quot;phone&quot;]))</b><br>
+<br>
+Enter a last name: <b>Coder</b><br>
+Alexander Coder (Kingston): 5551763
+</code>
+
+<p>There isn't much that looks different so far, aside from the indices, and you might be asking yourself why we even bothered. If we were using lists, and we wanted to append a new value like the street that the contact lived on, we could just add it to the end of each contact's list and reference the new index. That's true, and for smaller examples, it might not make a huge difference. As you program larger pieces of code, you run into the situation where you've added so many new components that you have something like this:</p>
+
+<code>
+<b>user = [&quot;Alexander&quot;, &quot;Coder&quot;, 5551065, &quot;Kingston&quot;, &quot;42 Elm St.&quot;, 30,</b><br>
+<b>&nbsp;&nbsp;12, 27, 1979, &quot;alexander@scootah.com&quot;, 545, 15, 1, 0, False]</b>
+</code>
+
+<p>You can probably guess what a few of those values are, but what about the ones on the end? It gets awfully confusing when you don't know that I have one cat, no dogs, and have never been to Antarctica. (Okay, I might be stretching on justifying those last three values, but if your program wanted to track them, you'd have no real way of knowing aside from copious comments.) As programs grow in size, you'll want some way to keep track of things. Even the order can be jumbled. Why is my street address after the city in the list? That's not how an address book usually does it. With a dictionary, the order doesn't matter. The keys are important, and you can change the order of the keys without affecting the final data structure.</p>
+
+<p>Our program shouldn't require the user to change Python code to change the search key. We don't want to deliver a program that needs a code change to switch from first name searches to phone numbers! Let's modify the program we just wrote so that the user can specify the key they'd like to search on, and then let them do the search themselves.</p>
+
+<code>
+<b>valid_keys = []</b><br>
+<b>for key in contacts_obj[0].keys():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;valid_keys.append(key)</b><br>
+<b>key_choice = &quot;&quot;</b><br>
+<b>while key_choice != &quot;quit&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Available searches: {0}&quot;.format(valid_keys))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;key_choice = input(&quot;Enter the type of search you would like to perform, or type quit: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if key_choice in valid_keys:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value_choice = input(&quot;Enter the value you would like to search for: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for contact in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if str(contact[key_choice]).lower() == value_choice.lower():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} {1} ({2}): {3}&quot;.format(</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contact[&quot;first_name&quot;], contact[&quot;last_name&quot;],</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contact[&quot;town&quot;], contact[&quot;phone&quot;]))</b><br>
+<br>
+Available searches: ['town', 'phone', 'first_name', 'last_name']<br>
+Enter the type of search you would like to perform, or type quit: <b>town</b><br>
+Enter the value you would like to search for: <b>Kingston</b><br>
+Alexander Coder (Kingston): 5551763<br>
+<br>
+Available searches: ['town', 'phone', 'first_name', 'last_name']<br>
+Enter the type of search you would like to perform, or type quit: <b>first_name</b><br>
+Enter the value you would like to search for: <b>Michael</b><br>
+Michael Jordan (Chicago): 5558722<br>
+<br>
+Available searches: ['town', 'phone', 'first_name', 'last_name']<br>
+Enter the type of search you would like to perform, or type quit: <b>quit</b>
+</code>
+
+<p>This is a relatively large program compared to the ones that we've seen, so let's break it down. We have a list of dictionaries where each individual dictionary is a contact to keep track of. Each dictionary has a set of keys corresponding to information about the contacts. We need to recall information about each of our contacts using these keys. The first thing our new program does is examine the first entry in our contact list to retrieve the keys one by one. We'll use this later, when the user provides the key that they'd like to search on. The <i>valid_keys</i> variable is a list of strings, where each string is a key in the contact dictionary.</p>
+
+<code>
+&gt;&gt;&gt; <b>print(valid_keys)</b><br>
+['town', 'phone', 'first_name', 'last_name']
+</code>
+
+<p>The <i>key_choice</i> variable is used to keep track of either the key that the user wants to do a search on, or the request to quit. If at any time, the user enters the string &quot;quit&quot; for the search parameter, our code knows to exit out of the while loop. Otherwise, <i>key_choice</i> is going to reference a key in the dictionary. If it doesn't, it's no big deal; we have a line of code that checks whether or not the key that the user requests is in <i>valid_keys</i>. If the string isn't in that list, it's not a key that's been defined in the contact data structure, and we don't consider it valid.</p>
+
+<p>The <i>value_choice</i> variable holds the actual value that the user would like to search for, whether it's a city that they live in, or the contact's phone number. Once <i>value_choice</i> has been set, each element in <i>contacts_obj</i>  is checked to see if the key's value matches, and if so, it is printed. This part is no different than the previous examples. It only relies on the fact that the key itself can be a string. We can store that string value in a variable, even if it's one that we got from the user.</p>
+
+<p>The <i>lower</i> function is still present in the comparison, but a string conversion to the value in the dictionary has been added. The reason for this is that we're not guaranteed to only be looking at string values any more. For example, consider a phone query.</p>
+
+<code>
+Available searches: ['town', 'phone', 'first_name', 'last_name']<br>
+Enter the type of search you would like to perform, or type quit: <b>phone</b><br>
+Enter the value you would like to search for: <b>5551763</b><br>
+Alexander Coder (Kingston): 5551763
+</code>
+
+<p>Searching for a number is actually searching for a string representation of that number, due to the semantics of <i>input</i>. The <i>input</i> function itself doesn't know whether you're asking for a string or a number, so it simplifies things by making everything a string. If you want that string to be a number, you wrap it in an <i>int</i> or a <i>float</i> function. At the simplest state, when you call <i>input</i>, you're asking for a string value to be returned. If we use this knowledge, we can convert any value in the contact dictionary into a string to do the comparison that way. The lower function doesn't affect numbers, so it doesn't cause any problems here.</p>
+
+<p>If your address book is anything like mine, you don't always have a full set of information about every contact in the list. Some people have cell phone numbers, whereas others prefer to stick to a landline. Some of my friends have even moved recently, and I'd rather have no address on file than an incorrect one. So what happens when we have keys in certain dictionaries that don't exist in others? If I know that I have a cell phone number but don't know if other contacts do, how can I make sure that cell phone numbers are still searchable elements in my program? In addition to this, how do I know that the first contact in the list is an accurate representation of the keys that we'll find in <i>contact_obj</i>?</p>
+
+<p>Let's extend <i>valid_keys</i>. What we'd like to do is look at every key in every dictionary, and where there's a key, there's search functionality. There is a function in Python called <i>get</i> that returns the value if it exists for the key that you specify, or None if it doesn't.</p>
+
+<code>
+&gt;&gt;&gt; <b>a = {}</b><br>
+&gt;&gt;&gt; <b>print(a.get(&quot;Test&quot;))</b><br>
+None<br>
+&gt;&gt;&gt; <b>a[&quot;Test&quot;]</b><br>
+Traceback (most recent call last):<br>
+ File &quot;&lt;pyshell#42&gt;&quot;, line 1, in &lt;module&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a[&quot;Test&quot;]<br>
+KeyError: 'Test'
+</code>
+
+<p>This is useful, because now dictionaries in <i>contact_obj</i> can define keys in certain places and omit them in others. By using <i>get</i>, we don't have to worry about <i>KeyError</i> when asking for keys that don't exist. Let's strip down the <i>contact_obj</i> variable to test this out.</p>
+
+<code>
+<b>contacts_obj = [</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;phone&quot;: 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Kingston&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Michael&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Benes&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Newport Beach&quot;},</b><br>
+<b>]</b><br>
+<br>
+<b>valid_keys = []</b><br>
+<b>for key in contacts_obj[0].keys():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;valid_keys.append(key)</b><br>
+<b>key_choice = &quot;&quot;</b><br>
+<b>while key_choice != &quot;quit&quot;:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Available searches: {0}&quot;.format(valid_keys))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;key_choice = input(&quot;Enter the type of search you would like to perform, or type quit: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;if key_choice in valid_keys:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value_choice = input(&quot;Enter the value you would like to search for: &quot;)</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for contact in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if str(contact.get(key_choice)).lower() == value_choice.lower():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;{0} {1} ({2}): {3}&quot;.format(</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contact.get(&quot;first_name&quot;), contact.get(&quot;last_name&quot;),</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contact.get(&quot;town&quot;), contact.get(&quot;phone&quot;)))</b>
+</code>
+
+<p>In addition to removing a lot of information from <i>contacts_obj</i>, the dictionary indices in the later parts of the program have been changed from direct index calls to <i>get</i> function calls. This changes the if-statement significantly, and a missing phone key won't prevent the if-statement from being able to make a comparison.</p>
+
+<p>The <i>print</i> statement has also been modified. If we don't have information about the phone number or the last name, our program won't crash. By using the <i>get</i> function, we ensure that our data is always available, even if there isn't any meaningful data to use.</p>
+
+<code>
+Available searches: ['town', 'phone', 'first_name', 'last_name']<br>
+Enter the type of search you would like to perform, or type quit: <b>first_name</b><br>
+Enter the value you would like to search for: <b>Michael</b><br>
+Michael None (None): None
+</code>
+
+<p>There is still a problem with this code. The <i>valid_keys</i> list doesn't necessarily reflect the state of all available keys in the dictionaries. Let's imagine that we know Michael's cell phone number. The <i>contacts_obj</i> variable changes to this:</p>
+
+<code>
+<b>contacts_obj = [</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;phone&quot;: 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Kingston&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;cell_phone&quot;: 5559955},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Benes&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Newport Beach&quot;},</b><br>
+<b>]</b>
+</code>
+
+<p>The previous code won't catch the <i>cell_phone</i> key, because it's not defined in <i>contacts_obj[0]</i>. If I don't have a cell phone, <i>valid_keys</i> won't know that a <i>cell_phone</i> key is available to search on. Let's change that subset of the code to look at every contact, picking out each of the keys that can be searched one-by-one.</p>
+
+<code>
+<b>valid_keys = []</b><br>
+<b>for contact in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for key in contact.keys():</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if key not in valid_keys:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;valid_keys.append(key)</b><br>
+<br>
+Available searches: ['town', 'phone', 'first_name', 'last_name', 'cell_phone']<br>
+Enter the type of search you would like to perform, or type quit: 
+</code>
+
+<p>Instead of looking at only the first element in <i>contacts_obj</i>, iterate over each element one-by-one and add every key that hasn't already been added to <i>valid_keys</i>. This new structure becomes our valid key list, and the <i>cell_phone</i> key shows up as an option for searching.</p>
+
+<p>This is exactly the kind of benefit that shows the real power of indexing by key instead of by an abstract numerical index. If we know a new piece of information about a contact, it can just be added. Maybe it's a birthplace, or maybe it's the name of their second child. It doesn't matter because we can add it in through a unique key. In doing so, it becomes an indexable element in the original data structure.</p>
+
+<p>Here's an explicit demonstration of this technique, for our feline friends.</p>
+
+<code>
+<b>contacts_obj = [</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;phone&quot;: 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Kingston&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;cell_phone&quot;: 5559955},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Benes&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Newport Beach&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;{&quot;first_name&quot;: &quot;Ulysses&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;species&quot;: &quot;Cat&quot;},</b><br>
+<b>]</b>
+</code>
+
+<p>If we simply append a new element with a new key, how does that affect the output of the original program?</p>
+
+<code>
+Available searches: ['town', 'phone', 'first_name', 'last_name', 'cell_phone', 'species']<br>
+Enter the type of search you would like to perform, or type quit: <b>species</b><br>
+Enter the value you would like to search for: <b>cat</b><br>
+Ulysses None (None): None
+</code>
+
+<p>This new contact dictionary also has an entirely new key, but none of the other expected keys for use with the <i>print</i> statement. Fortunately, this is completely fine, thanks to the robust construction of our program. It won't crash due to a new piece of data and it won't crash if data is missing that might be expected in <i>print</i>. Things can always be modified later to handle new data, but in the meantime, we can rest assured that our program will run without crashing.</p>
+
+<h2>Complex dictionaries</h2>
+
+<p>By this point, you probably have a fair grasp of the values you can use as keys, and the values you can store in a dictionary using those keys. So far, the only values that we've stored in a dictionary have been strings and numbers. There is no reason that lists and dictionaries can't be placed in there too though, so let's show that by example.</p>
+
+<p>Let's rebuild the contact list so each of the individuals has a nickname. We'd like to be able to index <i>contacts_obj</i> by nickname instead of identifying someone by the opaque <i>contacts_obj[0]</i> notation.</p>
+
+<p>First, <i>contacts_obj</i> will need to be converted to a dictionary. As we have already seen, this allows for indexing by arbitrary keys, which is exactly what we're looking for. Next, we'll define a unique string for each of the contacts we're tracking. For each of the contacts in the list, a key will be specified.</p>
+
+<code>
+<b>contacts_obj = {</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;alexander&quot;: {&quot;first_name&quot;: &quot;Alexander&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Coder&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;phone&quot;: 5551763,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Kingston&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;mike&quot;: {&quot;first_name&quot;: &quot;Michael&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;cell_phone&quot;: 5559955},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;laney&quot;: {&quot;first_name&quot;: &quot;Elaine&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;last_name&quot;: &quot;Benes&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;doc&quot;: {&quot;first_name&quot;: &quot;Tobias&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;town&quot;: &quot;Newport Beach&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&quot;uly&quot;: {&quot;first_name&quot;: &quot;Ulysses&quot;,</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; &quot;species&quot;: &quot;Cat&quot;},</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</b><br>
+<br>
+<b>nickname = input(&quot;Enter the contact you would like to see: &quot;)</b><br>
+<b>if nickname in contacts_obj:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Contact: {0}&quot;.format(nickname))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;contact = contacts_obj[nickname]</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;for key in contact:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;&nbsp;&nbsp;&nbsp;&nbsp;{0}: {1}&quot;.format(key, contact[key]))</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;else:</b><br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(&quot;Sorry, I don't know {0}!&quot;.format(nickname))</b><br>
+<br>
+Enter the contact you would like to see: <b>alexander</b><br>
+Contact: alexander<br>
+&nbsp;&nbsp;&nbsp;&nbsp;town: Kingston<br>
+&nbsp;&nbsp;&nbsp;&nbsp;phone: 5551763<br>
+&nbsp;&nbsp;&nbsp;&nbsp;first_name: Alexander<br>
+&nbsp;&nbsp;&nbsp;&nbsp;last_name: Coder<br>
+Enter the contact you would like to see: <b>steve</b><br>
+Sorry, I don't know steve!
+</code>
+
+<p>Now see if you can use some dictionaries in your own examples.  Are you able to find some creative ways of using this new data structure in your own applications?</p>
+
+<h2>Breaking Stuff</h2>
+
+<p>Dictionaries differ from lists in many ways.  One of the most fundamental ways, despite what might seem obvious from the way they are written, is the fact that the elements are not ordered.  For example, if you create a dictionary that uses the numbers from 0 to 9 as keys, they are not necessarily analogous to indexes in a list.  Specifically, it doesn't make sense to talk about the 3rd key in a dictionary.</p>
+
+<p>Now, with that said, you are free to impose an ordering on the keys.  You can get the list of keys, as we did in this chapter, and sort it in some way.  Still, that is a specific sort imposed by the programmer, and not an inherent part of the data structure itself.</p>
+
+<code>
+<b>d = {1: True, 0: False}</b><br>
+<b>keys = d.keys()</b><br>
+<b>print(keys)</b><br>
+<b>print(sorted(keys))</b><br>
+<br>
+[0, 1]<br>
+[0, 1]
+</code>
+
+<p>In this case, the order of the <i>keys</i> variable is different from the order that the dictionary was originally written.  You might intuitively assume that keys would be [1, 0], since a list is an ordered data structure.  Remember that there is no such restriction on the keys of a dictionary; there is no order among keys.  Either a key is set, or it is not.</p>
+
+<p>In addition, remember that the keys in a Python dictionary must be immutable values, as stated earlier.  However (and there's usually a however!), the keys don't all have to be the same type.  They just have to be immutable.  For example, take a look at this dictionary.</p>
+
+<code>
+<b>d = {1: True, 0: False, &quot;True&quot;: 1, &quot;False&quot;: 0, &quot;1&quot;: True, &quot;0&quot;: False}</b><br>
+<b>keys = d.keys()</b><br>
+<b>print(keys)</b><br>
+<b>print(sorted(keys))</b><br>
+<br>
+[0, 1, 'False', '1', '0', 'True']<br>
+[0, 1, '0', '1', 'False', 'True']
+</code>
+
+<p>Although it's possible to sort the list, any assumption that we make about the set of keys other than the fact that they are immutable values may lead us to break stuff.  Treating the keys as sequential integers, for example, will give errors when we hit the strings.</p>
+
+<h2>Summary</h2>
+
+<p>Dictionaries represent the hash table, another fundamental and extremely useful concept in computer programming.  While hash tables come with their own set of complex considerations, Python abstracts away a lot of those details to provide a convenient way to store values by associating them with a key.</p>
